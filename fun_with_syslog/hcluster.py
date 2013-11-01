@@ -27,6 +27,7 @@ class HCluster():
     def __init__(self):
         ''' Init for HCluster. '''
         self.sim_method = None
+        self.agg_sim = 0.0
 
     def set_sim_method(self, sim_function):
         ''' 
@@ -35,7 +36,7 @@ class HCluster():
         '''
         self.sim_method = sim_function
 
-    def sims_to_hcluster(self, sim_list, node_attribute_list, labels=None):
+    def sims_to_hcluster(self, sim_list, node_attribute_list, labels=None, agg_sim=0.0):
         ''' 
             Use single-linkage hierarchical clustering to build up a tree
             of clusters from a similarity list.
@@ -46,6 +47,7 @@ class HCluster():
                                          so for instance [[a,b,c], [a,b,d], ...]
             Output: Hierarchical Cluster (as a networkx digraph datatype)
         '''
+        self.agg_sim = agg_sim
 
         # Generate labels if we need to
         if labels is None:
@@ -156,52 +158,15 @@ class HCluster():
         meta_label = self.meta_label(G, meta_node)
         G.node[meta_node]['label'] = meta_label 
 
-    def add_links_to_htree_new(self, graph, sim_list, attributes):
-
-        # Add all the nodes to the graph
-        for sim, source, target in sim_list:
-            graph.add_node(source, label=attributes[source]['label'])
-            graph.add_node(target, label=attributes[target]['label'])
-
-        # Construct edge map to help find an existing nodes in the graph
-        edge_map = collections.defaultdict(list)
-        for sim, source, target in sim_list:
-            edge_map[source].append((target,sim))
-            edge_map[target].append((source,sim))
-
-        # Construct H Tree
-        for sim, source, target in sim_list:
-            root_target = self.find_root(graph, target)
-            root_source = self.find_root(graph, source)
-
-            # If they have the same root they are already 'linked'
-            if root_source == root_target:
-                continue
-
-            # Does either have existing children?
-            if (graph.out_edges(root_source)):
-                if (sim == graph.out_edges(root_source, data=True)[0][2]['weight']):
-                    graph.add_edge(root_source, target, weight=sim, inv_weight=1.0-sim)
-                    continue
-            if (graph.out_edges(root_target)):
-                if (sim == graph.out_edges(root_target, data=True)[0][2]['weight']):
-                    graph.add_edge(root_target, source, weight=sim, inv_weight=1.0-sim)
-                    continue
-
-            '''
-            # Okay at this point we have to search edge_map, if that
-            # fails then we add a meta node
-            for target, t_sim in edge_map[source]:
-                if (target in graph):
-            '''
-                
-            self.add_meta_node(graph, sim, root_source, root_target)
 
     def check_edge_map(self, edge_map, G, node, sim):
         for target, t_sim in edge_map[node]:
             if (target in G and t_sim == sim):
                 return target
-        return None       
+        return None
+
+    def close_sim(self, sim1, sim2):
+        return True if abs(sim1-sim2) <= self.agg_sim else False
 
     def add_links_to_htree(self, graph, sim_list, labels=None):
 
@@ -252,7 +217,8 @@ class HCluster():
                 root_target = self.find_root(graph, target)
                 
                 # 2a) similarity is the same (source)
-                if (sim == graph.out_edges(root_target, data=True)[0][2]['weight']):
+                if self.close_sim(sim, graph.out_edges(root_target, data=True)[0][2]['weight']):
+                # if (sim == graph.out_edges(root_target, data=True)[0][2]['weight']):
                     graph.add_edge(root_target, source, weight=sim, inv_weight=1.0-sim)
                     continue
                 # 2b) similarity is NOT the same
@@ -265,7 +231,8 @@ class HCluster():
                 root_source = self.find_root(graph, source)
                 
                 # 2a) similarity is the same (target)
-                if (sim == graph.out_edges(root_source, data=True)[0][2]['weight']):
+                if self.close_sim(sim, graph.out_edges(root_source, data=True)[0][2]['weight']):
+                #if (sim == graph.out_edges(root_source, data=True)[0][2]['weight']):
                     graph.add_edge(root_source, target, weight=sim, inv_weight=1.0-sim)
                     continue 
                 # 2b) similarity is NOT the same

@@ -2,38 +2,10 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <link type="text/css" rel="stylesheet" href="syslog_style.css"/>
     <style type="text/css">
 
-text {
-  font-size: 11px;
-  pointer-events: none;
-}
 
-text.parent {
-  fill: #1f77b4;
-}
-
-circle {
-  fill: #ccc;
-  stroke: #999;
-  pointer-events: all;
-}
-
-circle.parent {
-  fill: #1f77b4;
-  fill-opacity: .1;
-  stroke: steelblue;
-}
-
-circle.parent:hover {
-  stroke: #ff7f0e;
-  stroke-width: .5px;
-}
-
-circle.child {
-  pointer-events: none;
-}
 
     </style>
   </head>
@@ -54,7 +26,7 @@ var w = 1280,
 
 var pack = d3.layout.pack()
     .size([r, r])
-    .value(function(d) { return d.size; })
+    .value(function(d) { return 1;}) //d.size; })
 
 var vis = d3.select("body").insert("svg:svg", "h2")
     .attr("width", w)
@@ -85,7 +57,7 @@ d3.json("h_tree.json", function(data) {
       .attr("dy", ".35em")
       .attr("text-anchor", "middle")
       .style("opacity", function(d) { return d.r > 20 ? 1 : 0; })
-      .text(function(d) { return d.name; });
+      .text(function(d) { return d.label; });
 
   d3.select(window).on("click", function() { zoom(root); });
 });
