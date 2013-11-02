@@ -57,7 +57,7 @@ d3.json("h_tree.json", function(data) {
       .attr("dy", ".35em")
       .attr("text-anchor", "middle")
       .style("opacity", function(d) { return d.r > 20 ? 1 : 0; })
-      .text(function(d) { return d.label; });
+      .text(function(d) { return d.label.substring(0,6); });
 
   d3.select(window).on("click", function() { zoom(root); });
 });
