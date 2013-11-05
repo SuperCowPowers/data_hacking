@@ -61,7 +61,7 @@ dga/dga: 85.39% (228/267)
 </pre>
 ![confusion_matrix](/Users/briford/work/data_hacking/dga_detection/images/confusion_matrix.png)
 
-We can see that 'false positives' (legit domains classified as DGA) is quite small 0.62% which is critical in a large scale system where you don't want false 'alerts' going off for legitimate domains. 
+We can see that 'false positives' (legit domains classified as DGA) is quite small at 0.62%. This is critical in a large scale system where you don't want false alerts going off for legitimate domains. 
 
 Well that summarizes the results in a nutshell but the [DGA Notebook](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/dga_detection/DGA_Domain_Detection.ipynb) gives a thorough, in-depth treatment of the data, features, analysis and machine learning done for this exercise.
 
