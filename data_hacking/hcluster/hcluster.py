@@ -15,7 +15,7 @@ import networkx as nx
 import collections
 import matplotlib.pyplot as plt
 
-import data_hacking.lsh_sims
+import data_hacking.lsh_sims as lsh_sims
 
 class HCluster():
     ''' 

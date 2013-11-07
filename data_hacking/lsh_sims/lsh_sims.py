@@ -25,7 +25,7 @@
 '''
 
 import os
-import data_hacking.min_hash
+import data_hacking.min_hash as min_hash
 import pandas as pd
 
 class LSHSimilarities():
