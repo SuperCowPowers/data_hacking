@@ -27,11 +27,11 @@ Exercises:
 
 Running/Setup:
   
-  * Modify the PYTHONPATH environment var to point to data_hacking/data_hacking to pick up the packages
-  
-    OR 
-  
-  * Install the packages into your python site packages
+  * Some of the exercises use packages from the data_hacking repository, to install those packages into your python site packages: 
   <pre>
-     %> python setup.py install
+     %> sudo python setup.py install
+  </pre>
+  * To uninstall:
+  <pre>
+     %> sudo pip uninstall data_hacking
   </pre>
