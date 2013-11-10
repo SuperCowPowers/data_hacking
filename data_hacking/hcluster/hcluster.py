@@ -14,6 +14,7 @@ import optparse
 import networkx as nx
 import collections
 import matplotlib.pyplot as plt
+import pandas as pd
 
 import data_hacking.lsh_sims as lsh_sims
 
@@ -24,8 +25,32 @@ class HCluster():
             - Similarities -> Hierarchical Clustering (Tree)
     '''
 
-    def __init__(self):
+    def __init__(self, records):
         ''' Init for HCluster. '''
+
+        ''' Trying to support python list, pandas DataFrames and pandas Series. '''
+        if isinstance(records, list):
+            self._record_type = 'list'
+            self._get_row = lambda index: self._records[index]
+        elif isinstance(records, pd.DataFrame):
+            self._record_type = 'dataframe'
+            self._get_row = lambda index: [str(x) for x in self._records.iloc[index].values.tolist()]
+        elif isinstance(records, pd.Series):
+            if isinstance(records.iloc[0], list):
+                self._record_type = 'series'
+                self._get_row = lambda index: self._records.iloc[index]
+            else:
+                print 'A Series must be a series of lists'
+                print 'instead got a series of %s' % type(records.iloc[0])
+                exit(1)
+        else:
+            print 'Unknown records type for LSHSimilarities(): %s' % type(records)
+            exit(1)
+
+        # Store a handle to the records
+        self._records = records
+
+        # Other class ivars
         self.sim_method = None
         self.agg_sim = 0.0
 
@@ -36,15 +61,14 @@ class HCluster():
         '''
         self.sim_method = sim_function
 
-    def sims_to_hcluster(self, sim_list, node_attribute_list, labels=None, agg_sim=0.0):
+    def sims_to_hcluster(self, sim_list, labels=None, agg_sim=0.0):
         ''' 
             Use single-linkage hierarchical clustering to build up a tree
             of clusters from a similarity list.
                 - Similarities -> Hierarchical Clustering (Tree)
 
             Input: sim_list - a tuple (source, target, sim)
-                   node_attribute_list - list of attributes indexed by source/target
-                                         so for instance [[a,b,c], [a,b,d], ...]
+
             Output: Hierarchical Cluster (as a networkx digraph datatype)
         '''
         self.agg_sim = agg_sim
@@ -52,8 +76,12 @@ class HCluster():
         # Generate labels if we need to
         if labels is None:
             labels = []
-            for data in node_attribute_list:
-                labels.append(':'.join(data)) 
+            if self._record_type == 'list':
+                for record in self._records:
+                    labels.append(':'.join(record))
+            else:
+                for uuid in xrange(self._records.shape[0]):
+                    labels.append(':'.join(self._get_row(uuid)))
 
 
         # Sort the sim_list based on similarity, source, target
