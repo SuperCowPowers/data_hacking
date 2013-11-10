@@ -45,7 +45,7 @@ class LSHSimilarities():
             self._get_row = lambda index: self._records[index]
         elif isinstance(records, pd.DataFrame): 
             self._record_type = 'dataframe'
-            self._get_row = lambda index: [str(x) for x in self._records.iloc[index].values.tolist()]
+            self._get_row = lambda index: [x for x in self._records.iloc[index].values.tolist()]
         elif isinstance(records, pd.Series):
             if isinstance(records.iloc[0], list):
                 self._record_type = 'series'
@@ -69,14 +69,6 @@ class LSHSimilarities():
         else:
             self._min_hash = min_hash.MinHash(num_hashes=20, lsh_bands=5, lsh_rows=4, drop_duplicates=True)
 
-        # Add the records to the min_hash class
-        print 'Adding %d samples to minhash...' % (len(self._records))
-        if self._record_type == 'list':
-            for uuid, record in enumerate(self._records):
-                self._min_hash.add_instance(uuid, record)
-        else:
-            for uuid in xrange(self._records.shape[0]):
-                self._min_hash.add_instance(uuid, self._get_row(uuid))
 
     def batch_compute_similarities(self, distance_metric='jaccard', threshold = 0.5):
         ''' 
