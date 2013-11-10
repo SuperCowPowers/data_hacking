@@ -81,8 +81,8 @@ class MinHash():
             print "Min_hash.addinstance() : Attributes must be in a list!"
             print type(attribute_list)
             sys.exit(1)
-        if not all(isinstance(x,str) for x in attribute_list):
-            print "Min_hash.addinstance() : All attributes must be of str type!"
+        if not all(isinstance(x,str) or isinstance(x,unicode) for x in attribute_list):
+            print "Min_hash.addinstance() : All attributes must be of str or unicode type!"
             print attribute_list
             sys.exit(1)        
 
