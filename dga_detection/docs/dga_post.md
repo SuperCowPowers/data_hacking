@@ -28,29 +28,27 @@ The [DGA Notebook](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/
 - Alexa 100k top domains (we also show results for top 1 Million).
 - A mixture of ~3500 domains that were known to come from DGA sources.
 
-** Approach **
+** Summary of Approach and Results **
 
 - Data Ingestion, Cleanup and Understanding
-  - Show the power/flexibility of Pandas python module by reading in, processing and cleaning the input data with a couple lines of python.
-  - We compute both length and entropy and add those to our Pandas data frame.
-  - Demonstrate the nice integration of iPython/Pandas/Matplotlib by showing several plots of the resulting data (BoxPlots, histograms, scatter plots).
+  - We compute both length and entropy and add those to our Pandas data frame and demonstrate the nice integration of iPython/Pandas/Matplotlib.
+  <div><img src="/Users/briford/work/data_hacking/dga_detection/images/length_plot.png" alt="Drawing" style="width: 280px;"/><img src="/Users/briford/work/data_hacking/dga_detection/images/entropy_plot.png" alt="Drawing" style="width: 275px;"/></div>
+  <img src="/Users/briford/work/data_hacking/dga_detection/images/length_entropy.png" alt="Drawing" style="width: 600px;"/>
+
+- We demonstrate the use of scikit learn's CountVectorizer to compute NGrams on both the Alexa domains and on the english dictionary, those new features helped to increased feature differentiation (plots shown below).
+
+  <img src="/Users/briford/work/data_hacking/dga_detection/images/alexa_ngram_feature.png" alt="Drawing" style="width: 600px;"/>
+  <img src="/Users/briford/work/data_hacking/dga_detection/images/dict_ngram_feature.png" alt="Drawing" style="width: 600px;"/>
 
 - Utilize Scikit Learn Machine Learning Library
   - Random Forest: popular ensemble machine learning classifier
-  - Train/Classify: We demonstrate the classification results on feature vectors containing just the length and entropy. The results show that prediction performance is extremely poor given just those features.
-
-- Incorporate NGrams:
-  - We show the use of scikit learn's CountVectorizer to compute NGrams on both the Alexa domains and on the english dictionary.
-  - We perform some Numpy matrix operations to capture a count vector
+  - We perform some Numpy matrix operations to capture a set of NGram count vectors.
   - Those new features are added to data frame and feature matrix for scikit learn.
+  - Train/Classify: We demonstrate the classification results on our expanded feature vectors 
 
 ** Results **
 
 For an exercise where the focus was to demonstrate the utilization of iPython, Pandas, Scikit Learn and Matplotlib, the results were reasonably good. 
-
-We can plot our new NGram features to determine differentiation between classes:
-![alexa_grams_vs_length](/Users/briford/work/data_hacking/dga_detection/images/alexa_grams_vs_length.png)
-
 Given a feature matrix of length, entropy, alexa_ngrams, and dict_ngrams our classifier had a predictive performance on our holdout set of the following:
 <pre>
 Confusion Matrix Stats
@@ -59,7 +57,8 @@ legit/dga: 0.62% (42/6765)
 dga/legit: 14.61% (39/267)
 dga/dga: 85.39% (228/267)
 </pre>
-![confusion_matrix](/Users/briford/work/data_hacking/dga_detection/images/confusion_matrix.png)
+<div><img src="/Users/briford/work/data_hacking/dga_detection/images/confusion_matrix.png" alt="Drawing" style="width: 210px;"/>
+<img src="/Users/briford/work/data_hacking/dga_detection/images/misclassified.png" alt="Drawing" style="width: 440px;"/></div>
 
 We can see that 'false positives' (legit domains classified as DGA) is quite small at 0.62%. This is critical in a large scale system where you don't want false alerts going off for legitimate domains. 
 
