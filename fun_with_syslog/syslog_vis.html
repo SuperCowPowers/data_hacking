@@ -39,6 +39,12 @@ d3.json("h_tree.json", function(data) {
 
   var nodes = pack.nodes(root);
 
+  // This just flips x and y
+  nodes.map( function(n) {
+      _temp = n.y;
+      n.y = n.x;
+      n.x = _temp; } );
+
   vis.selectAll("circle")
       .data(nodes)
     .enter().append("svg:circle")
@@ -46,7 +52,9 @@ d3.json("h_tree.json", function(data) {
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .attr("r", function(d) { return d.r; })
-      .on("click", function(d) { return zoom(node == d ? root : d); });
+      .on("click", function(d) { return zoom(node == d ? root : d); })
+      .append("svg:title")
+      .text(function(d) { return d.label; });
 
   vis.selectAll("text")
       .data(nodes)
@@ -57,7 +65,7 @@ d3.json("h_tree.json", function(data) {
       .attr("dy", ".35em")
       .attr("text-anchor", "middle")
       .style("opacity", function(d) { return d.r > 20 ? 1 : 0; })
-      .text(function(d) { return d.label.substring(0,6); });
+      .text(function(d) { return d.label.substring(0,20); });
 
   d3.select(window).on("click", function() { zoom(root); });
 });
