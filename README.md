@@ -23,10 +23,17 @@ Exercises:
   * Hierarchical Clustering of Syslogs
     * GitHub Project
     * Notebook Viewer
-  * Exploration of data from Malware Domain List (coming soon)
+  * Exploration of data from Malware Domain List
+    * GitHub Project
+    * Notebook Viewer
 
 Running/Setup:
-  
+
+  * Required packages:
+    * Python
+      * iPython, Pandas, Matplotlib
+    * Brew
+      * GraphViz, FreeType
   * Some of the exercises use packages from the data_hacking repository, to install those packages into your python site packages: 
   <pre>
      %> sudo python setup.py install
