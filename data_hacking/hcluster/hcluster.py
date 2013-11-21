@@ -26,7 +26,9 @@ class HCluster():
     '''
 
     def __init__(self, records):
-        ''' Init for HCluster. '''
+        ''' Init for HCluster.  The records parameter can be either
+            a dataframe series or a python list of features.
+        '''
 
         ''' Trying to support python list, pandas DataFrames and pandas Series. '''
         if isinstance(records, list):
