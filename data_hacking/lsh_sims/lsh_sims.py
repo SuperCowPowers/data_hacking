@@ -24,7 +24,7 @@
             Output: Similarities - a tuple (source, target, sim)
 '''
 
-import os
+import os, sys
 import data_hacking.min_hash as min_hash
 import pandas as pd
 
@@ -53,10 +53,10 @@ class LSHSimilarities():
             else:
                 print 'A Series must be a series of lists'
                 print 'instead got a series of %s' % type(records.iloc[0])
-                exit(1)
+                sys.exit(1)
         else:
             print 'Unknown records type for LSHSimilarities(): %s' % type(records)
-            exit(1)
+            sys.exit(1)
 
         # Store a handle to the records
         self._records = records
