@@ -16,13 +16,13 @@ import collections
 from struct import unpack
 
 class MinHash():
-    ''' This class implements MinHash (en.wikipedia.org/wiki/Minhash) 
+    ''' This class implements MinHash (en.wikipedia.org/wiki/Minhash)
         for sparse datasets. It also does banded LSH 'Locality Sensitive Hashing'
         so that only candidates with a high probability of being similar are
         returned by getCandidatePairs().
-    '''    
+    '''
 
-    def __init__(self, num_hashes=40, lsh_bands=10, lsh_rows=4, load_models=None, drop_duplicates=False):
+    def __init__(self, num_hashes=40, lsh_bands=10, lsh_rows=4, load_models=None, drop_duplicates=False, verbose=False):
         ''' Init for MinHash '''
 
         # Minhash signatures, hashing and banding parameters
@@ -37,7 +37,7 @@ class MinHash():
         # Storage for candidate buckets
         def _min_hash_hash_bucket():
             ''' Defining a hash bucket 'callable' for the candidate buckets '''
-            return collections.defaultdict(list)        
+            return collections.defaultdict(list)
         self._candidate_buckets = collections.defaultdict(_min_hash_hash_bucket)
 
         # Set of All 2 All, Candidate Pairs
@@ -47,16 +47,25 @@ class MinHash():
         self._instances_hashes = set()
         self._drop_duplicates = drop_duplicates
 
+        # Verbose flag
+        self.verbose = verbose
+
         # Existing model load?
         if (load_models):
             # Salt has to be reloaded, everything else is optional
-            self._hash_salt = self._load_model_from_disk("min_hash_salt", "models")
-            if ("buckets" in load_models):
-                self._candidate_buckets = self._load_model_from_disk("min_hash_candidate_buckets", "models")
-            if ("pairs" in load_models):
-                self._all_candidate_pairs = self._load_model_from_disk("min_hash_all_candidate_pairs", "models")
-            if ("minhash" in load_models):
-                self._minhash_sigs = self._load_model_from_disk("min_hash_minhash_sigs", "models")                
+            self._hash_salt = self._load_model_from_disk('min_hash_salt', 'models')
+            if ('buckets' in load_models):
+                self._candidate_buckets = self._load_model_from_disk('min_hash_candidate_buckets', 'models')
+            if ('pairs' in load_models):
+                self._all_candidate_pairs = self._load_model_from_disk('min_hash_all_candidate_pairs', 'models')
+            if ('minhash' in load_models):
+                self._minhash_sigs = self._load_model_from_disk('min_hash_minhash_sigs', 'models')
+
+    def vprint(self, args):
+        if (self.verbose):
+            for a in args:
+                sys.stdout.write( a),
+            sys.stdout.write()
 
     def reset(self):
         ''' Reset for MinHash '''
@@ -64,7 +73,7 @@ class MinHash():
         # Reset Minhash signatures
         self._minhash_sigs = {}
 
-        # Rest Storage for candidate buckets      
+        # Rest Storage for candidate buckets
         self._candidate_buckets = collections.defaultdict(_min_hash_hash_bucket)
 
         # Reset All 2 All, Candidate Pairs
@@ -78,13 +87,13 @@ class MinHash():
 
         # Make sure the attributes are coming in the right way
         if not isinstance(attribute_list, list):
-            print "Min_hash.addinstance() : Attributes must be in a list!"
+            print 'Min_hash.addinstance() : Attributes must be in a list!'
             print type(attribute_list)
             sys.exit(1)
         if not all(isinstance(x,str) or isinstance(x,unicode) for x in attribute_list):
-            print "Min_hash.addinstance() : All attributes must be of str or unicode type!"
+            print 'Min_hash.addinstance() : All attributes must be of str or unicode type!'
             print attribute_list
-            sys.exit(1)        
+            sys.exit(1)
 
         # Drop duplicates?
         if (self._drop_duplicates):
@@ -107,7 +116,7 @@ class MinHash():
         return minhash_sig
 
     def candidate_query(self, attribute_list):
-        
+
         # Compute the min hash signature and build a candidate match list
         minhash_sig = self.compute_minhash_sig(attribute_list)
 
@@ -129,7 +138,7 @@ class MinHash():
     def compute_all_candidate_matches(self):
         ''' Compute band based candidate list for all instances in the model '''
 
-        print "\tComputing All to All Candidates Matches..."
+        self.vprint('\tComputing All to All Candidates Matches...')
         self._all_to_all_matches()
 
     def get_candidate_pairs(self):
@@ -139,16 +148,16 @@ class MinHash():
     def save_model_to_disk(self):
         ''' Save all the minhash internal models to disk '''
 
-        self._save_model_to_disk("min_hash_salt", self._hash_salt, "models")
-        self._save_model_to_disk("min_hash_candidate_buckets", self._candidate_buckets, "models")
-        self._save_model_to_disk("min_hash_all_candidate_pairs", self._all_candidate_pairs, "models")
-        self._save_model_to_disk("min_hash_minhash_sigs", self._minhash_sigs, "models")
+        self._save_model_to_disk('min_hash_salt', self._hash_salt, 'models')
+        self._save_model_to_disk('min_hash_candidate_buckets', self._candidate_buckets, 'models')
+        self._save_model_to_disk('min_hash_all_candidate_pairs', self._all_candidate_pairs, 'models')
+        self._save_model_to_disk('min_hash_minhash_sigs', self._minhash_sigs, 'models')
 
     # This function needs to be highly optimized
     # Compute min hash on a list of items
     def _minhash_slow(self, salt, v_list):
         ''' Compute a hash value for the list of values, the 'salt' is a random permutation factor '''
-        minhash = "ffffffffffffffffffffffffffffffff"
+        minhash = 'ffffffffffffffffffffffffffffffff'
         for value in v_list:
             h_value = hashlib.md5(value+salt).hexdigest()
             if (h_value < minhash):
@@ -159,7 +168,7 @@ class MinHash():
         ''' Compute a hash value for the list of values, the 'salt' is a random permutation factor '''
         minhash = sys.maxint
         for value in v_list:
-            h_value = unpack("<IIII", hashlib.md5(value+salt).digest())[0]
+            h_value = unpack('<IIII', hashlib.md5(value+salt).digest())[0]
             if (h_value < minhash):
                 minhash = h_value
         return minhash
@@ -187,14 +196,14 @@ class MinHash():
         ''' Getting the candidate matches for all instances in the model '''
 
         # Linear pass to collapse candidate pairs (the buckets will have repeats)
-        print "\t\tCollapsing Candidate Pairs..."
+        self.vprint('\t\tCollapsing Candidate Pairs...')
         for _key, subdict in self._candidate_buckets.iteritems():
             for __key, candidate_list in subdict.iteritems():
 
                 # Sanity check
                 if (len(candidate_list) > 1000):
-                    print "Hashing function issue, key: (%s,%s) has %d items in it" % (_key, __key, len(candidate_list))
-                    print "LIMITED IT to 1000"
+                    print 'Hashing function issue, key: (%s,%s) has %d items in it' % (_key, __key, len(candidate_list))
+                    print 'LIMITED IT to 1000'
                     candidate_list = candidate_list[:1000]
 
                 for source in candidate_list:
@@ -212,30 +221,30 @@ class MinHash():
         serialized_model = pickle.dumps(model, protocol=pickle.HIGHEST_PROTOCOL)
 
         # Model directory + model name
-        model_path = os.path.join(model_dir, name+".model")
+        model_path = os.path.join(model_dir, name+'.model')
 
         # Now store it to disk
-        print "Storing Serialized Model to Disk (%s:%.2fMeg)" % (name, len(serialized_model)/1024.0/1024.0)
-        open(model_path,"wb").write(serialized_model)
+        print 'Storing Serialized Model to Disk (%s:%.2fMeg)' % (name, len(serialized_model)/1024.0/1024.0)
+        open(model_path,'wb').write(serialized_model)
 
     def _load_model_from_disk(self, name, model_dir):
         ''' Load a particular model from disk '''
 
         # Model directory is relative to this file
-        model_path = os.path.join(model_dir, name+".model")
+        model_path = os.path.join(model_dir, name+'.model')
 
         # Put a try/except around the model load in case it fails
         try:
             model = pickle.loads(open(model_path,'rb').read())
         except:
-            print "Could not load model: %s from directory %s!" % (name, model_path)
+            print 'Could not load model: %s from directory %s!' % (name, model_path)
             sys.exit(1)
 
         return model
 
 # Simple test of the min_hash functionality
 def _test():
-    
+
     import pprint
 
     my_min = MinHash(num_hashes=40, lsh_bands=20, lsh_rows=2, drop_duplicates=True)
@@ -249,14 +258,14 @@ def _test():
     my_min.add_instance(8, ['u','s','t'])
     my_min.compute_all_candidate_matches()
     pairs = my_min.get_candidate_pairs()
-    
+
     print 'All candidate pairs'
     pprint.pprint(pairs)
-    
+
     print 'Query on [x,y,z,h]'
     matches = my_min.candidate_query(['x','y','z','h'])
     pprint.pprint(matches)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     _test()
