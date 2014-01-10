@@ -2,8 +2,10 @@
 
 from setuptools import setup
 
+from data_hacking import __version__
+
 setup(name='data_hacking',
-      version = '0.1',
+      version=__version__,
       author='Brian Wylie',
       author_email='bwylie@visiblerisk.com',
       description='Modules for Data Hacking project',
