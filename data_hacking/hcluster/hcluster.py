@@ -25,7 +25,7 @@ class HCluster():
             - Similarities -> Hierarchical Clustering (Tree)
     '''
 
-    def __init__(self, records):
+    def __init__(self, records, verbose=False):
         ''' Init for HCluster.  The records parameter can be either
             a dataframe series or a python list of features.
         '''
@@ -55,6 +55,13 @@ class HCluster():
         # Other class ivars
         self.sim_method = None
         self.agg_sim = 0.0
+        self.verbose = verbose
+
+    def vprint(self, args):
+        if (self.verbose):
+            for a in args:
+                sys.stdout.write( a),
+            sys.stdout.write()
 
     def set_sim_method(self, sim_function):
         '''
@@ -106,17 +113,17 @@ class HCluster():
 
             # Exemplar features for this component
             features = self.exemplar_features(graph, root)
-            print features
+            self.vprint(features)
             exemplars.append((root, features))
 
         # For each exemplar compute similarities to other examplars
         # Sort those similarities and add to hierarchical tree until
         # all components are wired together into one big tree
-        print "Computing similarity on %d exemplars" % (len(exemplars))
+        self.vprint('Computing similarity on %d exemplars' % (len(exemplars)))
         exemplar_sims = []
         exemplar_zero_sims = []
         joined_exemplars = set()
-        print "Created exemplar set (%d)" % (len(exemplars))
+        self.vprint('Created exemplar set (%d)" % (len(exemplars))')
         for node1, features1 in exemplars:
             for node2, features2 in exemplars:
                 if (node1 == node2):
@@ -131,12 +138,12 @@ class HCluster():
                 joined_exemplars.add(node1)
                 joined_exemplars.add(node2)
 
-        print "Sorting %d exemplar sim" % (len(exemplar_sims)+len(exemplar_zero_sims))
+        self.vprint('Sorting %d exemplar sim" % (len(exemplar_sims)+len(exemplar_zero_sims))')
         exemplar_sims.sort(key=lambda k:k, reverse=True)
         exemplar_zero_sims.sort(key=lambda k:k, reverse=True)
 
         # Now wire them up
-        print "Wiring up %d exemplar sims" % (len(exemplar_sims))
+        self.vprint('Wiring up %d exemplar sims' % (len(exemplar_sims)))
         for sim, source, target in exemplar_sims:
             root_source = self.find_root(graph, source)
             root_target = self.find_root(graph, target)
@@ -309,7 +316,7 @@ class HCluster():
     def plot_htree(self, h_tree, prog='neato', node_size=1500, figsize=(12,6)):
 
         # Now split graph up into different labels
-        print "Adding labels to graph..."
+        self.vprint('Adding labels to graph...')
         labels = {}
         for node in h_tree.nodes(data=True):
             labels[node[0]] = node[1]['label']
