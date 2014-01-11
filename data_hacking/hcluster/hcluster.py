@@ -371,10 +371,10 @@ def _test():
     # Compute a hierarchical clustering from the similarity list
     h_clustering = HCluster(my_data)
     h_clustering.set_sim_method(lsh.jaccard_sim)
-    h_graph, root = h_clustering.sims_to_hcluster(sims)
+    h_tree, root = h_clustering.sims_to_hcluster(sims)
 
     # Plot the hierarchical tree
-    h_clustering.plot_htree(h_graph)
+    h_clustering.plot_htree(h_tree)
 
 
 if __name__ == "__main__":
