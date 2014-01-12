@@ -285,7 +285,8 @@ class HCluster():
             root = G.predecessors(root)[0]
         return root
 
-    def find_parent(self, G, node):
+    def find_parent(self, G, node, root=True):
+        if root: return self.find_root(G, node)      # Temp hack for testing
         return G.predecessors(node)[0]
 
     def common_features(self, G, root):
