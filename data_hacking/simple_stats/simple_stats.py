@@ -104,7 +104,8 @@ class GTest():
         for key_a, counter in _cont_table.iteritems():
             score_heap = FixedHeap(matches)
             for key_b, count in counter.iteritems():
-                score = self._g_test_score(count, total_counts_a[key_a]*total_counts_b[key_b])
+                expected_count = total_counts_a[key_a]*total_counts_b[key_b]
+                score = self._g_test_score(count, expected_count)
                 score_heap.push((score, count, key_b))
 
             # We want to convert the sorted list into an ordered dictionary (for dataframe later)
@@ -155,6 +156,7 @@ def _test():
     names, match_list, df = g_test.highest_gtest_scores(dataframe['name'], dataframe['status'], N=5)
     print '\n<<< Names with highest correlation to status >>>'
     pprint.pprint(zip(names, match_list))
+    print df
 
 if __name__ == "__main__":
     _test()
