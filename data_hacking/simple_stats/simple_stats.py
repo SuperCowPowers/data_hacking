@@ -81,8 +81,8 @@ class GTest():
         #           this should be done, she is SO cute! (and also super smart of course :)
         #           http://www.youtube.com/watch?v=0nmxFpNBFIY
         total_counts_a = series_a.value_counts()
-        num_categories_b = series_b.unique().size
-        expected_count_a = total_counts_a / float(num_categories_b)
+        total_count = float(sum(series_b.value_counts()))
+        total_counts_b = series_b.value_counts() / total_count
 
         # Count up all the times that a category from series_a
         # matches up with a category from series_b. This is
@@ -104,7 +104,7 @@ class GTest():
         for key_a, counter in _cont_table.iteritems():
             score_heap = FixedHeap(matches)
             for key_b, count in counter.iteritems():
-                score = self._g_test_score(count, expected_count_a[key_a])
+                score = self._g_test_score(count, total_counts_a[key_a]*total_counts_b[key_b])
                 score_heap.push((score, count, key_b))
 
             # We want to convert the sorted list into an ordered dictionary (for dataframe later)
@@ -142,34 +142,19 @@ def _test():
 
     import os
     import pprint
+    import ast
 
+    # Open a dataset (relative path)
     cwd = os.getcwd()
-    file_path = os.path.join(cwd, 'data/mdl_full.csv')
+    file_path = os.path.join(cwd, 'data/test_data.csv')
+    dataframe = pd.read_csv(file_path)
+    dataframe.head()
 
-    # Note: when the data was pulled it didn't have column names, so poking around
-    # on the website we found the column headers referenced so we're explicitly
-    # specifying them to the CSV reader:
-    #    date,domain,ip,reverse,description,registrant,asn,inactive,country
-    dataframe = pd.read_csv(file_path, names=['date','domain','ip','reverse','description',
-                                             'registrant','asn','inactive','country'], header=None)
-
-    # For this use case we're going to remove any rows that have a '-' in the data
-    # by replacing '-' with NaN and then running dropna() again
-    dataframe = dataframe.replace('-', np.nan)
-    dataframe = dataframe.dropna()
-
-    # We noticed that many values just differed by captilization (this is common)
-    dataframe = dataframe.applymap(lambda x: x.strip().lower() if isinstance(x,str) else x)
-
-    # Exploits with highest correlation to ASNs
+    # Looking for correlations between sql names and status
     g_test = GTest()
-    exploits, match_list, df = g_test.highest_gtest_scores(dataframe['description'], dataframe['asn'], N=5, matches=10)
-    print '\n<<< Exploits with highest correlation to ASNs >>>'
-    pprint.pprint(zip(exploits, match_list))
-
-    exploits, match_list, df = g_test.highest_gtest_scores(dataframe['description'], dataframe['asn'], N=10, matches=10, reverse=True, min_volume=500)
-    print '\n<<< Exploits with lowest correlation to ASNs >>>'
-    pprint.pprint(zip(exploits, match_list))
+    names, match_list, df = g_test.highest_gtest_scores(dataframe['name'], dataframe['status'], N=5)
+    print '\n<<< Names with highest correlation to status >>>'
+    pprint.pprint(zip(names, match_list))
 
 if __name__ == "__main__":
     _test()
