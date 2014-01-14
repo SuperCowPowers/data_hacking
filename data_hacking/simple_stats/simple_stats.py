@@ -51,25 +51,20 @@ class GTest():
     def __init__(self):
         ''' Init for GTest '''
 
-    def highest_gtest_scores(self, series_a, series_b, N=10, matches=10, reverse=False, min_volume=None):
+    def highest_gtest_scores(self, series_a, series_b, N=10, matches=10, reverse=False, min_volume=0):
         '''
             Inputs:
                     series_a, series_b: both should contain categorical data values (countries, protocols, etc).
                     N: How many of the top N keys in series_a should be returned.
                     matches: How many matches for each key should be returned.
-                    reverse: Reverse sort, normal sort is lowest to highest, reverse is opposite
-                    min_volume: For some data you only want to see values with resonable volume.
+                    reverse: Reverse sort, normal sort is highest g-score to lowest, reverse is opposite
+                    min_volume: For some data you only want to see values with reasonable volume.
 
             Output:
                     There are 3 outputs,
-                    1) a_keys: A sorted list of keys from series_a
-                    2) match_list: A matched list of dictionaries of the form {series_b_key: count}
-                       the count is the number of times the a_key was coincident with the b_key.
-                    3) df: A dataframe with keys from series_a as the index, series_b_keys as the
-                       columns, and the counts as the values.
-
-                    Note: Just including the max g-score in the output right now as the g-score
-                    without context is kinda meaningless.
+                    - contingency table (raw counts)
+                    - conditional distribution (row proportions)
+                    - g_scores + everything in the first two outputs
         '''
 
         # Might Need Improvement:
@@ -77,59 +72,53 @@ class GTest():
         #     Which in this case means that series_a's categories will be equally
         #     distributed among series_b's categories.
         #
-        #     Note: I might need some private lessons from Alison Gibbs on exactly how
+        #     Note: I might need some 'private' lessons from Alison Gibbs on exactly how
         #           this should be done, she is SO cute! (and also super smart of course :)
         #           http://www.youtube.com/watch?v=0nmxFpNBFIY
-        total_counts_a = series_a.value_counts()
-        total_count = float(sum(series_b.value_counts()))
-        total_counts_b = series_b.value_counts() / total_count
+        mar_dist_a = series_a.value_counts().astype(float)  # Marginal distibution of A
+        mar_dist_b = series_b.value_counts().astype(float)  # Marginal distibution of B
+        total_count = float(sum(mar_dist_a))  # Both mar_dist_a/b will sum up to the same thing
+
+        # Filter out anything less than the minimum volume parameter.
+        # Kinda cheesy but handy to weed out low volume counts.
+        mar_dist_a = mar_dist_a[mar_dist_a > min_volume]
 
         # Count up all the times that a category from series_a
         # matches up with a category from series_b. This is
         # basically a gigantic contingency table
-        _cont_table = collections.defaultdict(lambda : collections.Counter())
+        cont_table = collections.defaultdict(lambda : collections.Counter())
         for val_a, val_b in zip(series_a.values, series_b.values):
+            cont_table[val_a][val_b] += 1
 
-            # Is there a minimum volume parameter
-            if (not min_volume or total_counts_a[val_a] > min_volume):
-                _cont_table[val_a][val_b] += 1
+        # Create a dataframe
+        # A dataframe with keys from series_a as the index, series_b_keys
+        # as the columns and the counts as the values.
+        dataframe = pd.DataFrame(cont_table.values(), index=cont_table.keys())
+        dataframe.fillna(0, inplace=True)
 
-        # Now that we have a contingency table we can compare
-        # the counts against the expected counts given our
-        # null hypothesis that each category should have a
-        # uniform distribution across all other categories.
-        a_b_scores = []
+        # Add a column for the marginal distribution of A
+        dataframe['total'] = mar_dist_a
 
-        # Compute g-test scores
-        for key_a, counter in _cont_table.iteritems():
-            score_heap = FixedHeap(matches)
-            for key_b, count in counter.iteritems():
-                expected_count = total_counts_a[key_a]*total_counts_b[key_b]
-                score = self._g_test_score(count, expected_count)
-                score_heap.push((score, count, key_b))
+        # For each column (except total) compute conditional distribution (row proportions)
+        columns = dataframe.columns.tolist()
+        columns.remove('total')
+        dataframe_cd = pd.DataFrame.copy(dataframe)
+        for column in columns:
+            dataframe_cd[column] = dataframe_cd[column] / dataframe_cd['total']
 
-            # We want to convert the sorted list into an ordered dictionary (for dataframe later)
-            od = collections.OrderedDict([(item[2], item[1]) for item in score_heap.sorted()])
+        # Now build the g-scores dataframe
+        # Fixme: Probably a better/faster way to do this (sleepy right now)
+        dataframe_g = pd.DataFrame.copy(dataframe)
+        for column in columns:
+            dataframe_g[column+'_cd'] = dataframe_cd[column]
+            dataframe_g[column+'_exp'] = mar_dist_a * mar_dist_b[column] / total_count
+            dataframe_g[column+'_g'] = [self.g_test_score(count, exp) for count, exp in zip(dataframe_g[column], dataframe_g[column+'_exp'])]
 
-            # Now add the ordered dict to the meta list
-            a_b_scores.append({'key':key_a, 'max_g': score_heap.max()[0], 'matches': od})
 
-        # Sort the list of keys based on their highest g-score
-        a_b_scores.sort(key=lambda k:k['max_g'], reverse=True)
+        # Return the 3 dataframes
+        return dataframe, dataframe_cd, dataframe_g
 
-        # Only pulling just the information we need before doing the output transformations
-        if (reverse):
-            pre_output = a_b_scores[-N:]
-        else:
-            pre_output = a_b_scores[:N]
-
-        # Transform the data into the proper output forms
-        a_keys = [item['key'] for item in pre_output]
-        match_list = [item['matches'] for item in pre_output]
-        df = pd.DataFrame(match_list, index=a_keys)
-        return a_keys, match_list, df
-
-    def _g_test_score(self, count, expected):
+    def g_test_score(self, count, expected):
         #return count/expected
         ''' G Test Score for likelihood ratio stats '''
         if (count == 0):
