@@ -1,0 +1,1003 @@
+ALTER SYSTEM FLUSH SHARED_POOL
+ALTER TABLE metadatacollectionschema.altidcollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.andsactivity OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.andsparty OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.andsservice OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.contributorcollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.custodiancollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.dataformatscollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.fundingcollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.guestusersgroup OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.metadatacollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.metadatamedia OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.microscopecollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.portalimportdetails OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.projectscollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.publishercollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.relatedurlscollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.subjectforcollection OWNER TO omerouser
+ALTER TABLE metadatacollectionschema.subjectseoccollection OWNER TO omerouser
+ALTER TABLE products ADD CONSTRAINT pk_products PRIMARY KEY (id) CREATE TABLE patches ( id int PRIMARY KEY, patch int, product int FOREIGN KEY REFERENCES products(id), release date )
+ALTER TABLE products ADD CONSTRAINT u_product_version UNIQUE (product, version)
+ALTER USER username identified by new_password 
+ANALYZE
+ANALYZE lockdemo
+ANALYZE pg_language
+ANALYZE sample
+ANALYZE sample1
+ANALYZE sample2
+BEGIN OPEN curs
+BEGIN TRANSACTION
+BEGIN WORK
+BEGIN sqlsetname := 'MY_STS_WORKLOAD'
+CALL RAND(0)
+CLOSE curs
+CLUSTER lockdemo USING i_lockdemo
+COMMIT
+CONNECT /AS SYSDBA
+CREATE FUNCTION sylph.add_anon_user(char, char, char) RETURNS BIGINT AS ' INSERT INTO sylph.users(name, is_anonymous, pass_hash, web_site) VALUES ($1, true, $2, $3)
+CREATE FUNCTION sylph.add_article(char, char, char) RETURNS BIGINT AS ' SELECT sylph.add_post(''article'', $1, false, $2, $3)
+CREATE FUNCTION sylph.add_comment(integer, char, char) RETURNS BIGINT AS ' SELECT sylph.add_post(''comment'', $2, true, ''comment'', $3)
+CREATE FUNCTION sylph.add_link(char, char, char) RETURNS BIGINT AS ' SELECT sylph.add_post(''link'', $1, true, $2, $3)
+CREATE FUNCTION sylph.add_news(char, char, char) RETURNS BIGINT AS ' SELECT sylph.add_post(''news'', $1, false, $2, $3)
+CREATE FUNCTION sylph.add_post(char, char, boolean, char, char) RETURNS BIGINT AS ' INSERT INTO sylph.posts(type_id,user_id,is_visible,title,content) VALUES ( (SELECT id FROM sylph.post_types WHERE name = $1), (SELECT id FROM sylph.users WHERE name = $2), $3, $4, $5)
+CREATE FUNCTION sylph.add_software(char, char, char) RETURNS BIGINT AS ' SELECT sylph.add_post(''software'', $1, true, $2, $3)
+CREATE FUNCTION sylph.add_user(char, char, char, char, char) RETURNS BIGINT AS ' INSERT INTO sylph.users(name, is_anonymous, pass_hash, full_name, email, web_site) VALUES ($1, false, $2, $3, $4, $5)
+CREATE FUNCTION sylph.add_version(char, char) RETURNS BIGINT AS ' INSERT INTO versions(post_id, name) VALUES ( (SELECT id FROM sylph.posts WHERE type_id = (SELECT id FROM sylph.post_types WHERE name = ''software'') AND is_visible = true AND title = $1), $2 )
+CREATE GROUP sylph_web
+CREATE INDEX IDX_TEST_TYPE ON TEST(TYPE)
+CREATE INDEX IDX_TEST_TYPE_VALUE ON TEST(TYPE, VALUE)
+CREATE INDEX IDX_TEST_VALUE ON TEST(VALUE)
+CREATE INDEX IDX_TEST_VALUE_D ON TEST(VALUE DESC)
+CREATE INDEX TEST_DATA ON TEST(DATA)
+CREATE INDEX aadv_uwk_idx_01 ON user_workload (module)
+CREATE INDEX aadv_uwk_idx_02 ON user_workload (username)
+CREATE INDEX i_sample1 on sample1 (id)
+CREATE INDEX i_sample2 on sample2 (id)
+CREATE INDEX in_comments_comment ON sylph.comments(comment_id)
+CREATE INDEX in_comments_post ON sylph.comments(post_id)
+CREATE INDEX in_post_tags_post ON sylph.post_tags(post_id)
+CREATE INDEX in_post_tags_tag ON sylph.post_tags(tag_id)
+CREATE INDEX in_posts_post_is_visible ON sylph.posts(is_visible)
+CREATE INDEX in_posts_post_type ON sylph.posts(type_id)
+CREATE INDEX in_posts_post_user ON sylph.posts(user_id)
+CREATE INDEX in_users_is_anonymous ON sylph.users(is_anonymous)
+CREATE INDEX in_versions_post ON sylph.versions(post_id)
+CREATE INDEX instructor_ix_fname_lname ON Instructor(fname, lname)
+CREATE OR REPLACE FUNCTION lookup_letter(text) RETURNS SETOF text AS $$ BEGIN RETURN QUERY EXECUTE ' EXPLAIN SELECT letter FROM sample WHERE letter = ''' || $1 || ''''
+CREATE OR REPLACE PROCEDURE show_recm (in_task_name IN VARCHAR2) IS CURSOR curs IS SELECT DISTINCT action_id, command, attr1, attr2, attr3, attr4 FROM user_advisor_actions WHERE task_name = in_task_name ORDER BY action_id
+CREATE RULE r_lockdemo AS ON INSERT TO lockdemo DO INSTEAD NOTHING
+CREATE SCHEMA metadataCollectionSchema
+CREATE SCHEMA sylph
+CREATE TABLE #T1 (SNO char(6), Shipping smallint CONSTRAINT PK#T1 PRIMARY KEY (SNO))
+CREATE TABLE #T2 (SNO char(6), Used smallint CONSTRAINT PK#T2 PRIMARY KEY (SNO))
+CREATE TABLE E(ENO char(2), EName varchar(8), BossENO char(2), CONSTRAINT PKE PRIMARY KEY (ENO), CONSTRAINT FKE FOREIGN KEY (BossENO) REFERENCES E)
+CREATE TABLE Instructor ( username VARCHAR(8), fname VARCHAR(50), lname VARCHAR(50), started_on CHAR(10), PRIMARY KEY (username) )
+CREATE TABLE TEST(ID INT PRIMARY KEY)
+CREATE TABLE TEST(ID INT PRIMARY KEY, DATA INT)
+CREATE TABLE TEST(ID INT PRIMARY KEY, TYPE INT)
+CREATE TABLE TEST(ID INT PRIMARY KEY, TYPE INT, VALUE DECIMAL(100, 2))
+CREATE TABLE TEST(ID INT PRIMARY KEY, VALUE DECIMAL(100, 2))
+CREATE TABLE Teaches ( username VARCHAR(8), dept VARCHAR(6), number INTEGER, PRIMARY KEY (username, dept, number), FOREIGN KEY (username) REFERENCES Instructor(username), FOREIGN KEY (dept, number) REFERENCES Class(dept, number) )
+CREATE TABLE lockdemo (col int)
+CREATE TABLE metadatacollectionschema.altidcollection ( internalidcol numeric, idtypecol text, idcol text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.andsactivity ( activity text, activitycode text, activityid bigint NOT NULL, CONSTRAINT andsactivity_pkey PRIMARY KEY (activityid) ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.andsparty ( partycode text, party text, partyid bigint NOT NULL, CONSTRAINT andsparty_pkey PRIMARY KEY (partyid) ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.andsservice ( servicecode text, service text, serviceid bigint NOT NULL, CONSTRAINT andsservice_pkey PRIMARY KEY (serviceid) ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.contributorcollection ( internalidcol numeric, individualcontributorcol text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.custodiancollection ( internalidcol numeric, custodian text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.dataformatscollection ( internalidcol numeric, extcol character varying(10) ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.fundingcollection ( internalidcol numeric, fundingsourceproj text, fundingsourceidproj text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.guestusersgroup ( groupid numeric, guestlogin text, guestloginid numeric, guestloginpass text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.metadatacollection ( internalidcol numeric NOT NULL, namecol text, registrycol character varying(125), descriptioncol text, typecol character varying(125), custodiancol text, coveragecol text , langcol character varying(25) , resourcetypecol character varying(125), projectcol text, projectdescol text, publishstatus boolean DEFAULT false, CONSTRAINT metadatacollection_pkey PRIMARY KEY (internalidcol) ) WITH (OIDS=FALSE)
+CREATE TABLE metadatacollectionschema.metadatamedia ( omeroid integer NOT NULL, internalidcol numeric, namecollection text, investigationdesc text, snumber text, researchername text, campusorlocation text, species text, stains text, dyes text, tissueenvironment text, tissuetype text, publishstatus boolean NOT NULL DEFAULT false, CONSTRAINT metadatamedia_pkey PRIMARY KEY (omeroid) ) WITH (OIDS=FALSE)
+CREATE TABLE metadatacollectionschema.microscopecollection ( internalidcol numeric, microscope text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.portalimportdetails ( jobid bigint NOT NULL, jobstatus text, filecountforuser integer, files text, import_description text, uid text, fullname text, collid text, camporloc text, species text, stains text, dyes text, tenv text, ttype text, num_files integer, CONSTRAINT portalimportdetails_pkey PRIMARY KEY (jobid) ) WITH (OIDS=FALSE)
+CREATE TABLE metadatacollectionschema.projectscollection ( internalidcol numeric, project text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.publishercollection ( internalidcol numeric, publishercol text, publisherdesc text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.relatedurlscollection ( internalidcol numeric, relatedurlscol text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.subjectforcollection ( internalidcol numeric, forcol text ) WITH (OIDS=TRUE)
+CREATE TABLE metadatacollectionschema.subjectseoccollection ( internalidcol numeric, seoccol text ) WITH (OIDS=TRUE)
+CREATE TABLE patches ( id int NOT NULL, product_id int, patch int NOT NULL, release date, PRIMARY KEY (id), CONSTRAINT fk_product_patches FOREIGN KEY (id) REFERENCES products(id) )
+CREATE TABLE products ( id int, product varchar(30), type varchar(30), version int, release date ) CREATE TABLE products ( id int, product varchar(30), type varchar(30), version int, release date )
+CREATE TABLE sylph.banned_ips ( id SERIAL PRIMARY KEY, ts_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ip VARCHAR(16) UNIQUE NOT NULL )
+CREATE TABLE sylph.banned_terms ( id SERIAL PRIMARY KEY, ts_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, content TEXT UNIQUE NOT NULL )
+CREATE TABLE sylph.comments ( post_id INTEGER NOT NULL CONSTRAINT fk_comments_post REFERENCES sylph.posts(id) ON UPDATE CASCADE ON DELETE CASCADE, comment_id INTEGER NOT NULL CONSTRAINT fk_comments_comment REFERENCES sylph.posts(id) ON UPDATE CASCADE ON DELETE CASCADE )
+CREATE TABLE sylph.post_tags ( post_id INTEGER NOT NULL CONSTRAINT fk_post_tags_post REFERENCES sylph.posts(id) ON UPDATE CASCADE ON DELETE CASCADE, tag_id INTEGER NOT NULL CONSTRAINT fk_post_tags_tag REFERENCES sylph.tags(id) ON UPDATE CASCADE ON DELETE CASCADE )
+CREATE TABLE sylph.post_types ( id SERIAL PRIMARY KEY, name VARCHAR(16) UNIQUE NOT NULL )
+CREATE TABLE sylph.posts ( id SERIAL PRIMARY KEY, type_id INTEGER NOT NULL CONSTRAINT fk_posts_post_type REFERENCES sylph.post_types(id) ON UPDATE CASCADE ON DELETE CASCADE, user_id INTEGER NOT NULL CONSTRAINT fk_posts_user REFERENCES sylph.users(id) ON UPDATE CASCADE ON DELETE CASCADE, -- timestamps ts_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ts_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- flags is_visible BOOLEAN NOT NULL DEFAULT false, is_closed BOOLEAN NOT NULL DEFAULT false, -- content title VARCHAR(100) NOT NULL DEFAULT '', content TEXT NOT NULL DEFAULT '' )
+CREATE TABLE sylph.tags ( id SERIAL PRIMARY KEY, name VARCHAR(64) NOT NULL, ts_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP )
+CREATE TABLE sylph.users ( id SERIAL PRIMARY KEY, -- timestamps ts_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, ts_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, name VARCHAR(32) UNIQUE NOT NULL, -- flags is_anonymous BOOLEAN NOT NULL DEFAULT true, is_admin BOOLEAN NOT NULL DEFAULT false, is_locked BOOLEAN NOT NULL DEFAULT false, -- attributes pass_hash VARCHAR(64) NOT NULL DEFAULT '', full_name TEXT NOT NULL DEFAULT '', email TEXT NOT NULL DEFAULT '', web_site TEXT NOT NULL DEFAULT '' )
+CREATE TABLE sylph.versions ( id SERIAL PRIMARY KEY, post_id INTEGER NOT NULL CONSTRAINT fk_post_tags_post REFERENCES sylph.posts(id) ON UPDATE CASCADE ON DELETE CASCADE, -- basic attributes name VARCHAR(32) NOT NULL, ts_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- flags is_visible BOOLEAN NOT NULL DEFAULT true, has_rubygem BOOLEAN NOT NULL DEFAULT false, -- urls url_download TEXT NOT NULL DEFAULT '', url_signature TEXT NOT NULL DEFAULT '', url_changelog TEXT NOT NULL DEFAULT '' )
+CREATE TABLE temp (JobId BIGINT NOT NULL, JobTDate BIGINT, ClientId BIGINT, Level CHAR, StartTime TEXT, VolumeName TEXT, StartFile BIGINT, VolSessionId BIGINT, VolSessionTime BIGINT )
+CREATE TABLE temp2 (JobId BIGINT NOT NULL, StartTime TEXT, VolumeName TEXT, Level CHAR, StartFile BIGINT, VolSessionId BIGINT, VolSessionTime BIGINT)
+CREATE TEMPORARY TABLE sample (letter, junk) AS SELECT substring(relname, 1, 1), repeat('x', 250) FROM pg_class ORDER BY random()
+CREATE TEMPORARY TABLE sample1 (id, junk) AS SELECT oid, repeat('x', 250) FROM pg_proc ORDER BY random()
+CREATE UNIQUE INDEX i_lockdemo on lockdemo(col)
+CREATE USER CALVIN IDENTIFIED BY HOBBES;
+CREATE VIEW V1(SNO,Shipping) AS SELECT SNO, SUM(QTY) AS Shipping FROM SP GROUP BY SNO
+CREATE VIEW lock_stat_view AS SELECT pg_stat_activity.procpid AS pid, current_query, waiting, vxid, lock_type, lock_mode, granted, xid_lock FROM lockview JOIN pg_stat_activity ON (lockview.pid = pg_stat_activity.procpid)
+CREATE VIEW lockinfo_hierarchy AS WITH RECURSIVE lockinfo1 AS ( SELECT pid, vxid, granted, xid_lock, lock_type, relname, page, tuple FROM lockview WHERE xid_lock IS NOT NULL AND relname IS NULL AND granted UNION ALL SELECT lockview.pid, lockview.vxid, lockview.granted, lockview.xid_lock, lockview.lock_type, lockview.relname, lockview.page, lockview.tuple FROM lockinfo1 JOIN lockview ON (lockinfo1.xid_lock = lockview.xid_lock) WHERE lockview.xid_lock IS NOT NULL AND lockview.relname IS NULL AND NOT lockview.granted AND lockinfo1.granted), lockinfo2 AS ( SELECT pid, vxid, granted, xid_lock, lock_type, relname, page, tuple FROM lockview WHERE lock_type = 'tuple' AND granted UNION ALL SELECT lockview.pid, lockview.vxid, lockview.granted, lockview.xid_lock, lockview.lock_type, lockview.relname, lockview.page, lockview.tuple FROM lockinfo2 JOIN lockview ON ( lockinfo2.lock_type = lockview.lock_type AND lockinfo2.relname = lockview.relname AND lockinfo2.page = lockview.page AND lockinfo2.tuple = lockview.tuple) WHERE lockview.lock_type = 'tuple' AND NOT lockview.granted AND lockinfo2.granted ) SELECT * FROM lockinfo1 UNION ALL SELECT * FROM lockinfo2
+CREATE VIEW lockview AS SELECT pid, virtualtransaction AS vxid, locktype AS lock_type, mode AS lock_mode, granted, CASE WHEN virtualxid IS NOT NULL AND transactionid IS NOT NULL THEN virtualxid || ' ' || transactionid WHEN virtualxid::text IS NOT NULL THEN virtualxid ELSE transactionid::text END AS xid_lock, relname, page, tuple, classid, objid, objsubid FROM pg_locks LEFT OUTER JOIN pg_class ON (pg_locks.relation = pg_class.oid) WHERE -- do not show our view's locks pid != pg_backend_pid() AND -- no need to show self-vxid locks virtualtransaction IS DISTINCT FROM virtualxid ORDER BY 1, 2, 5 DESC, 6, 3, 4, 7
+CREATE VIEW lockview1 AS SELECT pid, vxid, lock_type, lock_mode, granted, xid_lock, relname FROM lockview ORDER BY 1, 2, 5 DESC, 6, 3, 4, 7
+CREATE VIEW lockview2 AS SELECT pid, vxid, lock_type, page, tuple, classid, objid, objsubid FROM lockview ORDER BY 1, 2, granted DESC, vxid, xid_lock::text, 3, 4, 5, 6, 7, 8
+CREATE VIEW sylph.articles AS SELECT id, user_id, title, content, (SELECT COUNT(*) FROM sylph.comments WHERE post_id = p.id) AS num_comments FROM sylph.posts p WHERE type_id = (SELECT id FROM sylph.post_types WHERE name = 'article') AND is_visible = true
+CREATE VIEW sylph.links AS SELECT id, content AS link, title FROM sylph.posts WHERE type_id = (SELECT id FROM sylph.post_types WHERE name = 'link') AND is_visible = true
+CREATE VIEW sylph.news AS SELECT id, user_id, title, content, (SELECT COUNT(*) FROM sylph.comments WHERE post_id = p.id) AS num_comments FROM sylph.posts p WHERE type_id = (SELECT id FROM sylph.post_types WHERE name = 'news') AND is_visible = true
+CREATE VIEW sylph.software AS SELECT id, user_id, title, content, (SELECT COUNT(*) FROM sylph.comments WHERE post_id = p.id) AS num_comments FROM sylph.posts p WHERE type_id = (SELECT id FROM sylph.post_types WHERE name = 'article') AND is_visible = true
+DBMS_OUTPUT.PUT_LINE('----------------------------------------')
+DBMS_OUTPUT.PUT_LINE('=========================================')
+DBMS_OUTPUT.PUT_LINE('=========END RECOMMENDATIONS============')
+DBMS_OUTPUT.PUT_LINE('Action ID: ' || v_action)
+DBMS_OUTPUT.PUT_LINE('Attr1 (name) : ' || SUBSTR(v_attr1,1,30))
+DBMS_OUTPUT.PUT_LINE('Attr2 (tablespace): ' || SUBSTR(v_attr2,1,30))
+DBMS_OUTPUT.PUT_LINE('Attr3 : ' || SUBSTR(v_attr3,1,30))
+DBMS_OUTPUT.PUT_LINE('Attr4 : ' || v_attr4)
+DBMS_OUTPUT.PUT_LINE('Attr5 : ' || v_attr5)
+DBMS_OUTPUT.PUT_LINE('Command : ' || v_command)
+DBMS_OUTPUT.PUT_LINE('Task_name = ' || in_task_name)
+DECLARE @SNO char(6)
+DECLARE sqlsetname VARCHAR2(30)
+DELETE FROM lockdemo
+DELETE FROM lockdemo WHERE col = 1
+DROP TABLE IF EXISTS lockdemo
+DROP TABLE temp
+DROP TABLE temp2
+DROP VIEW IF EXISTS lock_stat_view CASCADE
+DROP VIEW IF EXISTS lockview CASCADE
+DROP VIEW IF EXISTS lockview1 CASCADE
+DROP VIEW IF EXISTS lockview2 CASCADE
+END
+END $$ LANGUAGE plpgsql
+END LOOP
+END show_recm
+EXECUTE :create_mv_ddl := ' - CREATE MATERIALIZED VIEW cust_mv - ENABLE QUERY REWRITE AS - SELECT s.prod_id, s.cust_id, COUNT(*) cnt, SUM(s.amount_sold) sum_amount - FROM sales s, customers cs, countries cn - WHERE s.cust_id = cs.cust_id AND cs.country_id = cn.country_id - AND cn.country_name IN (''USA'',''Canada'') - GROUP BY s.prod_id, s.cust_id - UNION - SELECT s.prod_id, s.cust_id, COUNT(*) cnt, SUM(s.amount_sold) sum_amount - FROM sales s, customers cs - WHERE s.cust_id = cs.cust_id AND s.cust_id IN (1005,1010,1012) - GROUP BY s.prod_id, s.cust_id'
+EXECUTE :create_mv_ddl := ' - CREATE MATERIALIZED VIEW cust_mv - REFRESH FAST - DISABLE QUERY REWRITE AS - SELECT s.prod_id, s.cust_id, SUM(s.amount_sold) sum_amount - FROM sales s, customers cs - WHERE s.cust_id = cs.cust_id - GROUP BY s.prod_id, s.cust_id'
+EXECUTE :create_mv_ddl := '- CREATE MATERIALIZED VIEW cust_mv - REFRESH FAST ON DEMAND - ENABLE QUERY REWRITE AS - SELECT s.prod_id, s.cust_id, COUNT(*) cnt, SUM(s.amount_sold) sum_amount - FROM sales s, customers cs - WHERE s.cust_id = cs.cust_id AND s.cust_id IN (2005,1020) - GROUP BY s.prod_id, s.cust_id UNION - SELECT s.prod_id, s.cust_id, COUNT(*) cnt, SUM(s.amount_sold) sum_amount - FROM sales s, customers cs - WHERE s.cust_id = cs.cust_id AND s.cust_id IN (1005,1010,1012) - GROUP BY s.prod_id, s.cust_id'
+EXECUTE :name := 'MYWORKLOAD'
+EXECUTE :sql_stmt := 'SELECT COUNT(*) FROM customers - WHERE cust_state_province=''CA'''
+EXECUTE :sql_text := 'SELECT AVG(amount_sold) FROM sales'
+EXECUTE :sql_text2 := 'SELECT AVG(amount_sold) FROM sales'
+EXECUTE :sqlsetname := 'MY_STS_WORKLOAD'
+EXECUTE :task_cust_mv := 'cust_mv'
+EXECUTE :task_cust_mv := 'cust_mv2'
+EXECUTE :task_cust_mv := 'cust_mv3'
+EXECUTE :task_name := 'MYTASK'
+EXECUTE :task_name := 'MY_EVAL_TASK'
+EXECUTE :task_name := 'MY_QUICKTUNE_TASK'
+EXECUTE :task_name2 := 'MYTASK2'
+EXECUTE :template_name := 'MY_TEMPLATE'
+EXECUTE :template_name := 'MY_WK_TEMPLATE'
+EXECUTE :workload_name := 'MYWORKLOAD'
+EXECUTE :workload_name := 'MY_CACHE_WORKLOAD'
+EXECUTE :workload_name := 'MY_WORKLOAD'
+EXECUTE :workload_name := 'SCHEMA_WKLD'
+EXECUTE :workload_name2 := 'MYWORKLOAD2'
+EXECUTE DBMS_ADVISOR.ADD_SQLWKLD_REF('MYTASK', 'MYWORKLOAD')
+EXECUTE DBMS_ADVISOR.ADD_SQLWKLD_REF('MYTASK','MYWORKLOAD')
+EXECUTE DBMS_ADVISOR.ADD_SQLWKLD_REF(:task_name, :workload_name)
+EXECUTE DBMS_ADVISOR.ADD_SQLWKLD_REF(:task_name2, :workload_name2)
+EXECUTE DBMS_ADVISOR.ADD_SQLWKLD_STATEMENT ( - 'MYWORKLOAD', 'MONTHLY', 'ROLLUP', 0,0,0,0,1,0,10,1,SYSDATE,1, - 'SH', 'SELECT count(count(*)) FROM sales GROUP BY prod_id')
+EXECUTE DBMS_ADVISOR.ADD_SQLWKLD_STATEMENT ( - 'MYWORKLOAD', 'MONTHLY', 'ROLLUP', priority=>1, executions=>10, - username => 'SH', sql_text => :sql_text)
+EXECUTE DBMS_ADVISOR.ADD_SQLWKLD_STATEMENT ( - :workload_name2, 'MONTHLY', 'ROLLUP', priority=>1, executions=>10, - username => 'SH', sql_text => :sql_text2)
+EXECUTE DBMS_ADVISOR.ADD_SQLWKLD_STATEMENT (:workload_name, username => 'SH', - priority => 1, executions => 10, sql_text => - 'select count(*) from customers where cust_state_province=''CA''')
+EXECUTE DBMS_ADVISOR.CANCEL_TASK('MYTASK')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT('MYTASK'), 'ADVISOR_RESULTS','advscript.sql')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT('cust_mv2'),- 'TUNE_RESULTS', 'mv_create2.sql')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT('cust_mv3'), - 'TUNE_RESULTS', 'mv_create3.sql')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT(:task_cust_mv), - 'TUNE_RESULTS', 'mv_create.sql')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT(:task_name), - 'TUNE_RESULTS', 'mv_create.sql')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT(:task_name),- 'ADVISOR_RESULTS', 'Example1_script.sql')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT(:task_name),- 'ADVISOR_RESULTS', 'Example2_script.sql')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT(:task_name),- 'ADVISOR_RESULTS', 'Example3_script.sql')
+EXECUTE DBMS_ADVISOR.CREATE_FILE(DBMS_ADVISOR.GET_TASK_SCRIPT(:task_name, 'UNDO'), 'TUNE_RESULTS', 'mv_undo.sql')
+EXECUTE DBMS_ADVISOR.CREATE_SQLWKLD ( - :workload_name, 'This is my first workload', 'MY_WK_TEMPLATE')
+EXECUTE DBMS_ADVISOR.CREATE_SQLWKLD (:workload_name)
+EXECUTE DBMS_ADVISOR.CREATE_SQLWKLD(:name)
+EXECUTE DBMS_ADVISOR.CREATE_SQLWKLD(:template_name, is_template=>'TRUE')
+EXECUTE DBMS_ADVISOR.CREATE_SQLWKLD(:workload_name)
+EXECUTE DBMS_ADVISOR.CREATE_SQLWKLD(:workload_name,'This is my first workload')
+EXECUTE DBMS_ADVISOR.CREATE_SQLWKLD(:workload_name2,'This is my test workload')
+EXECUTE DBMS_ADVISOR.CREATE_TASK ( - 'SQL Access Advisor', :task_id, :task_name, template => 'MY_TEMPLATE')
+EXECUTE DBMS_ADVISOR.CREATE_TASK ( - 'SQL Access Advisor',:template_id, :template_name, is_template=>'TRUE')
+EXECUTE DBMS_ADVISOR.CREATE_TASK ('SQL Access Advisor', :task_id, :task_name)
+EXECUTE DBMS_ADVISOR.CREATE_TASK ('SQL Access Advisor', :task_id2, - :task_name2)
+EXECUTE DBMS_ADVISOR.CREATE_TASK('SQL Access Advisor', - :task_id, :task_name, template=>'SQLACCESS_WAREHOUSE')
+EXECUTE DBMS_ADVISOR.CREATE_TASK('SQL Access Advisor', :task_id, - :task_name, template=>'MY_TEMPLATE')
+EXECUTE DBMS_ADVISOR.CREATE_TASK('SQL Access Advisor', :task_id, :task_name)
+EXECUTE DBMS_ADVISOR.CREATE_TASK('SQL Access Advisor','MYTASK')
+EXECUTE DBMS_ADVISOR.CREATE_TASK('SQL Access Advisor',:template_id, - :template_name, is_template => 'TRUE')
+EXECUTE DBMS_ADVISOR.DELETE_SQLWKLD('%')
+EXECUTE DBMS_ADVISOR.DELETE_SQLWKLD('MYWORKLOAD')
+EXECUTE DBMS_ADVISOR.DELETE_SQLWKLD_REF('MYTASK', 'MYWORKLOAD')
+EXECUTE DBMS_ADVISOR.DELETE_SQLWKLD_STATEMENT('MYWORKLOAD', 10)
+EXECUTE DBMS_ADVISOR.DELETE_TASK('%')
+EXECUTE DBMS_ADVISOR.DELETE_TASK('MYTASK')
+EXECUTE DBMS_ADVISOR.DELETE_TASK('MY_TEMPLATE')
+EXECUTE DBMS_ADVISOR.DELETE_TASK('TUNING1')
+EXECUTE DBMS_ADVISOR.EXECUTE_TASK('MYTASK')
+EXECUTE DBMS_ADVISOR.EXECUTE_TASK(:task_name)
+EXECUTE DBMS_ADVISOR.EXECUTE_TASK(:task_name2)
+EXECUTE DBMS_ADVISOR.IMPORT_SQLWKLD_SCHEMA ( - :workload_name, 'NEW', 2, :saved_stmts, :failed_stmts)
+EXECUTE DBMS_ADVISOR.IMPORT_SQLWKLD_SQLCACHE ( - :workload_name, 'APPEND', 2, :saved_stmts, :failed_stmts)
+EXECUTE DBMS_ADVISOR.IMPORT_SQLWKLD_SQLCACHE (- 'MYWORKLOAD', 'APPEND', 2, :saved_stmts, :failed_stmts)
+EXECUTE DBMS_ADVISOR.IMPORT_SQLWKLD_STS (:workload_name , - :sqlsetname, 'NEW', 1, :saved_stmts, :failed_stmts)
+EXECUTE DBMS_ADVISOR.IMPORT_SQLWKLD_USER ( - :workload_name, 'APPEND', 'SH', 'USER_WORKLOAD', :saved_stmts,:failed_stmts)
+EXECUTE DBMS_ADVISOR.IMPORT_SQLWKLD_USER ( - :workload_name, 'APPEND', 'SH','USER_WORKLOAD', :saved_stmts, :failed_stmts)
+EXECUTE DBMS_ADVISOR.IMPORT_SQLWKLD_USER (:workload_name, 'APPEND', 'SH', - 'USER_WORKLOAD', :saved_stmts, :failed_stmts)
+EXECUTE DBMS_ADVISOR.IMPORT_SQLWKLD_USER( - 'MYWORKLOAD', 'NEW', 'SH', 'USER_WORKLOAD', :saved_stmts, :failed_stmts)
+EXECUTE DBMS_ADVISOR.MARK_RECOMMENDATION('MYTASK', 2, 'REJECT')
+EXECUTE DBMS_ADVISOR.QUICK_TUNE(DBMS_ADVISOR.SQLACCESS_ADVISOR, - :task_name, :sql_stmt)
+EXECUTE DBMS_ADVISOR.RESET_SQLWKLD('MYWORKLOAD')
+EXECUTE DBMS_ADVISOR.RESET_TASK('MYTASK')
+EXECUTE DBMS_ADVISOR.SET_SQLWKLD_PARAMETER ( - 'MYWORKLOAD', 'ORDER_LIST', 'OPTIMIZER_COST')
+EXECUTE DBMS_ADVISOR.SET_SQLWKLD_PARAMETER ( - :workload_name, 'USERNAME_LIST', 'SH')
+EXECUTE DBMS_ADVISOR.SET_SQLWKLD_PARAMETER (:workload_name, - 'USERNAME_LIST', 'SH')
+EXECUTE DBMS_ADVISOR.SET_SQLWKLD_PARAMETER( - :template_name, 'USERNAME_LIST', 'SH')
+EXECUTE DBMS_ADVISOR.SET_SQLWKLD_PARAMETER('MYWORKLOAD', 'JOURNALING', 0)
+EXECUTE DBMS_ADVISOR.SET_SQLWKLD_PARAMETER('MYWORKLOAD', 'JOURNALING', 4)
+EXECUTE DBMS_ADVISOR.SET_SQLWKLD_PARAMETER('MYWORKLOAD', 'SQL_LIMIT', 3)
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER ( - 'MYTASK', 'VALID_TABLE_LIST', 'SH.SALES, SH.CUSTOMERS')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER ( - :task_name, 'EXECUTION_TYPE', 'INDEX_ONLY')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER ( - :template_name, 'DEF_INDEX_OWNER', 'SH')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER ( - :template_name, 'DEF_INDEX_TABLESPACE', 'SH_INDEXES')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER ( - :template_name, 'DEF_MVIEW_OWNER', 'SH')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER ( - :template_name, 'DEF_MVIEW_TABLESPACE', 'SH_MVIEWS')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER ( - :template_name, 'INDEX_NAME_TEMPLATE', 'SH_IDX$$_<SEQ>')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER ( - :template_name, 'MVIEW_NAME_TEMPLATE', 'SH_MV$$_<SEQ>')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER (:task_name, 'EVALUATION_ONLY', 'TRUE')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER('MYTASK', 'JOURNALING', 0)
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER('MYTASK', 'JOURNALING', 4)
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER('MYTASK', 'RECOMMEND_MV_EXACT_TEXT_MATCH', 'FALSE')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER('MYTASK', 'RECOMMEND_MV_EXACT_TEXT_MATCH', 'TRUE')
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER('MYTASK','STORAGE_CHANGE', 100)
+EXECUTE DBMS_ADVISOR.SET_TASK_PARAMETER(:task_name, 'STORAGE_CHANGE', 100)
+EXECUTE DBMS_ADVISOR.TUNE_MVIEW(:task_cust_mv, :create_mv_ddl)
+EXECUTE DBMS_ADVISOR.UPDATE_REC_ATTRIBUTES(:task_name2, 1, 2, 'TABLESPACE', - 'SH_MVIEWS')
+EXECUTE DBMS_ADVISOR.UPDATE_SQLWKLD_ATTRIBUTES ( - 'MYWORKLOAD', read_only=> 'FALSE')
+EXECUTE DBMS_ADVISOR.UPDATE_SQLWKLD_ATTRIBUTES ( - 'MYWORKLOAD', read_only=> 'TRUE')
+EXECUTE DBMS_ADVISOR.UPDATE_SQLWKLD_STATEMENT( - 'MYWORKLOAD', 2, priority=>3)
+EXECUTE DBMS_ADVISOR.UPDATE_TASK_ATTRIBUTES('MYTASK', 'TUNING1')
+EXECUTE DBMS_ADVISOR.UPDATE_TASK_ATTRIBUTES('TUNING1', is_template=>'TRUE')
+EXECUTE DBMS_ADVISOR.UPDATE_TASK_ATTRIBUTES('TUNING1', read_only => 'FALSE')
+EXECUTE DBMS_ADVISOR.UPDATE_TASK_ATTRIBUTES('TUNING1', read_only => 'TRUE')
+EXECUTE dbms_advisor.delete_sqlwkld(:workload_name)
+EXECUTE dbms_advisor.delete_task('MYTASK')
+EXECUTE dbms_advisor.delete_task(:task_name)
+EXECUTE show_recm(:task_name)
+EXIT when curs%NOTFOUND
+EXPLAIN SELECT * FROM TEST WHERE ID IN (10, 20) AND DATA IN (1, 2)
+EXPLAIN SELECT * FROM TEST WHERE ID IN(1, 1000)
+EXPLAIN SELECT COUNT(*) FROM TEST
+EXPLAIN SELECT DISTINCT TYPE FROM TEST ORDER BY TYPE LIMIT 3
+EXPLAIN SELECT ID X, COUNT(*) FROM TEST GROUP BY ID
+EXPLAIN SELECT MIN(VALUE), MAX(VALUE) FROM TEST
+EXPLAIN SELECT TYPE, (SELECT VALUE FROM TEST T2 WHERE T.TYPE = T2.TYPE ORDER BY TYPE, VALUE LIMIT 1) MIN FROM (SELECT DISTINCT TYPE FROM TEST) T ORDER BY TYPE
+EXPLAIN SELECT VALUE FROM TEST ORDER BY VALUE DESC LIMIT 10
+EXPLAIN SELECT VALUE FROM TEST ORDER BY VALUE LIMIT 10
+EXPLAIN SELECT letter FROM sample WHERE letter = 'd'
+EXPLAIN SELECT letter FROM sample WHERE letter = 'k'
+EXPLAIN SELECT letter FROM sample WHERE letter = 'p'
+EXPLAIN SELECT sample1.junk FROM sample1 CROSS JOIN sample2
+EXPLAIN SELECT sample1.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id)
+EXPLAIN SELECT sample1.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id) WHERE sample2.id > 33
+EXPLAIN SELECT sample1.junk FROM sample1 RIGHT OUTER JOIN sample2 ON (sample1.id = sample2.id)
+EXPLAIN SELECT sample2.id, sample2.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id) ORDER BY 1 LIMIT 1
+EXPLAIN SELECT sample2.id, sample2.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id) ORDER BY 1 LIMIT 10
+EXPLAIN SELECT sample2.id, sample2.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id) ORDER BY 1 LIMIT 100
+EXPLAIN SELECT sample2.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id)
+EXPLAIN SELECT sample2.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id) WHERE sample1.id = 33
+EXPLAIN SELECT sample2.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id) WHERE sample2.junk ~ '^aaa'
+EXPLAIN SELECT sample2.junk FROM sample1 JOIN sample2 ON (sample1.id = sample2.id) WHERE sample2.junk ~ '^xxx'
+EXPLAIN SELECT sample2.junk FROM sample2 JOIN sample1 ON (sample2.id = sample1.id)
+GO /* S has 5 rows: */ SELECT * FROM S
+GRANT ALL ON TABLE metadatacollectionschema.altidcollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.andsactivity TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.andsparty TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.andsservice TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.contributorcollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.custodiancollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.dataformatscollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.fundingcollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.guestusersgroup TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.metadatacollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.metadatamedia TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.microscopecollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.projectscollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.publishercollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.relatedurlscollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.subjectforcollection TO omerouser
+GRANT ALL ON TABLE metadatacollectionschema.subjectseoccollection TO omerouser
+GRANT EXECUTE ON FUNCTION sylph.add_link, sylph.add_news, sylph.add_article, sylph.add_comment, sylph.add_software, sylph.add_version TO GROUP sylph_web
+GRANT SELECT ON TABLE metadatacollectionschema.altidcollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.andsactivity TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.andsparty TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.andsservice TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.contributorcollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.custodiancollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.dataformatscollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.fundingcollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.guestusersgroup TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.metadatacollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.metadatamedia TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.microscopecollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.projectscollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.publishercollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.relatedurlscollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.subjectforcollection TO hubuser
+GRANT SELECT ON TABLE metadatacollectionschema.subjectseoccollection TO hubuser
+GRANT SELECT ON TABLE sylph.links, sylph.news, sylph.articles, sylph.software TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.banned_ips TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.banned_terms TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.comments TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.post_tags TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.post_types TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.posts TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.tags TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.users TO GROUP sylph_web
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE sylph.versions TO GROUP sylph_web
+GRANT USAGE ON LANGUAGE SQL TO ALL
+GoogleGitSign in eclipse / datatools/org.eclipse.datatools.sqltools / DTP_1_7_0_Branch^ / . / tests / org.eclipse.datatools.sqltools.parsers.sql.query.test / src / org / eclipse / datatools / sqltools / parsers / sql / query / test / select2.sql blob: 5550e3189351adca14a02f2082af16976718cbd0 [file history] SELECT * FROM TBKT2102 ORDER BY DATE2, TIMESTAMP2, SORT_FIELD
+INSERT INTO #T1 (SNO, Shipping) SELECT SNO,SUM(QTY) FROM SP GROUP BY SNO UNION SELECT SNO,0 FROM S WHERE SNO NOT IN (SELECT SNO FROM SP)
+INSERT INTO #T2 (SNO, Used) SELECT SNO,SUM(QTY) FROM SPJ GROUP BY SNO UNION SELECT SNO,0 FROM S WHERE SNO NOT IN (SELECT SNO FROM SPJ)
+INSERT INTO Class VALUES('CSE', 451, 'Introduction to Operating Systems')
+INSERT INTO Class VALUES('CSE', 461, 'Introduction to Computer Communication Networks')
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E1','J.Smith',NULL)
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E2','D.Brown','E1')
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E3','A.Sharma','E1')
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E4','B.Lee','E2')
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E5','S.Green','E2')
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E6','Q.Han','E3')
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E7','M.Patel','E3')
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E8','D.Jones','E7')
+INSERT INTO E(ENO,EName,BossENO) VALUES ('E9','G.Bush','E7')
+INSERT INTO Instructor VALUES('djw', 'David', 'Wetherall', '1999-07-01')
+INSERT INTO Instructor VALUES('levy', 'Hank', 'Levy', date('1988-04-01'))
+INSERT INTO Instructor VALUES('tom', 'Tom', 'Anderson', date('1997-10-01'))
+INSERT INTO Instructor VALUES('zahorjan', 'John', 'Zahorjan', '1985-01-01')
+INSERT INTO TEST SELECT X FROM SYSTEM_RANGE(1, 1000)
+INSERT INTO TEST SELECT X, MOD(X, 10) FROM SYSTEM_RANGE(1, 1000)
+INSERT INTO TEST SELECT X, MOD(X, 100), RAND()*100 FROM SYSTEM_RANGE(1, 1000)
+INSERT INTO TEST SELECT X, MOD(X, 5), RAND()*100 FROM SYSTEM_RANGE(1, 1000)
+INSERT INTO TEST SELECT X, RAND()*100 FROM SYSTEM_RANGE(1, 1000)
+INSERT INTO TEST SELECT X, X/10 FROM SYSTEM_RANGE(1, 100)
+INSERT INTO Teaches VALUES('djw', 'CSE', 461)
+INSERT INTO Teaches VALUES('levy', 'CSE', 451)
+INSERT INTO Teaches VALUES('tom', 'CSE', 451)
+INSERT INTO Teaches VALUES('tom', 'CSE', 461)
+INSERT INTO Teaches VALUES('zahorjan', 'CSE', 378)
+INSERT INTO Teaches VALUES('zahorjan', 'CSE', 451)
+INSERT INTO Teaches VALUES('zahorjan', 'CSE', 461)
+INSERT INTO lockdemo VALUES (1)
+INSERT INTO lockdemo VALUES (2)
+INSERT INTO lockdemo VALUES (40), (60), (80)
+INSERT INTO lockdemo VALUES (50), (80)
+INSERT INTO sylph.comments(post_id, comment_id) VALUES ( $1, (SELECT sylph.add_post(''comment'', $2, true, ''comment'', $3)) )
+INSERT INTO sylph.post_types(name) VALUES ('article')
+INSERT INTO sylph.post_types(name) VALUES ('comment')
+INSERT INTO sylph.post_types(name) VALUES ('link')
+INSERT INTO sylph.post_types(name) VALUES ('news')
+INSERT INTO sylph.post_types(name) VALUES ('software')
+INSERT INTO temp SELECT Job.JobId,JobTDate,Job.ClientId,Job.Level, StartTime,VolumeName,JobMedia.StartFile,VolSessionId,VolSessionTime FROM Client,Job,JobMedia,Media WHERE Client.Name='%1' AND Client.ClientId=Job.ClientId AND Level='F' AND JobStatus='T' AND JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId ORDER BY Job.JobTDate DESC LIMIT 1
+INSERT INTO temp2 SELECT DISTINCT Job.JobId,Job.StartTime,Media.VolumeName, Job.Level,JobMedia.StartFile,Job.VolSessionId,Job.VolSessionTime FROM Job,temp,JobMedia,Media WHERE Job.JobTDate>temp.JobTDate AND Job.ClientId=temp.ClientId AND Job.Level IN ('I','D') AND JobStatus='T' AND JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId
+INSERT INTO temp2 SELECT Job.JobId,Job.StartTime,Media.VolumeName,Job.Level, JobMedia.StartFile,Job.VolSessionId,Job.VolSessionTime FROM temp,Job,JobMedia,Media WHERE temp.JobId=Job.JobId AND Job.Level='F' AND Job.JobStatus='T' AND JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId
+INSERT INTO user_workload (username, module, action, priority, elapsed_time, cpu_time, buffer_gets, disk_reads, rows_processed, executions, optimizer_cost, last_execution_date, stat_period, sql_text) VALUES ('SH', 'Example1', 'Action', 2, 1, 1, 1, 1, 1, 1000, 1, SYSDATE, 1, ' SELECT c.country_id, c.cust_city, c.cust_last_name FROM customers c WHERE c.country_id in (''US'', ''UK'') ORDER BY c.country_id, c.cust_city, c.cust_last_name ')
+INSERT INTO user_workload (username, module, action, priority, elapsed_time, cpu_time, buffer_gets, disk_reads, rows_processed, executions, optimizer_cost, last_execution_date, stat_period, sql_text) VALUES ('SH', 'Example1', 'Action', 2, 1, 1, 1, 1, 1, 1000, 1, SYSDATE, 1, ' SELECT t.calendar_month_desc, sum(s.amount_sold) AS dollars FROM sales s , times t WHERE s.time_id = t.time_id AND s.time_id between TO_DATE(''01-JAN-2000'', ''DD-MON-YYYY'') AND TO_DATE(''01-JUL-2000'', ''DD-MON-YYYY'') GROUP BY t.calendar_month_desc ')
+INSERT INTO user_workload (username, module, action, priority, elapsed_time, cpu_time, buffer_gets, disk_reads, rows_processed, executions, optimizer_cost, last_execution_date, stat_period, sql_text) VALUES ('SH', 'Example1', 'Action', 2, 1, 1, 1, 1, 1, 1000, 1, SYSDATE, 1, 'SELECT ch.channel_class, c.cust_city, t.calendar_quarter_desc, SUM(s.amount_sold) sales_amount FROM sales s, times t, customers c, channels ch WHERE s.time_id = t.time_id AND s.cust_id = c.cust_id AND s.channel_id = ch.channel_id AND c.cust_state_province = ''CA'' AND ch.channel_desc in (''Internet'',''Catalog'') AND t.calendar_quarter_desc IN (''1999-Q1'',''1999-Q2'') GROUP BY ch.channel_class, c.cust_city, t.calendar_quarter_desc ')
+INSERT INTO user_workload (username, module, action, priority, elapsed_time, cpu_time, buffer_gets, disk_reads, rows_processed, executions, optimizer_cost, last_execution_date, stat_period, sql_text) VALUES ('SH', 'Example1', 'Action', 2, 1, 1, 1, 1, 1, 1000, 1, SYSDATE, 1, 'SELECT t.week_ending_day, p.prod_subcategory, sum(s.amount_sold) AS dollars, s.channel_id, s.promo_id FROM sales s, times t, products p WHERE s.time_id = t.time_id AND s.prod_id = p.prod_id AND s.prod_id > 10 AND s.prod_id < 50 GROUP BY t.week_ending_day, p.prod_subcategory, s.channel_id, s.promo_id ')
+INSERT INTO user_workload (username, module, action, priority, sql_text) VALUES ('SH', 'Example1', 'Action', 2, 'SELECT t.week_ending_day, p.prod_subcategory, SUM(s.amount_sold) AS dollars, s.channel_id, s.promo_id FROM sales s, times t, products p WHERE s.time_id = t.time_id AND s.prod_id = p.prod_id AND s.prod_id > 10 AND s.prod_id < 50 GROUP BY t.week_ending_day, p.prod_subcategory, s.channel_id, s.promo_id') / INSERT INTO user_workload (username, module, action, priority, sql_text) VALUES ('SH', 'Example1', 'Action', 2, 'SELECT t.calendar_month_desc, SUM(s.amount_sold) AS dollars FROM sales s , times t WHERE s.time_id = t.time_id AND s.time_id between TO_DATE(''01-JAN-2000'', ''DD-MON-YYYY'') AND TO_DATE(''01-JUL-2000'', ''DD-MON-YYYY'') GROUP BY t.calendar_month_desc') / INSERT INTO user_workload (username, module, action, priority, sql_text) VALUES ('SH', 'Example1', 'Action', 2, 'SELECT ch.channel_class, c.cust_city, t.calendar_quarter_desc, SUM(s.amount_sold) sales_amount FROM sales s, times t, customers c, channels ch WHERE s.time_id = t.time_id AND s.cust_id = c.cust_id AND s.channel_id = ch.channel_id AND c.cust_state_province = ''CA'' AND ch.channel_desc IN (''Internet'',''Catalog'') AND t.calendar_quarter_desc IN (''1999-Q1'',''1999-Q2'') GROUP BY ch.channel_class, c.cust_city, t.calendar_quarter_desc') / INSERT INTO user_workload (username, module, action, priority, sql_text) VALUES ('SH', 'Example1', 'Action', 2, 'SELECT c.country_id, c.cust_city, c.cust_last_name FROM customers c WHERE c.country_id in (''US'', ''UK'') ORDER BY c.country_id, c.cust_city, c.cust_last_name') / COMMIT
+LOCK TABLE lockdemo IN ACCESS EXCLUSIVE MODE
+LOCK TABLE lockdemo IN ACCESS SHARE MODE
+LOCK TABLE lockdemo IN EXCLUSIVE MODE
+LOCK TABLE lockdemo IN ROW EXCLUSIVE MODE
+LOCK TABLE lockdemo IN ROW SHARE MODE
+LOCK TABLE lockdemo IN SHARE MODE
+LOCK TABLE lockdemo IN SHARE ROW EXCLUSIVE MODE
+LOCK TABLE lockdemo IN SHARE UPDATE EXCLUSIVE MODE
+LOOP FETCH curs INTO v_action, v_command, v_attr1, v_attr2, v_attr3, v_attr4 
+OPEN sqlsetcur FOR SELECT VALUE(P) FROM TABLE( dbms_sqltune.select_cursor_cache( 'sql_text like ''SELECT /* Query%''', NULL, NULL, NULL, NULL, NULL, null) ) P
+PRINT :failed_stmts
+PRINT :saved_stmts
+RESET ALL
+ROLLBACK WORK
+SELECT 'Action Count', COUNT(DISTINCT action_id) cnt FROM user_advisor_actions WHERE task_name = :task_name
+SELECT ((((((((COUNT(DISTINCT AVG_SMINT)*2)/2) *13.3)/13.3)-25)+25)-33.556)+33.556) FROM (SELECT AVG(SMINT) AS AVG_SMINT FROM TBIPR302 WHERE TIME(TIME(CHAR(TIME1))) < '17.58.58' GROUP BY CHAR1) AS TBL
+SELECT ((((((COUNT(DISTINCT CHAR1)*2)/2)*10)/10)+9999)-9999) FROM TBIPR302 WHERE '200' < RECID AND '900' > RECID
+SELECT * FROM #T1
+SELECT * FROM #T2
+SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT ((((((((((COUNT(*) *2)/2)*10)/10)*1.5)*1.6)*1.7)*0.8)/10)-0.6) FROM TBIPR301 WHERE RECID < '400' ) AS TBLEXP6 ) AS TBLEXP5 ) AS TBLEXP4 ) AS TBLEXP3 ) AS TBLEXP2 ) AS TBLEXP1 ) AS TBLEXP0
+SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT * FROM ( SELECT ABS(INTCOLNN) FROM TBKT2101 WHERE RECID = '100' ) AS TBLEXP6 ) AS TBLEXP5 ) AS TBLEXP4 ) AS TBLEXP3 ) AS TBLEXP2 ) AS TBLEXP1 ) AS TBLEXP0
+SELECT * FROM (SELECT * FROM Product AS Y WHERE Y.price > '$20') AS x WHERE x.price < '$30';
+SELECT * FROM Class WHERE dept = 'CSE' AND 400 <= number AND number <= '499' 
+SELECT * FROM Class WHERE title LIKE 'I_troduction%' 
+SELECT * FROM Class WHERE title LIKE 'Introduction%' 
+SELECT * FROM Class c WHERE c.dept = 'CSE' AND c.number NOT IN ( SELECT c.number FROM Class c, Teaches t, Instructor i WHERE c.dept = t.dept AND c.number = t.number AND t.username = i.username AND i.username IN ('levy', 'djw') ) 
+SELECT * FROM Customers WHERE Last_Name='Smith';
+SELECT * FROM E
+SELECT * FROM HIPPO WHERE CASE MOUTHS WHEN '061' THEN 'AAA' WHEN '010' THEN 'BBB' WHEN '118' THEN 'CCC' WHEN '087' THEN 'DDD' WHEN '000' THEN 'EEE' ELSE 'FFF' END > 'CCC'
+SELECT * FROM HIPPO WHERE CASE POUNDS WHEN 6000 THEN 1 WHEN 8090 THEN 2 WHEN 10100 THEN 1 WHEN 12050 THEN 2 WHEN 1450 THEN 1 ELSE 3 END = 1
+SELECT * FROM HIPPO WHERE CASE WHEN MOUTHS = '061' THEN CURRENT SERVER WHEN MOUTHS = '010' THEN USER WHEN MOUTHS = '118' THEN CURRENT SCHEMA WHEN MOUTHS = '087' THEN CURRENT SERVER WHEN MOUTHS = '000' THEN CURRENT DEGREE ELSE CURRENT PATH END IN (CURRENT SERVER, USER)
+SELECT * FROM HIPPO WHERE EXISTS ( SELECT CASE WHEN FOOD = 'FIRED APPLES' THEN 1 END FROM HIPPO)
+SELECT * FROM Instructor WHERE started_on < DATE('now')
+SELECT * FROM Instructor WHERE started_on >= DATE('now', 'start of year', '-15 years')
+SELECT * FROM OUTERJN.TEMPTAB1 T1 LEFT JOIN OUTERJN.TEMPTAB3 T2 ON T1.COL1 = T2.COL1
+SELECT * FROM Product WHERE category='Gadgets';
+SELECT * FROM S
+SELECT * FROM S INNER JOIN SP ON S.SNO = SP.SNO
+SELECT * FROM S INNER JOIN SP ON S.SNO = SP.SNO SELECT * FROM S LEFT OUTER JOIN SP ON S.SNO = SP.SNO SELECT * FROM S FULL OUTER JOIN SP ON S.SNO = SP.SNO
+SELECT * FROM S LEFT OUTER JOIN SP ON S.SNO = SP.SNO SELECT SUM(QTY) FROM SP WHERE SNO = 'S9'
+SELECT * FROM S WHERE Len(SNAME) > (SELECT Len(SNAME) FROM S WHERE SNO = 'S9')
+SELECT * FROM S WHERE NOT STATUS < null
+SELECT * FROM S WHERE NOT STATUS = null
+SELECT * FROM S WHERE NOT STATUS > null
+SELECT * FROM S WHERE STATUS < null
+SELECT * FROM S WHERE STATUS = null
+SELECT * FROM S WHERE STATUS > null
+SELECT * FROM S,SP
+SELECT * FROM S,SP WHERE S.SNO = SP.SNO
+SELECT * FROM S,SP,P
+SELECT * FROM SP
+SELECT * FROM SP WHERE SNO = 'S3' SELECT * FROM SPJ WHERE SNO = 'S3' SELECT * FROM SP, SPJ WHERE SP.SNO = SPJ.SNO AND SP.SNO = 'S3'
+SELECT * FROM SPJ
+SELECT * FROM T1 X WHERE C1 IN ( SELECT C1 FROM T2 WHERE C2 = CASE X.C3 WHEN 3 THEN C1 WHEN 4 THEN C2 END)
+SELECT * FROM TEST WHERE ID IN(1, 1000)
+SELECT * FROM USER_TUNE_MVIEW WHERE TASK_NAME= 'cust_mv3' AND SCRIPT_TYPE='IMPLEMENTATION' ORDER BY action_id
+SELECT * FROM USER_TUNE_MVIEW WHERE TASK_NAME= :task_cust_mv AND SCRIPT_TYPE='IMPLEMENTATION' ORDER BY action_id
+SELECT * FROM USER_TUNE_MVIEW WHERE TASK_NAME='cust_mv2' AND SCRIPT_TYPE='IMPLEMENTATION' ORDER BY action_id
+SELECT * FROM V1
+SELECT * FROM V2
+SELECT * FROM lockdemo
+SELECT * FROM lockdemo FOR SHARE
+SELECT * FROM lockdemo WHERE col = 1 FOR SHARE
+SELECT * FROM lockdemo WHERE col = 1 FOR UPDATE
+SELECT * FROM lockview1
+SELECT * FROM lockview2
+SELECT * FROM pg_stat_get_backend_idset() AS t(id) WHERE pg_stat_get_backend_pid(id) = pg_backend_pid()
+SELECT /*+ ordered */ c.city, sdo_nn_distance (1) distance_in_miles FROM geod_interstates i, geod_cities c WHERE i.highway = 'I170' AND sdo_nn (c.location, i.geom, 'sdo_batch_size=5 unit=mile', 1) = 'TRUE' AND pop90 > 300000 AND rownum < 6 ORDER by distance_in_miles
+SELECT ABS(ABS(ABS(ABS(ABS(ABS(ABS(ABS(ABS(-FLOAT4WDN))))))))) FROM VWKT2102 WHERE ABS(ABS(ABS(FLOAT4WDN))) = ABS(-FLOAT4WDN)
+SELECT ABS(COUNT(*)) FROM TBKT2102 WHERE ABS(FLOAT(FLOAT4NN)) = FLOAT4NN
+SELECT ABS(DAYOFWEEK(TIMESTMP)),ABS(DAYOFMONTH(TIMESTMP)), ABS(DAYOFYEAR(TIMESTMP)) FROM VWKT2102 WHERE RECID = '001' AND ABS(DAYOFWEEK(DATE(CURRENT TIMESTAMP))) = ABS(DAYOFWEEK(DATE(CURRENT DATE))) AND ABS(DAYOFMONTH(DATE(CURRENT TIMESTAMP))) = ABS(DAYOFMONTH(CURRENT DATE)) AND ABS(DAYOFYEAR(DATE(CURRENT TIMESTAMP))) = ABS(DAYOFYEAR(DATE(CURRENT TIMESTAMP)))
+SELECT ABS(HEX(INTCOLNN)) FROM VWKT2102 WHERE ABS(HEX(INTCOLNN)) = INTCOLNN
+SELECT ABS(IFNULL((FLOAT(IFNULL(FLOAT(RECID),0))) / (IFNULL(FLOAT(FILENO)+1,0)),0)) FROM (SELECT A.RECID, B.FILENO, A.FLOAT4WDN, B.FLOAT8, A.FLOAT4NN, B.INTCOLWDN,A.VARCHAR20BIT,A.INTCOLNN,A.DEFNULL FROM VWKT2102 A, TBKT2102 B WHERE A.RECID = '001') AS TBK001 WHERE CASE WHEN ABS(IFNULL(123.00*2,0.00000)) = ABS(IFNULL(FLOAT4WDN,123.00*2.0)) THEN 1 WHEN ABS(IFNULL(REAL(123.0*2.0),0)) = ABS(IFNULL(INTEGER(FLOAT(1000)),0)) THEN 2 WHEN ABS(INTEGER((FLOAT4NN+1.0-2.)*.1)) >= ABS(INTEGER(INTCOLNN)) THEN 6 WHEN ABS(IFNULL(SMALLINT(RECID),0)) = ABS(IFNULL(INTCOLWDN,INTEGER(FILENO))) THEN 3 WHEN ABS(IFNULL(SMALLINT(RECID),0)) < ABS(IFNULL(INTCOLWDN,INTEGER(FILENO))) THEN 4 WHEN ABS(IFNULL(SMALLINT(RECID),0)) > ABS(IFNULL(INTCOLWDN,INTEGER(FILENO))) THEN 5 ELSE 7 END IN (0,1,2,3,4,5,6)
+SELECT ABS(IFNULL(FLOAT4WDN,FLOAT4WDN)) FROM VWKT2102 WHERE ABS(FLOAT(FLOAT4NN)) = FLOAT(FLOAT4NN)
+SELECT ABS(IFNULL(FLOAT4WDN,FLOAT4WDN)) FROM VWKT2102 WHERE ABS(FLOAT4WDN) IS NULL
+SELECT ABS(INT(DECIMAL(FLOAT(DOUBLE(CEIL(FLOOR(1))))))) FROM (SELECT INT(DECIMAL(FLOAT(DOUBLE(CEIL(FLOOR(INTCOLNN)))))) FROM VWKT2102) AS TBKT002
+SELECT ABS(INT(DECIMAL(FLOAT(DOUBLE(CEIL(FLOOR(INTCOLNN))))))) FROM VWKT2102
+SELECT ABS(INTCOLNN) FROM VWKT2102 WHERE ABS(INTCOLNN) = INTCOLNN
+SELECT ABS(INTCOLWDN) FROM VWKT2102 WHERE ABS(INTCOLWDN) IS NULL
+SELECT ABS(INTCOLWDN) FROM VWKT2102 WHERE RECID='959'
+SELECT ABS(LVCHAR) FROM VWKT2102 WHERE ABS(LVCHAR) = LVCHAR
+SELECT ABS(MIN(SMINT)/MIN(SMINT)) FROM VWKT2102 WHERE ABS(SMALLINT(RECID)) = ABS(INTEGER(FILENO)) AND ABS(SMALLINT(RECID)/SMALLINT(FILENO)) IN (SELECT ABS(SMALLINT(FLOAT8/FLOAT8)) FROM TBKT2102 WHERE RECID = CHAR(100) AND SMALLINT(RECID) <> (SELECT MIN(ABS(INTCOLNN)) FROM TBKT2102 WHERE ABS(INTCOLNN) = INTCOLNN))
+SELECT ABS(SMINT) FROM VWKT2102 WHERE ABS(SMINT) = SMINT
+SELECT ABS(SUM(FLOAT4NN+INTCOLNN+NUMERIC83NN+SMINT)) FROM TBKT2102 WHERE RECID='969'
+SELECT CASE WHEN ABS(DECIMAL(CONCAT(RECID,'0'))) = ABS(DECIMAL(FILENO || '0')) THEN ABS(1) WHEN ABS(DECIMAL(CONCAT(RECID,'0'))) < ABS(DECIMAL(FILENO || '0')) THEN ABS(-1) WHEN ABS(DECIMAL(CONCAT(RECID,'0'))) > ABS(DECIMAL(FILENO || '0')) THEN ABS(-9) END FROM TBKT2102
+SELECT CASE WHEN ABS(VARCHAR(FILENO)) > VARCHAR(RECID) THEN ABS(SMALLINT(-9)) WHEN VARCHAR(FILENO) < VARCHAR(RECID) THEN ABS(SMALLINT(-1)) WHEN VARCHAR(FILENO) = VARCHAR(RECID) THEN ABS(INT(SMALLINT(RECID)/SMALLINT(FILENO))) END FROM TBKT2102
+SELECT CASE WHEN COUNT(DISTINCT DOUBLE1) = 23 THEN 99999 WHEN COUNT(*) = 24 THEN 88888 WHEN COUNT(DISTINCT DOUBLE1) = 25 THEN 77777 ELSE 10000 END FROM TBIPR302
+SELECT CITY, COUNT(*) AS NumberOfPlus10Suppliers FROM S WHERE STATUS > 10 GROUP BY CITY HAVING COUNT(*) > 1
+SELECT CITY, COUNT(*) AS NumberOfSuppliers FROM S EXECUTE ResetSampleData
+SELECT CITY, SNO, COUNT(*) AS NumberOfPlus10Suppliers FROM S WHERE STATUS > 10 GROUP BY CITY HAVING COUNT(*) > 1
+SELECT COALESCE(#T2.SNO,#T1.SNO) AS SNO, COALESCE(Shipping,0) + COALESCE(Used,0) AS Total FROM #T1 FULL OUTER JOIN #T2 ON #T1.SNO = #T2.SNO
+SELECT COALESCE(V2.SNO,V1.SNO) AS SNO, COALESCE(Shipping,0) + COALESCE(Used,0) AS Total FROM V1 FULL OUTER JOIN V2 ON V1.SNO = V2.SNO
+SELECT CONSTCOL, BUSINESS FROM VWEN4504 GROUP BY BUSINESS, CONSTCOL HAVING AVG(COST) > CONSTCOL AND MAX(COST) IN (SELECT VC4 FROM VWEN4504 GROUP BY VC4 HAVING COUNT(*) > 10) ORDER BY BUSINESS
+SELECT COUNT(*) AS NumberOfSuppliers FROM S
+SELECT COUNT(*) AS NumberOfSuppliers FROM S GROUP BY ()
+SELECT COUNT(*) FROM TEST
+SELECT COUNT(*) FROM VWIPR301 WHERE INTEGER((((((SMINT*2)/2)*10)/10)*99.3)/99.3) > (SELECT (((((((COUNT(DISTINCT NUMERIC83NN*2)/2)*10)/10) *99)/99)/13)*13) FROM TBIPR302 WHERE CHARNN < 'CHARNN' )
+SELECT COUNT(*) FROM VWIPR301 WHERE RECID > '100'
+SELECT COUNT(*) FROM dept
+SELECT COUNT(DISTINCT INTCOLNN) FROM TBIPR301 WHERE '0' < RECID
+SELECT COUNT(DISTINCT INTCOLWDN) FROM TBIPR302 UNION ALL SELECT COUNT(DISTINCT INTCOLNN) FROM VWIPR301 UNION ALL SELECT COUNT(DISTINCT INTCOLWDN) FROM TBIPR303
+SELECT COUNT(DISTINCT V1.DATE1) FROM VWIPR301 AS V1 UNION SELECT COUNT(DISTINCT T1.RECID) FROM TBIPR303 AS T1 UNION ALL SELECT COUNT(DISTINCT T2.CHAR1) FROM TBIPR301 AS T2 UNION SELECT COUNT(DISTINCT V2.CHARWDU) FROM VWIPR301 AS V2 UNION ALL SELECT COUNT(DISTINCT T3.TIMESTAMP2) FROM TBIPR302 AS T3
+SELECT COUNTRY, MAX(HIREAGE), MIN(TOTSAL) FROM VWEN4501 WHERE EMPNUM BETWEEN 3000 AND 5000 GROUP BY COUNTRY HAVING COUNT(*) > 4 ORDER BY 2 DESC
+SELECT CURRVAL(''posts_id_seq'')
+SELECT CURRVAL(''users_id_seq'')
+SELECT CURRVAL(''versions_id_seq'')
+SELECT DATE2, TIMESTAMP2, SORT_FIELD FROM TBKT2101 ORDER BY DATE2, TIMESTAMP2, SORT_FIELD
+SELECT DAY('2000-01-01')/DAYOFYEAR('2000-01-01') FROM VWKT0902 WHERE RECID = FILENO AND DAYOFWEEK(DATE1) IN (SELECT DAYOFWEEK(DATE1) FROM TBKT0901 WHERE RECID = CHAR(100) AND DAYOFMONTH(TIMESTMP) <> (SELECT DAYOFYEAR(TIMESTMP) FROM TBKT0902 WHERE DAYOFWEEK(DATE2) <= DAYOFYEAR(DATE2) AND RECID = CHAR('100')))
+SELECT DAYOFMONTH(VARCHAR('2000-01-01'))/DAYOFYEAR(CHAR('2000-01-01')) FROM (SELECT A.RECID, B.FILENO, A.DATE1, B.TIMESTMP, A.DATE2 FROM VWKT0902 A, TBKT0901 B WHERE A.RECID = B.FILENO AND DAYOFMONTH(A.DATE1) <> DAYOFYEAR(VARCHAR(A.DATE1)) AND DAYOFWEEK(CURRENT TIMESTAMP) < 8) AS TBKT09T1 WHERE CASE WHEN DAYOFWEEK(DATE1) = DAYOFMONTH(CHAR(TIMESTMP)) THEN 0 WHEN DAYOFMONTH(VARCHAR(DATE1)) = DAYOFYEAR(TIMESTMP) THEN 1 WHEN DAYOFWEEK(VARCHAR(DATE1)) = DAYOFYEAR(CHAR('2000-01-01')) THEN 2 WHEN DAYOFWEEK(DATE1) = DAYOFWEEK(CURRENT DATE) THEN DAYOFWEEK(DATE1) WHEN DAYOFWEEK(CHAR(DATE1)) < DAYOFWEEK(CHAR(CURRENT TIMESTAMP)) THEN DAYOFMONTH(DATE1) WHEN DAYOFWEEK(VARCHAR(DATE1)) > DAYOFWEEK(VARCHAR(CURRENT DATE)) THEN DAYOFYEAR(DATE1) ELSE 999 END <= 356
+SELECT DAYOFMONTH(VARCHAR('2000-01-01'))/DAYOFYEAR(CHAR('2000-01-01')) FROM (SELECT A.RECID, B.FILENO, A.DATE1, B.TIMESTMP, A.DATE2 FROM VWKT0902 A, TBKT0901 B WHERE A.RECID = B.FILENO AND DAYOFMONTH(A.DATE1) <> DAYOFYEAR(VARCHAR(A.DATE1)) AND DAYOFWEEK(CURRENT TIMESTAMP) < 8) AS TBKT09T1 WHERE RECID = FILENO AND DAYOFWEEK(DATE1) IN (SELECT DAYOFWEEK(DATE1) FROM TBKT0901 WHERE RECID = CHAR(100) AND DAYOFMONTH(VARCHAR(TIMESTMP)) <> (SELECT DAYOFYEAR(VARCHAR(TIMESTMP)) FROM TBKT0902 WHERE DAYOFWEEK(DATE2) <= DAYOFYEAR(DATE2) AND RECID = CHAR('100')))
+SELECT DAYOFMONTH(VARCHAR('2000-01-01'))/DAYOFYEAR(CHAR('2000-01-01')) FROM VWKT0902 A, TBKT0901 B WHERE A.RECID = B.FILENO AND DAYOFMONTH(CASE WHEN DAYOFWEEK(A.DATE1) = DAYOFMONTH(CHAR(B.TIMESTMP)) THEN '2000-01-01' WHEN DAYOFMONTH(VARCHAR(A.DATE1)) = DAYOFYEAR(B.TIMESTMP) THEN '2000-01-02' WHEN DAYOFWEEK(VARCHAR(A.DATE1)) = DAYOFYEAR(CHAR('2000-01-01')) THEN '2000-01-03' WHEN DAYOFMONTH(B.DATE1) = DAYOFMONTH(CURRENT DATE) THEN '2000-01-04' WHEN DAYOFMONTH(CHAR(B.DATE1)) < DAYOFMONTH(CHAR(CURRENT TIMESTAMP)) THEN '2000-01-05' WHEN DAYOFMONTH(VARCHAR(A.DATE1)) > DAYOFMONTH(VARCHAR(CURRENT DATE)) THEN '2000-01-06' ELSE ('2000-01-07') END) < 7 AND DAYOFYEAR(CASE WHEN DAYOFWEEK(A.DATE1) = DAYOFMONTH(CHAR(B.TIMESTMP)) THEN '2000-01-01' WHEN DAYOFMONTH(VARCHAR(A.DATE1)) = DAYOFYEAR(B.TIMESTMP) THEN '2000-01-02' WHEN DAYOFWEEK(VARCHAR(A.DATE1)) = DAYOFYEAR(CHAR('2000-01-01')) THEN '2000-01-03' WHEN DAYOFYEAR(B.DATE1) = DAYOFYEAR(CURRENT DATE) THEN '2000-01-04' WHEN DAYOFYEAR(CHAR(B.DATE1)) < DAYOFYEAR(CHAR(CURRENT TIMESTAMP)) THEN '2000-01-05' WHEN DAYOFYEAR(VARCHAR(A.DATE1)) > DAYOFYEAR(VARCHAR(CURRENT DATE)) THEN '2000-01-06' ELSE ('2000-01-07') END) < 7 AND DAYOFWEEK(CASE WHEN DAYOFWEEK(A.DATE1) = DAYOFMONTH(CHAR(B.TIMESTMP)) THEN '2000-01-02' WHEN DAYOFMONTH(VARCHAR(A.DATE1)) = DAYOFYEAR(B.TIMESTMP) THEN '2000-01-03' WHEN DAYOFWEEK(VARCHAR(A.DATE1)) = DAYOFYEAR(CHAR('2000-01-01')) THEN '2000-01-04' WHEN DAYOFWEEK(B.DATE1) = DAYOFWEEK(CURRENT DATE) THEN '2000-01-05' WHEN DAYOFWEEK(CHAR(B.DATE1)) < DAYOFWEEK(CHAR(CURRENT TIMESTAMP)) THEN '2000-01-06' WHEN DAYOFWEEK(VARCHAR(A.DATE1)) > DAYOFWEEK(VARCHAR(CURRENT DATE)) THEN '2000-01-07' ELSE ('2000-01-01') END) < 7
+SELECT DISTINCT Company.country FROM Company WHERE '$100' > ALL (SELECT price FROM Product WHERE manufacturer = cname);
+SELECT DISTINCT Company.country FROM Company WHERE '$100' > ANY (SELECT price FROM Product WHERE manufacturer = cname);
+SELECT DISTINCT Company.country FROM Company WHERE Company.cname IN (SELECT Product.manufacturer FROM Product WHERE Product.price < '$100');
+SELECT DISTINCT Company.country FROM Company WHERE Company.cname NOT IN (SELECT Product.manufacturer FROM Product WHERE Product.price >= '$100');
+SELECT DISTINCT Company.country FROM Company WHERE EXISTS (SELECT * FROM Product WHERE manufacturer = cname and Product.price < '$100');
+SELECT DISTINCT Company.country FROM Company WHERE NOT EXISTS (SELECT * FROM Product WHERE Product.manufacturer = Company.cname and Product.price >= '$100');
+SELECT DISTINCT Company.country FROM Company, Product WHERE Company.cname = Product.manufacturer and Product.price < '$100';
+SELECT DISTINCT Job.JobId as JobId, Client.Name as Client, Path.Path,Filename.Name,StartTime,Level,JobFiles,JobBytes FROM Client,Job,File,Filename,Path WHERE Client.ClientId=Job.ClientId AND JobStatus='T' AND Job.JobId=File.JobId AND Path.PathId=File.PathId AND Filename.FilenameId=File.FilenameId AND Filename.Name='%1' ORDER BY Job.StartTime LIMIT 20
+SELECT DISTINCT Job.JobId as JobId,Client.Name as Client, FileSet.FileSet AS FileSet,Level,StartTime, JobFiles,JobBytes,VolumeName FROM Client,Job,JobMedia,Media,FileSet WHERE Client.Name='%1' AND Client.ClientId=Job.ClientId AND Job.Type='B' AND Job.JobStatus='T' AND Job.FileSetId=FileSet.FileSetId AND JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId ORDER BY Job.StartTime
+SELECT DISTINCT Job.JobId as JobId,Job.Name as Name,Job.StartTime as StartTime, Job.Type as Type,Job.Level as Level,Job.JobFiles as Files, Job.JobBytes as Bytes,Job.JobStatus as Status FROM Media,JobMedia,Job WHERE Media.VolumeName='%1' AND Media.MediaId=JobMedia.MediaId AND JobMedia.JobId=Job.JobId ORDER by Job.StartTime
+SELECT DISTINCT Job.JobId,Client.Name AS Client,StartTime,JobFiles,JobBytes, JobMedia.StartFile as VolFile,VolumeName FROM Client,Job,JobMedia,Media WHERE Client.Name='%1' AND Client.ClientId=Job.ClientId AND Level='F' AND JobStatus='T' AND JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId ORDER BY Job.StartTime DESC LIMIT 20
+SELECT DISTINCT Job.JobId,Client.Name as Client,Level,StartTime,JobFiles,JobBytes,VolumeName FROM Client,Job,JobMedia,Media WHERE Client.Name='%1' AND Client.ClientId=Job.ClientId AND JobStatus='T' AND JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId AND Job.StartTime >= '%2' ORDER BY Job.StartTime
+SELECT DISTINCT Job.JobId,Job.Name,Job.StartTime,Job.Type, Job.Level,Job.JobFiles,Job.JobBytes,Job.JobStatus FROM JobMedia,Job WHERE JobMedia.JobId=Job.JobId AND JobMedia.MediaId=%1 ORDER by Job.StartTime
+SELECT DISTINCT Job.JobId,StartTime AS JobStartTime,VolumeName,Client.Name AS ClientName FROM Job,File,Path,Filename,Media,JobMedia,Client WHERE File.JobId=Job.JobId AND Path.Path='%1' AND Filename.Name='%2' AND Client.Name='%3' AND Path.PathId=File.PathId AND Filename.FilenameId=File.FilenameId AND JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId AND Client.ClientId=Job.ClientId ORDER BY Job.StartTime DESC LIMIT 5
+SELECT DISTINCT Job.JobId,VolumeName FROM Job,JobMedia,Media WHERE Job.JobId=%1 AND Job.JobId=JobMedia.JobId AND JobMedia.MediaId=Media.MediaId
+SELECT DISTINCT TYPE FROM TEST ORDER BY TYPE LIMIT 3
+SELECT DISTINCT VolumeName from temp2
+SELECT DISTINCT X.category, (SELECT max(Y.price) FROM Product Y WHERE X.category = Y.category) FROM Product X;
+SELECT DISTINCT X.country, (SELECT count(*) FROM Company Y, Product Z WHERE Y.cname=Z.manufacturer AND Y.country = X.country) FROM Company X;
+SELECT DISTINCT a.program, cf.organism_id FROM analysis a, analysisfeature af, feature cf WHERE a.program = 'cogs' AND a.analysis_id = af.analysis_id AND af.feature_id = cf.feature_id
+SELECT DISTINCT a.program, cf.organism_id FROM analysis a, analysisfeature af, feature cf WHERE a.program = 'jaccard' AND a.analysis_id = af.analysis_id AND af.feature_id = cf.feature_id
+SELECT DISTINCT country, (SELECT count(*) FROM Product WHERE cname=manufacturer) FROM Company;
+SELECT DISTINCT x.manufacturer, (SELECT count(*) FROM Product y WHERE x.manufacturer = y.manufacturer AND price < '$200') AS total FROM Product x WHERE price < '$200';
+SELECT EMPNUM FROM VWEN4501 WHERE COUNTRY IN (SELECT COUNTRY FROM VWEN4501 V1 WHERE TOTSAL > 8000 AND V1.HIREAGE IN (SELECT MAX(HIREAGE) FROM VWEN4501 V2 WHERE V2.TOTSAL IS NOT NULL AND EMPNUM < 2000 GROUP BY HIREAGE HAVING COUNT(*) IN (2,3))) AND EMPNUM BETWEEN 2000 AND 3000 UNION ALL SELECT SERIALNO FROM VWEN4502 WHERE SERIALNO BETWEEN 2000 AND 3000 AND EMPLENGTH < ALL (SELECT V2.EMPLENGTH FROM VWEN4502 V2 WHERE EMPLENGTH BETWEEN 4000 AND 5000) UNION ALL SELECT SERIALNO FROM VWEN4502 WHERE EMPLENGTH *3 < (MONTHSAL/100) + EMPLENGTH AND EMPLENGTH BETWEEN 3000 AND 4000 ORDER BY 1
+SELECT EMP_NAME, O.OLD_OFFICE, O.NEW_OFFICE FROM OUTERJN.EMPLOYEES INNER JOIN (SELECT OLD_OFFICE, NEW_OFFICE, VALUE (OUTERJN.OLD_OFFICES.EMP_ID, OUTERJN.NEW_OFFICES.EMP_ID) AS E_ID FROM OUTERJN.NEW_OFFICES LEFT JOIN OUTERJN.OLD_OFFICES ON OUTERJN.OLD_OFFICES.EMP_ID = OUTERJN.NEW_OFFICES.EMP_ID) AS O ON OUTERJN.EMPLOYEES.EMP_ID = O.E_ID
+SELECT EMP_NAME, O.OLD_OFFICE, O.NEW_OFFICE FROM OUTERJN.EMPLOYEES INNER JOIN (SELECT OLD_OFFICE, NEW_OFFICE, VALUE (OUTERJN.OLD_OFFICES.EMP_ID, OUTERJN.NEW_OFFICES.EMP_ID) AS E_ID FROM OUTERJN.OLD_OFFICES RIGHT JOIN OUTERJN.NEW_OFFICES ON OUTERJN.OLD_OFFICES.EMP_ID = OUTERJN.NEW_OFFICES.EMP_ID) AS O ON OUTERJN.EMPLOYEES.EMP_ID = O.E_ID
+SELECT EMP_NAME, OUTERJN.EMPLOYEES.EMP_ID, NEW_OFFICE FROM OUTERJN.EMPLOYEES LEFT JOIN OUTERJN.NEW_OFFICES ON OUTERJN.EMPLOYEES.EMP_ID = OUTERJN.NEW_OFFICES.EMP_ID
+SELECT EMP_NAME, OUTERJN.EMPLOYEES.EMP_ID, NEW_OFFICE FROM OUTERJN.EMPLOYEES, OUTERJN.NEW_OFFICES WHERE OUTERJN.EMPLOYEES.EMP_ID = OUTERJN.NEW_OFFICES.EMP_ID UNION ALL SELECT EMP_NAME, EMP.EMP_ID, '?' FROM OUTERJN.EMPLOYEES EMP WHERE EXISTS (SELECT * FROM OUTERJN.NEW_OFFICES X WHERE EMP.EMP_ID = X.EMP_ID)
+SELECT ENO FROM E WHERE BossENO = 'E1' SELECT E.ENO FROM E JOIN Sub S ON E.BossENO = S.ENO SELECT ENO FROM Sub
+SELECT GR1,COUNT(*) FROM USRT027.SORTTAB1 WHERE INT1 < 20092401 GROUP BY GR1 UNION SELECT GR2,COUNT(*) FROM USRT027.SORTTAB2 WHERE INT2 < 20092401 GROUP BY GR2 HAVING COUNT(*) > 10 UNION SELECT MIN(GR1),COUNT(DISTINCT FLT1) FROM USRT027.SORTTAB1 UNION SELECT MAX(USRT027.SORTTAB1.GR1), MIN(USRT027.SORTTAB2.INT2) FROM USRT027.SORTTAB2,USRT027.SORTTAB1 ORDER BY 1
+SELECT HEX(A.EMPNO), DECIMAL(A.SRATE), INTEGER(A.EDUC) FROM USRT029.EMPINT A WHERE A.SRATE > (A.EDUC * 2 ) AND A.EMPNO IN (SELECT A.EMPNO FROM USRT029.EMPINT A WHERE A.DEPTNO = ANY(SELECT A.DEPTNO FROM USRT029.EMPINT A WHERE A.DEPTNO NOT BETWEEN 'Y10' AND 'Y79')) UNION ALL (SELECT A.EMPLOC, A.JOBCODE, A.EDUC FROM USRT029.EMPINT A WHERE A.SAL = 004900.00 OR (A.EDUC = A.SRATE / 2 - 19) UNION ALL (SELECT HEX(A.EMPLOC), INTEGER(A.JOBCODE), DECIMAL(A.SAL) FROM USRT029.EMPINT A WHERE A.DEPTNO = 'Y55' UNION SELECT HEX(A.BORN), A.EDUC, INTEGER(A.JOBCODE) FROM USRT029.EMPINT A WHERE A.SRATE = (SELECT COUNT(*) + 6 FROM USRT029.EMPINT A)))
+SELECT IDS.NAME AS INAME, FILES.NAME AS FNAME, COUNT(*) AS C FROM TOKENS INNER JOIN IDS ON IDS.EID = TOKENS.EID INNER JOIN FILES ON TOKENS.FID = FILES.FID GROUP BY IDS.EID, TOKENS.FID ORDER BY C DESC;
+SELECT IFNULL(FLOAT4WDN,FLOAT4WDN) FROM VWKT2102 WHERE ABS(DOUBLE(FLOAT4NN)) = DOUBLE(FLOAT4NN)
+SELECT IFNULL(FLOAT4WDN,FLOAT4WDN) FROM VWKT2102 WHERE ABS(FLOAT4WDN) = FLOAT4WDN
+SELECT INT(DECIMAL(FLOAT(ABS(DOUBLE(CEIL(FLOOR(INTCOLNN))))))) FROM VWKT2102 WHERE INT(DECIMAL(FLOAT(ABS(DOUBLE(CEIL(FLOOR(INTCOLNN))))))) = INT(DECIMAL(FLOAT(ABS(DOUBLE(CEIL(FLOOR(INTCOLNN)))))))
+SELECT Job.Name as JobName, Job.JobId as JobID, VolumeName, Job.StartTime as Start, sum(JobFiles) AS Files,sum(JobBytes) AS Bytes FROM Job,JobMedia,Media WHERE Job.Name='%1' AND JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId GROUP by VolumeName, Job.JobID, Job.Name, Job.StartTime ORDER by JobName, Start
+SELECT Job.Name as JobName, Job.JobId as JobID, VolumeName, Job.StartTime as Start, sum(JobFiles) AS Files,sum(JobBytes) AS Bytes FROM Job,JobMedia,Media WHERE JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId GROUP by VolumeName, Job.JobID, Job.Name, Job.StartTime ORDER by JobName, Start
+SELECT MIN(VALUE), MAX(VALUE) FROM TEST
+SELECT MediaId,VolumeName,VolBytes/(1024*1024*1024) AS GB,Storage.Name AS Storage,Slot,Pool.Name AS Pool,MediaType,VolStatus FROM Media,Pool,Storage WHERE Media.PoolId=Pool.PoolId AND Slot>0 AND InChanger=1 AND Media.StorageId=Storage.StorageId ORDER BY MediaType ASC, Slot ASC
+SELECT OUTERJN.MANYTYPES.*, OUTERJN.MANYTYPES_NOTNULL.* FROM OUTERJN.MANYTYPES LEFT JOIN OUTERJN.MANYTYPES_NOTNULL ON OUTERJN.MANYTYPES.DEC62COL = OUTERJN.MANYTYPES_NOTNULL.DEC72COL WHERE OUTERJN.MANYTYPES.INTCOL BETWEEN 5 AND 15 ORDER BY 1
+SELECT OUTERJN.MANYTYPES.*, OUTERJN.MANYTYPES_NOTNULL.* FROM OUTERJN.MANYTYPES RIGHT JOIN OUTERJN.MANYTYPES_NOTNULL ON OUTERJN.MANYTYPES.DEC62COL = OUTERJN.MANYTYPES_NOTNULL.DEC72COL WHERE OUTERJN.MANYTYPES_NOTNULL.INTCOL > 18 ORDER BY 1,11
+SELECT PART, SUPPLIER, OUTERJN.PARTS.PROD#, PRODUCT FROM OUTERJN.PARTS LEFT OUTER JOIN OUTERJN.PRODUCTS_NOTNULL ON OUTERJN.PARTS.PROD# = OUTERJN.PRODUCTS_NOTNULL.PROD# WHERE OUTERJN.PARTS.PROD# > 100
+SELECT PNO FROM SP WHERE SNO = 'S1'
+SELECT PName, Price FROM Product, Company WHERE Manufacturer=CName AND Country='Japan' AND Price <= '$200';
+SELECT PName, Price, Manufacturer FROM Product WHERE Price > '$100';
+SELECT POUNDS FROM HIPPO WHERE NULLIF(CASE WHEN FOOD = 'FRIED APPLES' THEN '061' WHEN FOOD = 'PUMPKINS AND ROOTS' THEN '010' WHEN FOOD = 'LETTUCE AND CARROTS' THEN '118' WHEN FOOD = 'CABBAGE AND RAISINS' THEN '087' ELSE '999' END, MOUTHS) BETWEEN '061' AND '087'
+SELECT POUNDS, MOUTHS FROM HIPPO WHERE MOUTHS IN ( SELECT CASE WHEN MOUTHS = '061' THEN '000' WHEN MOUTHS = '010' THEN '087' WHEN MOUTHS = '118' THEN '118' WHEN MOUTHS = '087' THEN '010' WHEN MOUTHS = '000' THEN '061' ELSE '999' END FROM HIPPO)
+SELECT POUNDS, MOUTHS, CASE WHEN CASE WHEN LEGNO = 1111 THEN 0 WHEN LEGNO = 1110 THEN 1 ELSE 2 END = 0 THEN 9 WHEN CASE LEGNO WHEN 11 THEN 3 WHEN 1011 THEN 4 ELSE 5 END = 3 THEN 8 ELSE 7 END AS CASERESULT, FOOD FROM HIPPO
+SELECT POUNDS, NULLIF(CASE WHEN FOOD = 'FRIED APPLES' THEN '061' ELSE '999' END, CASE WHEN FOOD = 'FRIED APPLES' THEN '061' ELSE '999' END) AS NULLIFRESULT, LEGNO, FOOD FROM HIPPO
+SELECT Path.Path,Filename.Name FROM File,Filename,Path WHERE File.JobId=%1 AND Filename.FilenameId=File.FilenameId AND Path.PathId=File.PathId ORDER BY Path.Path,Filename.Name
+SELECT REC_ID, RANK, BENEFIT FROM USER_ADVISOR_RECOMMENDATIONS WHERE TASK_NAME = :task_name
+SELECT Recycle,VolRetention,VolUseDuration,MaxVolJobs,MaxVolFiles,MaxVolBytes FROM Pool WHERE Name='%1'
+SELECT SNAME, COALESCE(SUM(QTY),0) AS Shipping FROM S LEFT JOIN SP ON S.SNO = SP.SNO GROUP BY SNAME
+SELECT SNAME, SUM(QTY) AS Shipping FROM S INNER JOIN SP ON S.SNO = SP.SNO GROUP BY SNAME
+SELECT SNAME, SUM(QTY) AS Shipping FROM S LEFT JOIN SP ON S.SNO = SP.SNO GROUP BY SNAME
+SELECT SNO FROM SP GROUP BY SNO HAVING SUM(QTY) > (SELECT COALESCE(SUM(QTY),0) FROM SP WHERE SNO = 'S5')
+SELECT SNO FROM SP GROUP BY SNO HAVING SUM(QTY) > (SELECT SUM(QTY) FROM SP WHERE SNO = 'S5')
+SELECT SNO FROM SP GROUP BY SNO HAVING SUM(QTY) > (SELECT SUM(QTY) FROM SP WHERE SNO = @SNO)
+SELECT SNO, (SELECT COALESCE(SUM(QTY),0) FROM SP WHERE SNO = S.SNO) + (SELECT COALESCE(SUM(QTY),0) FROM SPJ WHERE SNO = S.SNO) AS Total FROM S
+SELECT SNO, SUM(QTY) AS Shipping FROM SP GROUP BY SNO
+SELECT SNO, SUM(QTY) AS Total FROM (SELECT SNO, QTY FROM SP UNION ALL SELECT SNO, QTY FROM SPJ) AS UnionResult GROUP BY SNO
+SELECT SNO, SUM(QTY) AS Used FROM SPJ GROUP BY SNO
+SELECT SP.SNO, SUM(SP.QTY + SPJ.QTY) AS Total FROM SP INNER JOIN SPJ ON SP.SNO = SPJ.SNO GROUP BY SP.SNO
+SELECT SP.SNO, SUM(SP.QTY + SPJ.QTY) AS Total FROM SP, SPJ WHERE SP.SNO = SPJ.SNO GROUP BY SP.SNO
+SELECT SP.SNO, SUM(SP.QTY + SPJ.QTY) FROM SP INNER JOIN SPJ ON SP.SNO = SPJ.SNO GROUP BY SP.SNO
+SELECT SP.SNO, SUM(SP.QTY + SPJ.QTY) FROM SP, SPJ WHERE SP.SNO = SPJ.SNO GROUP BY SP.SNO
+SELECT SUBSTR(COUNTRY,1,3), LENGTH(EMPNO), DIGITS(JOBCODE), VALUE(SRATE,1) FROM USRT029.EMPINT WHERE EMPNO <= '062000' UNION ALL SELECT COUNTRY, EDUC, EMPLOC, SAL FROM USRT029.EMPINT WHERE ((SRATE * EDUC) - 5 = 190) UNION ALL SELECT SUBSTR(A.SEX,1,1),A.JOBCODE, SUBSTR(B.LOCNAME,1,2), VALUE(A.JOBCODE,1) FROM USRT029.EMPINT A, USRT029.EMPLOC B WHERE (B.CITY LIKE '%NAGAWA%' AND A.EMPNO = '069000') UNION ALL SELECT SUBSTR(COUNTRY,1,5), LENGTH(EMPNO), DIGITS(JOBCODE), VALUE(SRATE,1) FROM USRT029.EMPINT WHERE EMPNO <= '062000'
+SELECT SUM(amount_sold), channel_id FROM sales group by channel_id order by channel_id
+SELECT SUM(amount_sold), promo_id FROM sales where promo_id < 8 group by promo_id order by promo_id
+SELECT Slot,MaxVolBytes,VolCapacityBytes,VolStatus,Recycle,VolRetention, VolUseDuration,MaxVolJobs,MaxVolFiles FROM Media WHERE VolumeName='%1'
+SELECT TBNN1200.old_offices.OLD_OFFICE, TBNN1200.old_offices.EMP_ID FROM (TBNN1200.old_offices T1 FULL JOIN TBNN1200.new_offices T2 ON T1.emp_id = T2.emp_id), (TBNN1200.old_offices T3 FULL JOIN TBNN1200.new_offices T4 ON T3.emp_id = T4.emp_id) WHERE T1.emp_id = T3.emp_id
+SELECT TBNN1201.old_offices.OLD_OFFICE, TBNN1201.old_offices.EMP_ID FROM (TBNN1201.old_offices T1 FULL JOIN TBNN1201.new_offices T2 ON T1.emp_id = T2.emp_id), (TBNN1201.old_offices T3 FULL JOIN TBNN1201.new_offices T4 ON T3.emp_id = T4.emp_id) WHERE T1.emp_id = T3.emp_id
+SELECT TYPE, (SELECT VALUE FROM TEST T2 WHERE T.TYPE = T2.TYPE ORDER BY TYPE, VALUE LIMIT 1) MIN FROM (SELECT DISTINCT TYPE FROM TEST) T ORDER BY TYPE
+SELECT V1.SNO, Shipping + Used AS Total FROM V1 RIGHT OUTER JOIN V2 ON V1.SNO = V2.SNO
+SELECT V2.SNO, COALESCE(Shipping,0) + COALESCE(Used,0) AS Total FROM V1 FULL OUTER JOIN V2 ON V1.SNO = V2.SNO
+SELECT V2.SNO, COALESCE(Shipping,0) + Used AS Total FROM V1 RIGHT OUTER JOIN V2 ON V1.SNO = V2.SNO
+SELECT V2.SNO, Shipping + Used AS Total FROM V1 RIGHT OUTER JOIN V2 ON V1.SNO = V2.SNO
+SELECT VALUE FROM TEST ORDER BY VALUE DESC LIMIT 3
+SELECT VALUE FROM TEST ORDER BY VALUE LIMIT 3
+SELECT VolumeName AS Volume,VolMounts AS Mounts,VolErrors AS Errors, VolWrites AS Writes,VolStatus AS Status FROM Media WHERE (VolErrors>0) OR (VolStatus='Error') OR (VolMounts>50) OR (VolStatus='Disabled') OR (VolWrites>3999999) ORDER BY VolStatus ASC, VolErrors,VolMounts,VolumeName DESC
+SELECT VolumeName,VolStatus,Storage.Name AS Location, VolBytes/(1024*1024*1024) AS GB,MediaId,MediaType,Pool.Name AS Pool FROM Media,Pool,Storage WHERE Media.PoolId=Pool.PoolId AND Media.StorageId=Storage.StorageId AND InChanger=0 AND ((VolStatus='Purged') OR (VolStatus='Append') OR (VolStatus='Recycle')) ORDER BY VolMounts ASC, Pool.Name ASC, VolumeName ASC SELECT VolumeName, Job.JobId as JobID, Job.Name as JobName, Job.StartTime as Start, sum(JobFiles) AS Files,sum(JobBytes) AS Bytes FROM Job,JobMedia,Media WHERE JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId GROUP by VolumeName, Job.JobID, Job.Name, Job.StartTime ORDER by VolumeName
+SELECT X.country, count(*) FROM Company X, Product Y WHERE X.cname=Y.manufacturer GROUP BY X.country;
+SELECT X.pname FROM (SELECT * FROM Product AS Y WHERE Y.price > '$20') AS X WHERE X.price < '$30';
+SELECT X.pname, (SELECT Y.country FROM Company Y WHERE Y.cname=X.manufacturer) FROM Product X;
+SELECT YEAR(EMENDATE), MONTH(EMENDATE), DAY(EMENDATE), HOUR(EMPTIME), MINUTE(EMPTIME), SECOND(EMPTIME), MICROSECOND(EMPTIME) FROM USRT029.EMPROJACT WHERE DEPTNO ='M10' AND EMENDATE IS NOT NULL AND PROJNO = '973' UNION SELECT YEAR(EMSTDATE), MONTH(EMSTDATE), DAY(EMSTDATE), HOUR(EMPTIME), MINUTE(EMPTIME), SECOND(EMPTIME), MICROSECOND(EMPTIME) FROM USRT029.EMPROJACT WHERE EMENDATE IS NOT NULL AND DEPTNO ='S33' UNION SELECT YEAR(EMSTDATE), MONTH(EMSTDATE), DAY(EMSTDATE), HOUR(EMPTIME), MINUTE(EMPTIME), SECOND(EMPTIME), MICROSECOND(EMPTIME) FROM USRT029.EMPROJACT WHERE DEPTNO = ( SELECT MAX(DEPTNO) FROM USRT029.EMPROJACT )
+SELECT a.analysis_id, a.program, COUNT(cf.feature_id) FROM analysis a, analysisfeature af, feature cf WHERE a.analysis_id = af.analysis_id AND af.feature_id = cf.feature_id GROUP BY a.analysis_id, a.program
+SELECT a.analysis_id, cv.name, ap.value FROM analysis a, analysisprop ap, cvterm cv WHERE a.program = 'jaccard' AND a.analysis_id = ap.analysis_id AND ap.type_id = cv.cvterm_id AND cv.name = 'query_bsml_file_list' ORDER BY a.analysis_id ASC
+SELECT a.analysis_id, o.genus, o.species, COUNT(*) AS num_proteins FROM analysis a, analysisfeature af, feature cf, featureloc fl, feature p, organism o WHERE a.program = 'jaccard' AND a.analysis_id = af.analysis_id AND af.feature_id = cf.feature_id AND fl.feature_id = cf.feature_id AND fl.srcfeature_id = p.feature_id AND p.organism_id = o.organism_id GROUP BY a.analysis_id, o.genus, o.species
+SELECT analysis_id, program, sourcename FROM analysis
+SELECT c.country_id, c.cust_city, c.cust_last_name FROM customers c WHERE c.country_id IN ('US', 'UK') AND ROWNUM<20 ORDER BY c.country_id, c.cust_city, c.cust_last_name
+SELECT c.dept, c.number FROM Class c, Teaches t, Instructor i WHERE c.dept = t.dept AND c.number = t.number AND t.username = i.username AND i.username = 'zahorjan' 
+SELECT c.dept, c.number, c.title FROM Class c, Teaches t, Instructor i WHERE c.dept = t.dept AND c.number = t.number AND t.username = i.username AND i.username NOT IN ('levy', 'djw') 
+SELECT c.dept, c.number, c.title FROM Class c, Teaches t1, Teaches t2, Instructor i1, Instructor i2 WHERE c.dept = t1.dept AND c.dept = t2.dept AND c.number = t1.number AND c.number = t2.number AND t1.username = i1.username AND i1.username = 'levy' AND t2.username = i2.username AND i2.username = 'zahorjan' 
+SELECT category, max(price) FROM Product GROUP BY category;
+SELECT cf.residues FROM feature cf WHERE cf.uniquename = '3890169_cogs'
+SELECT cf.uniquename, a.program FROM feature p, featureloc fl, feature cf, analysisfeature af, analysis a WHERE p.uniquename = 'pfa1.2280.m00238_protein' AND p.feature_id = fl.srcfeature_id AND fl.feature_id = af.feature_id AND af.feature_id = cf.feature_id AND af.analysis_id = a.analysis_id AND a.program in ('jaccard', 'cogs')
+SELECT column1, column2 FROM table1, table2 WHERE column2='value';
+SELECT count(*) AS Jobs,sum(JobFiles) AS Files,sum(JobBytes) AS Bytes,Name AS Job FROM Job GROUP by Name
+SELECT count(*) AS Jobs,sum(JobFiles) AS Files,sum(JobBytes) AS Bytes,VolumeName FROM Job,JobMedia,Media WHERE JobMedia.JobId=Job.JobId AND JobMedia.MediaId=Media.MediaId GROUP by VolumeName
+SELECT count(DISTINCT category) FROM Product WHERE price > '$20';
+SELECT count(category) FROM Product WHERE price > '$20'
+SELECT ctid, xmin, * FROM lockdemo
+SELECT current_date FROM dual
+SELECT dept, number, SUBSTR(title, 1, 12) AS short_title FROM Class 
+SELECT e.ename, d.dname FROM emp e, dept d WHERE e.deptno = d.deptno order by e.ename
+SELECT first_name || ' ' || last_name as Full_Name FROM employees WHERE job_id = (SELECT job_id FROM jobs WHERE job_title = 'President')
+SELECT first_name, last_name FROM employees WHERE job_id = (SELECT job_id FROM jobs WHERE job_title = 'President')
+SELECT fname FROM Instructor WHERE username = 'zahorjan' 
+SELECT i.highway FROM geod_states s, geod_interstates i WHERE s.state = 'New Hampshire' AND mdsys.sdo_filter (i.geom, s.geom) = 'TRUE'
+SELECT intcol, charcol FROM TBLV0100.manytypes_ctrl WHERE intcol in ( SELECT t1.intcol FROM ((((TBLV0100.mtypes_1 T1 FULL JOIN TBLV0100.mtypes_2 T2 ON T1.charcol = T2.vcharcol AND T1.intcol = T2.dec62col) FULL JOIN (TBLV0100.mtypes_2 T4 FULL JOIN TBLV0100.mtypes_1 T3 ON T4.smintcol = T3.dec62col) ON T1.intcol = T4.intcol AND T2.charcol = T3.charcol) FULL JOIN ((TBLV0100.mtypes_1 T5 FULL JOIN TBLV0100.mtypes_2 T6 ON T5.charcol = T6.vcharcol AND T5.intcol = T6.dec62col) FULL JOIN (TBLV0100.mtypes_2 T7 FULL JOIN TBLV0100.mtypes_1 T8 ON T7.smintcol = T8.dec62col) ON T5.intcol = T8.dec62col AND T6.charcol = T7.charcol) ON T5.dec62col = T1.dec62col AND T5.intcol = T3.intcol) FULL JOIN (((TBLV0100.mtypes_1 T9 FULL JOIN TBLV0100.mtypes_2 T10 ON T9.charcol = T10.vcharcol AND T9.intcol = T10.dec62col) FULL JOIN (TBLV0100.mtypes_2 T12 FULL JOIN TBLV0100.mtypes_1 T11 ON T12.smintcol = T11.dec62col) ON T9.intcol = T12.intcol AND T10.charcol = T11.charcol) FULL JOIN ((TBLV0100.mtypes_1 T13 FULL JOIN TBLV0100.mtypes_2 T14 ON T13.charcol = T14.vcharcol AND T13.intcol = T14.dec62col) FULL JOIN (TBLV0100.mtypes_2 T15 FULL JOIN TBLV0100.mtypes_1 T16 ON T15.smintcol = T16.dec62col) ON T13.intcol = T16.dec62col AND T14.charcol = T15.charcol) ON T13.dec62col = T9.dec62col AND T13.intcol = T11.intcol) ON T12.dec62col = T2.dec62col AND T14.intcol = T8.intcol) FULL JOIN ((((TBLV0100.mtypes_1 T17 FULL JOIN TBLV0100.mtypes_2 T18 ON T17.charcol = T18.vcharcol AND T17.intcol = T18.dec62col) FULL JOIN (TBLV0100.mtypes_2 T20 FULL JOIN TBLV0100.mtypes_1 T19 ON T20.smintcol = T19.dec62col) ON T17.intcol = T20.intcol AND T18.charcol = T19.charcol) FULL JOIN ((TBLV0100.mtypes_1 T21 FULL JOIN TBLV0100.mtypes_2 T22 ON T21.charcol = T22.vcharcol AND T21.intcol = T22.dec62col) FULL JOIN (TBLV0100.mtypes_2 T23 FULL JOIN TBLV0100.mtypes_1 T24 ON T23.smintcol = T24.dec62col) ON T21.intcol = T24.dec62col AND T22.charcol = T23.charcol) ON T21.dec62col = T17.dec62col AND T21.intcol = T19.intcol) FULL JOIN (((TBLV0100.mtypes_1 T25 FULL JOIN TBLV0100.mtypes_2 T26 ON T25.charcol = T26.vcharcol AND T25.intcol = T26.dec62col) FULL JOIN (TBLV0100.mtypes_2 T28 FULL JOIN TBLV0100.mtypes_1 T27 ON T28.smintcol = T27.dec62col) ON T25.intcol = T28.intcol AND T26.charcol = T27.charcol) FULL JOIN (TBLV0100.mtypes_1 T29 FULL JOIN TBLV0100.mtypes_2 T30 ON T29.charcol = T30.vcharcol AND T29.intcol = T30.dec62col) ON T29.dec62col = T25.dec62col AND T29.intcol = T27.intcol) ON T28.dec62col = T18.dec62col AND T30.intcol = T24.intcol) ON T28.dec62col = T2.dec62col AND T30.intcol = T14.intcol) ORDER BY 1
+SELECT job_title, (SELECT count(*) FROM employees WHERE job_id = jobs.job_id) AS job_count FROM jobs ORDER BY job_title
+SELECT job_title, count(*) AS job_count FROM employees INNER JOIN jobs ON jobs.job_id = employees.job_id WHERE employees.job_id = jobs.job_id GROUP BY job_title HAVING count(*) = 1 ORDER BY job_title
+SELECT job_title, count(*) AS job_count FROM employees INNER JOIN jobs ON jobs.job_id = employees.job_id WHERE employees.job_id = jobs.job_id GROUP BY job_title ORDER BY job_title
+SELECT job_title, min_salary, max_salary, actual_min, actual_max, avg_salary FROM (SELECT jobs.job_id, max(salary) AS actual_max FROM jobs INNER JOIN employees ON jobs.job_id = employees.job_id GROUP BY jobs.job_id) salary_maxes INNER JOIN jobs ON jobs.job_id = salary_maxes.job_id INNER JOIN (SELECT jobs.job_id, avg(salary) AS avg_salary FROM jobs INNER JOIN employees ON jobs.job_id = employees.job_id GROUP BY jobs.job_id) salary_averages on salary_averages.job_id = jobs.job_id INNER JOIN (SELECT jobs.job_id, min(salary) AS actual_min FROM jobs INNER JOIN employees ON jobs.job_id = employees.job_id GROUP BY jobs.job_id) salary_mins on salary_mins.job_id = jobs.job_id
+SELECT job_title, min_salary, max_salary, actual_min, actual_max, avg_salary FROM (SELECT jobs.job_id, max(salary) AS actual_max, min(salary) AS actual_min, avg(salary) AS avg_salary FROM jobs INNER JOIN employees ON jobs.job_id = employees.job_id GROUP BY jobs.job_id) salary_ags INNER JOIN jobs ON jobs.job_id = salary_ags.job_id create view salary_ranges SELECT sum(salary) FROM employees
+SELECT job_title, min_salary, max_salary, avg_salary FROM (SELECT jobs.job_id, avg(salary) AS avg_salary FROM jobs INNER JOIN employees ON jobs.job_id = employees.job_id GROUP BY jobs.job_id) salary_averages INNER JOIN jobs ON jobs.job_id = salary_averages.job_id
+SELECT manufacturer, count(*) AS total FROM Product WHERE price < '$200' GROUP BY manufacturer;
+SELECT num_select_stmt FROM user_advisor_sqlw_sum WHERE workload_name = :workload_name
+SELECT o.genus, o.species, COUNT(*) AS num_proteins FROM analysisfeature af, feature cf, featureloc fl, feature p, organism o WHERE af.analysis_id = 2 AND af.feature_id = cf.feature_id AND fl.feature_id = cf.feature_id AND fl.srcfeature_id = p.feature_id AND p.organism_id = o.organism_id GROUP BY o.genus, o.species
+SELECT oid FROM pg_proc ORDER BY 1 LIMIT 8
+SELECT organism_id, genus, species FROM organism
+SELECT p.uniquename, fl.fmin, fl.fmax, fl.strand, fl.locgroup, fl.rank FROM feature cf, featureloc fl, feature p WHERE cf.uniquename = '3890169_cogs' AND fl.feature_id = cf.feature_id AND fl.srcfeature_id = p.feature_id
+SELECT parameter_name, parameter_value FROM user_advisor_parameters WHERE task_name = :task_name AND (parameter_name LIKE '%MVIEW%' OR parameter_name LIKE '%INDEX%') order by 1,2
+SELECT pg_advisory_lock(col) FROM lockdemo
+SELECT pg_backend_pid()
+SELECT pg_class.oid FROM pg_class JOIN pg_namespace ON (relnamespace = pg_namespace.oid) JOIN pg_attribute ON (pg_class.oid = pg_attribute.attrelid) LIMIT 1
+SELECT pg_sleep(0.300)
+SELECT pg_sleep(0.500)
+SELECT pg_sleep(0.600)
+SELECT pname, price, manufacturer FROM Product WHERE category='Gadgets' AND price > '$10' ORDER BY price, pname;
+SELECT rec_id, action_id, SUBSTR(command, 1, 30) AS command FROM user_advisor_actions WHERE task_name = :task_name ORDER BY rec_id, action_id
+SELECT rec_id, action_id, SUBSTR(command,1,30) AS command FROM user_advisor_actions WHERE task_name = :task_name ORDER BY rec_id, action_id
+SELECT rec_id, action_id, SUBSTR(command,1,30) AS command FROM user_advisor_actions WHERE task_name = :task_name2 ORDER BY rec_id, action_id
+SELECT rec_id, action_id, substr(command,1,30) AS command FROM user_advisor_actions WHERE task_name = :task_name ORDER BY rec_id, action_id
+SELECT rec_id, rank, benefit FROM user_advisor_recommendations WHERE task_name = :task_name
+SELECT rec_id, rank, benefit FROM user_advisor_recommendations WHERE task_name = :task_name order by rec_id
+SELECT relname FROM pg_class ORDER BY 1 LIMIT 8
+SELECT source.name AS CallingFunction, dest.name AS CalledFunction FROM fcalls INNER JOIN functions AS source ON fcalls.sourceid = source.id INNER JOIN functions AS dest ON fcalls.destid = dest.id
+SELECT sql_id, rec_id, precost, postcost, (precost-postcost)*100/precost AS percent_benefit FROM USER_ADVISOR_SQLA_WK_STMTS WHERE TASK_NAME = :task_name order by sql_id
+SELECT sql_id, rec_id, precost, postcost, (precost-postcost)*100/precost AS percent_benefit FROM user_advisor_sqla_wk_stmts WHERE task_name = :task_name order by sql_id
+SELECT sql_id, username, optimizer_cost, SUBSTR(sql_text, 1, 30) FROM user_advisor_sqlw_stmts WHERE workload_name = :workload_name ORDER BY sql_id
+SELECT state, landsqmi, SDO_GEOM.SDO_AREA(c.geom,0.005,'unit=SQ_KM') FROM Geod_States c WHERE state_abrv='WA'
+SELECT substring(relname, 1, 1) FROM pg_class ORDER BY 1 LIMIT 8
+SELECT sum(price) FROM Product WHERE manufacturer='GizmoWorks';
+SELECT sum(salary) AS salary, department_name FROM employees LEFT JOIN departments on departments.department_id = employees.department_id GROUP BY department_name
+SELECT sum(salary) AS salary, department_name FROM employees RIGHT JOIN departments on departments.department_id = employees.department_id GROUP BY department_name
+SELECT sum(salary) from ( SELECT sum(salary) as salary, department_name FROM employees INNER JOIN departments on departments.department_id = employees.department_id GROUP BY department_name )
+SELECT sum(salary), department_name FROM employees FULL JOIN departments on departments.department_id = employees.department_id GROUP BY department_name
+SELECT t.calendar_month_desc, SUM(s.amount_sold) AS dollars FROM sales s, times t WHERE s.time_id = t.time_id AND s.time_id between TO_DATE('01-JAN-2000', 'DD-MON-YYYY') AND TO_DATE('01-JUL-2000', 'DD-MON-YYYY') GROUP BY t.calendar_month_desc ORDER BY t.calendar_month_desc
+SELECT tokensa.eid, min(ids.name) as identifier, min(filesb.name) as defined, min(filesa.name) as used FROM definers INNER JOIN tokens AS tokensa ON definers.basefileid = tokensa.fid INNER JOIN tokens AS tokensb ON definers.definerid = tokensb.fid INNER JOIN ids ON ids.eid = tokensa.eid INNER JOIN files as filesa ON tokensa.fid = filesa.fid INNER JOIN files as filesb ON tokensb.fid = filesb.fid WHERE tokensa.eid = tokensb.eid GROUP BY tokensa.eid, definerid, basefileid ORDER BY defined, identifier
+SELECT txid_current()
+SELECT u.country, v.pname, v.price FROM Company u, Product v, (SELECT x.country, max(y.price) as mprice FROM Company x, Product y WHERE x.cname = y.manufacturer GROUP BY x.country) AS p WHERE u.country = p.country and v.price = p.mprice;
+SELECT virtualtransaction AS vxid, transactionid::text FROM pg_locks WHERE pid = pg_backend_pid() ORDER BY 1, 2 LIMIT 1
+SELECT x.country, count(*) FROM Company x, Product y WHERE x.cname = y.manufacturer GROUP BY x.country;
+SELECT x.country, count(y.pname) FROM Company x LEFT OUTER JOIN Product y ON x.cname = y.manufacturer GROUP BY x.country;
+SELECT x.country, max(y.price) FROM Company x, Product y WHERE x.cname = y.manufacturer GROUP BY x.country;
+SELECT x.country, y.pname FROM Company x JOIN Product y ON x.cname = y.manufacturer
+SELECT x.country, y.pname FROM Company x LEFT OUTER JOIN Product y ON x.cname = y.manufacturer;
+SELECT x.country, y.pname FROM Company x, Product y WHERE x.cname = y.manufacturer;
+SELECT x.country, y.pname, y.price FROM Company x, Product y WHERE x.cname = y.manufacturer and y.price >= ALL (SELECT z.price FROM Product z WHERE x.cname = z.manufacturer);
+UPDATE lockdemo SET col = 1
+UPDATE lockdemo SET col = 1 WHERE col = 1
+UPDATE lockdemo SET col = 2
+UPDATE lockdemo SET col = 3
+UPDATE lockdemo SET col = 3 WHERE col = 3
+UPDATE lockdemo SET col = 4
+UPDATE lockdemo SET col = 40 WHERE col = 40
+UPDATE lockdemo SET col = 42 WHERE col = 40
+UPDATE lockdemo SET col = 5
+UPDATE lockdemo SET col = 50 WHERE col = 50
+UPDATE lockdemo SET col = 51 WHERE col = 50
+UPDATE lockdemo SET col = 6
+UPDATE lockdemo SET col = 61 WHERE col = 60
+UPDATE lockdemo SET col = 7
+UPDATE lockdemo SET col = 81 WHERE col = 80
+USE Parts GO SELECT * FROM SP
+VARIABLE collection_id NUMBER
+VARIABLE create_mv_ddl VARCHAR2(4000)
+VARIABLE failed_stmts NUMBER
+VARIABLE no_recs NUMBER
+VARIABLE saved_stmts NUMBER
+VARIABLE sql_stmt VARCHAR2(4000)
+VARIABLE sql_text VARCHAR2(400)
+VARIABLE sql_text2 VARCHAR2(400)
+VARIABLE task_cust_mv VARCHAR2(30)
+VARIABLE task_id NUMBER
+VARIABLE task_id2 NUMBER
+VARIABLE task_name VARCHAR2(255)
+VARIABLE task_name2 VARCHAR2(255)
+VARIABLE template_id NUMBER
+VARIABLE template_name VARCHAR2(255)
+VARIABLE workload_name VARCHAR2(255)
+VARIABLE workload_name VARCHAR2(30)
+VARIABLE workload_name2 VARCHAR2(255)
+WITH Sub(ENO) AS ( SELECT ENO FROM E WHERE BossENO = 'E1' UNION ALL SELECT E.ENO FROM E JOIN Sub S ON E.BossENO = S.ENO ) SELECT ENO FROM Sub
+WITH V1(SNO,ORDERED) AS ( SELECT SNO,SUM(QTY) FROM SP GROUP BY SNO UNION SELECT SNO,0 FROM S WHERE SNO NOT IN (SELECT SNO FROM SP)), V2(SNO,USED) AS ( SELECT SNO,SUM(QTY) FROM SPJ GROUP BY SNO UNION SELECT SNO,0 FROM S WHERE SNO NOT IN (SELECT SNO FROM SPJ)) SELECT V1.SNO, ORDERED+USED AS TOTAL FROM V1,V2 WHERE V1.SNO = V2.SNO
+WITH letter (letter, count) AS ( SELECT letter, COUNT(*) FROM sample GROUP BY 1 ) SELECT letter AS l, count, (SELECT * FROM lookup_letter(letter) AS l2 LIMIT 1) AS lookup_letter FROM letter ORDER BY 2 DESC
+WITH letter (letter, count) AS ( SELECT letter, COUNT(*) FROM sample GROUP BY 1 ) SELECT letter AS l, count, lookup_letter(letter) FROM letter ORDER BY 2 DESC
+WITH letters (letter, count) AS ( SELECT letter, COUNT(*) FROM sample GROUP BY 1 ) SELECT letter, count, (count * 100.0 / (SUM(count) OVER ()))::numeric(4,1) AS "%" FROM letters ORDER BY 2 DESC
+a1(minSalary, maxSalary, avgSalary, sumSalary, countEmps) := select min(E.eSalary), max(E.eSalary), avg(E.eSalary), sum(E.eSalary), count(*) from employee E
+a2(numEmpsTakenDB) := select count(distinct T.eID) from dbCourse D, takes T where D.cID = T.cID
+alter system flush shared_pool
+alter table product add foreign key (manufacturer) references company;
+begin sql_stmt := 'SELECT /* Query */ t.week_ending_day, p.prod_subcategory, sum(s.amount_sold) AS dollars, s.channel_id, s.promo_id FROM sales s, times t, products p WHERE s.time_id = t.time_id AND s.prod_id = p.prod_id AND s.prod_id > 10 AND s.prod_id < 50 GROUP BY t.week_ending_day, p.prod_subcategory, s.channel_id, s.promo_id'
+begin transaction
+commit
+connect / as sysdba
+connect /as sysdba
+connect scott/tiger
+connect sh/sh
+create index name_idx on students(name)
+create index teid on tokens(eid)
+create index tfid on tokens(fid)
+create table Product (pid int primary key, pname text, manufacturer text);
+create table Purchase (pid int primary key, product text, price float, quantity int, month varchar(15));
+create table account (account_id integer unsigned not null auto_increment, product_cd varchar(10) not null, cust_id integer unsigned not null, open_date date not null, close_date date, last_activity_date date, status enum('ACTIVE','CLOSED','FROZEN'), open_branch_id smallint unsigned, open_emp_id smallint unsigned, avail_balance float(10,2), pending_balance float(10,2), constraint fk_product_cd foreign key (product_cd) references product (product_cd), constraint fk_a_cust_id foreign key (cust_id) references customer (cust_id), constraint fk_a_branch_id foreign key (open_branch_id) references branch (branch_id), constraint fk_a_emp_id foreign key (open_emp_id) references employee (emp_id), constraint pk_account primary key (account_id) )
+create table branch (branch_id smallint unsigned not null auto_increment, name varchar(20) not null, address varchar(30), city varchar(20), state varchar(2), zip varchar(12), constraint pk_branch primary key (branch_id) )
+create table business (cust_id integer unsigned not null, name varchar(40) not null, state_id varchar(10) not null, incorp_date date, constraint fk_b_cust_id foreign key (cust_id) references customer (cust_id), constraint pk_business primary key (cust_id) )
+create table customer (cust_id integer unsigned not null auto_increment, fed_id varchar(12) not null, cust_type_cd enum('I','B') not null, address varchar(30), city varchar(20), state varchar(20), postal_code varchar(10), constraint pk_customer primary key (cust_id) )
+create table department (dept_id smallint unsigned not null auto_increment, name varchar(20) not null, constraint pk_department primary key (dept_id) )
+create table employee (emp_id smallint unsigned not null auto_increment, fname varchar(20) not null, lname varchar(20) not null, start_date date not null, end_date date, superior_emp_id smallint unsigned, dept_id smallint unsigned, title varchar(20), assigned_branch_id smallint unsigned, constraint fk_e_emp_id foreign key (superior_emp_id) references employee (emp_id), constraint fk_dept_id foreign key (dept_id) references department (dept_id), constraint fk_e_branch_id foreign key (assigned_branch_id) references branch (branch_id), constraint pk_employee primary key (emp_id) )
+create table individual (cust_id integer unsigned not null, fname varchar(30) not null, lname varchar(30) not null, birth_date date, constraint fk_i_cust_id foreign key (cust_id) references customer (cust_id), constraint pk_individual primary key (cust_id) )
+create table officer (officer_id smallint unsigned not null auto_increment, cust_id integer unsigned not null, fname varchar(30) not null, lname varchar(30) not null, title varchar(20), start_date date not null, end_date date, constraint fk_o_cust_id foreign key (cust_id) references business (cust_id), constraint pk_officer primary key (officer_id) )
+create table product (product_cd varchar(10) not null, name varchar(50) not null, product_type_cd varchar(10) not null, date_offered date, date_retired date, constraint fk_product_type_cd foreign key (product_type_cd) references product_type (product_type_cd), constraint pk_product primary key (product_cd) )
+create table product_type (product_type_cd varchar(10) not null, name varchar(50) not null, constraint pk_product_type primary key (product_type_cd) )
+create table transaction (txn_id integer unsigned not null auto_increment, txn_date datetime not null, account_id integer unsigned not null, txn_type_cd enum('DBT','CDT'), amount double(10,2) not null, teller_emp_id smallint unsigned, execution_branch_id smallint unsigned, funds_avail_date datetime, constraint fk_t_account_id foreign key (account_id) references account (account_id), constraint fk_teller_emp_id foreign key (teller_emp_id) references employee (emp_id), constraint fk_exec_branch_id foreign key (execution_branch_id) references branch (branch_id), constraint pk_transaction primary key (txn_id) )
+create tablespace sh_indexes datafile 'shidx.f' size 2m reuse autoextend on default storage (initial 2k next 2k pctincrease 0 maxextents unlimited)
+create tablespace sh_mviews datafile 'shmv.f' size 2m reuse autoextend on default storage (initial 2k next 2k pctincrease 0 maxextents unlimited)
+create temporary table emp_tmp as select emp_id, fname, lname from employee
+create view view_sections as select s.id, c.title, f.name, s.year, count(e.id) from sections s, courses c, faculty f, enrollment e where s.course_id = c.id and s.instructor_id = f.id and s.id = e.section_id group by s.id, c.title, f.name, s.year
+dbCourse := select C.cID, C.cTitle, C.cHours from trainingCourse C where exists (select * from technologyArea A where A.aID = C.areaID and A.aTitle = 'Database')
+dbEmployee := select E.eID, E.eLast, E.eFirst, E.eTitle from employee E where exists (select * from takes T, dbCourse D where T.eID=E.eID and T.cID=D.cID)
+dbms_sqltune.create_sqlset(sqlsetname, 'Test loading from cursor cache')
+dbms_sqltune.load_sqlset(sqlsetname, sqlsetcur)
+declare sql_stmt varchar2(1000)
+delete from enrollment where section_id = (select s.id from sections s, courses c where s.year = 2001 and s.course_id = c.id and c.title = 'Elocution')
+drop table emp_tmp
+drop view view_sections
+end
+execute immediate sql_stmt
+g1(eTitle, minSalary, maxSalary, avgSalary) := select E.eTitle, min(E.eSalary), max(E.eSalary), avg(E.eSalary) from employee E group by E.eTitle
+g2 := select A.aID, A.aTitle, count(distinct T.eID) as numEmps from technologyArea A, trainingCourse C, takes T where A.aID = C.areaID and C.cID = T.cID group by A.aID, A.aTitle
+grant ADMINISTER SQL TUNING SET to sh
+grant ADVISOR to sh
+h1 := select A.aID, A.aTitle, count(distinct T.eID) as numEmps from technologyArea A, trainingCourse C, takes T where A.aID = C.areaID and C.cID = T.cID group by A.aID, A.aTitle having numEmps >= 4 order by numEmps desc
+h2 := select * from numEmpsTakenArea where numEmps >= 4 order by numEmps desc
+insert into Company values('MuseumPass', 'Vatican');
+insert into Purchase values(12, 'gadget', NULL, NULL, 'april');
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Quincy' limit 1) e cross join (select 'CHK' prod_cd, '2002-11-23' open_date, '2004-11-30' last_date, 1057.75 avail, 1057.75 pend union all select 'MM' prod_cd, '2002-12-15' open_date, '2004-12-05' last_date, 2212.50 avail, 2212.50 pend) a where c.fed_id = '333-33-3333'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Quincy' limit 1) e cross join (select 'SBL' prod_cd, '2004-02-22' open_date, '2004-12-17' last_date, 50000.00 avail, 50000.00 pend) a where c.fed_id = '04-4444444'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Salem' limit 1) e cross join (select 'CHK' prod_cd, '2001-05-23' open_date, '2005-01-03' last_date, 3487.19 avail, 3487.19 pend union all select 'SAV' prod_cd, '2001-05-23' open_date, '2004-10-12' last_date, 387.99 avail, 387.99 pend) a where c.fed_id = '888-88-8888'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Salem' limit 1) e cross join (select 'CHK' prod_cd, '2002-09-30' open_date, '2004-12-15' last_date, 23575.12 avail, 23575.12 pend union all select 'BUS' prod_cd, '2002-10-01' open_date, '2004-08-28' last_date, 0 avail, 0 pend) a where c.fed_id = '04-1111111'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Salem' limit 1) e cross join (select 'CHK' prod_cd, '2003-07-30' open_date, '2004-12-15' last_date, 38552.05 avail, 38552.05 pend) a where c.fed_id = '04-3333333'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Salem' limit 1) e cross join (select 'CHK' prod_cd, '2004-01-27' open_date, '2005-01-05' last_date, 2237.97 avail, 2897.97 pend) a where c.fed_id = '555-55-5555'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Waltham' limit 1) e cross join (select 'CHK' prod_cd, '2002-08-24' open_date, '2004-11-29' last_date, 122.37 avail, 122.37 pend union all select 'CD' prod_cd, '2004-12-28' open_date, '2004-12-28' last_date, 10000.00 avail, 10000.00 pend) a where c.fed_id = '666-66-6666'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Waltham' limit 1) e cross join (select 'CHK' prod_cd, '2003-07-30' open_date, '2004-12-15' last_date, 125.67 avail, 125.67 pend union all select 'MM' prod_cd, '2004-10-28' open_date, '2004-10-28' last_date, 9345.55 avail, 9845.55 pend union all select 'CD' prod_cd, '2004-06-30' open_date, '2004-06-30' last_date, 1500.00 avail, 1500.00 pend) a where c.fed_id = '999-99-9999'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Waltham' limit 1) e cross join (select 'CHK' prod_cd, '2003-09-12' open_date, '2005-01-03' last_date, 534.12 avail, 534.12 pend union all select 'SAV' prod_cd, '2000-01-15' open_date, '2004-10-24' last_date, 767.77 avail, 767.77 pend union all select 'MM' prod_cd, '2004-09-30' open_date, '2004-11-11' last_date, 5487.09 avail, 5487.09 pend) a where c.fed_id = '444-44-4444'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Woburn' limit 1) e cross join (select 'BUS' prod_cd, '2004-03-22' open_date, '2004-11-14' last_date, 9345.55 avail, 9345.55 pend) a where c.fed_id = '04-2222222'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Woburn' limit 1) e cross join (select 'CD' prod_cd, '2004-01-12' open_date, '2004-01-12' last_date, 5000.00 avail, 5000.00 pend) a where c.fed_id = '777-77-7777'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Woburn' limit 1) e cross join (select 'CHK' prod_cd, '2000-01-15' open_date, '2005-01-04' last_date, 1057.75 avail, 1057.75 pend union all select 'SAV' prod_cd, '2000-01-15' open_date, '2004-12-19' last_date, 500.00 avail, 500.00 pend union all select 'CD' prod_cd, '2004-06-30' open_date, '2004-06-30' last_date, 3000.00 avail, 3000.00 pend) a where c.fed_id = '111-11-1111'
+insert into account (account_id, product_cd, cust_id, open_date, last_activity_date, status, open_branch_id, open_emp_id, avail_balance, pending_balance) select null, a.prod_cd, c.cust_id, a.open_date, a.last_date, 'ACTIVE', e.branch_id, e.emp_id, a.avail, a.pend from customer c cross join (select b.branch_id, e.emp_id from branch b inner join employee e on e.assigned_branch_id = b.branch_id where b.city = 'Woburn' limit 1) e cross join (select 'CHK' prod_cd, '2001-03-12' open_date, '2004-12-27' last_date, 2258.02 avail, 2258.02 pend union all select 'SAV' prod_cd, '2001-03-12' open_date, '2004-12-11' last_date, 200.00 avail, 200.00 pend) a where c.fed_id = '222-22-2222'
+insert into branch (branch_id, name, address, city, state, zip) values (null, 'Headquarters', '3882 Main St.', 'Waltham', 'MA', '02451')
+insert into branch (branch_id, name, address, city, state, zip) values (null, 'Quincy Branch', '125 Presidential Way', 'Quincy', 'MA', '02169')
+insert into branch (branch_id, name, address, city, state, zip) values (null, 'So. NH Branch', '378 Maynard Ln.', 'Salem', 'NH', '03079')
+insert into branch (branch_id, name, address, city, state, zip) values (null, 'Woburn Branch', '422 Maple St.', 'Woburn', 'MA', '01801')
+insert into business (cust_id, name, state_id, incorp_date) select cust_id, 'AAA Insurance Inc.', '45-678-901', '1999-05-01' from customer where fed_id = '04-4444444'
+insert into business (cust_id, name, state_id, incorp_date) select cust_id, 'Chilton Engineering', '12-345-678', '1995-05-01' from customer where fed_id = '04-1111111'
+insert into business (cust_id, name, state_id, incorp_date) select cust_id, 'Northeast Cooling Inc.', '23-456-789', '2001-01-01' from customer where fed_id = '04-2222222'
+insert into business (cust_id, name, state_id, incorp_date) select cust_id, 'Superior Auto Body', '34-567-890', '2002-06-30' from customer where fed_id = '04-3333333'
+insert into company values ('Canon', 'Japan');
+insert into company values ('GizmoWorks', 'USA');
+insert into company values ('Hitachi', 'Japan');
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '04-1111111', 'B', '7 Industrial Way', 'Salem', 'NH', '03079')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '04-2222222', 'B', '287A Corporate Ave', 'Wilmington', 'MA', '01887')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '04-3333333', 'B', '789 Main St', 'Salem', 'NH', '03079')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '04-4444444', 'B', '4772 Presidential Way', 'Quincy', 'MA', '02169')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '111-11-1111', 'I', '47 Mockingbird Ln', 'Lynnfield', 'MA', '01940')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '222-22-2222', 'I', '372 Clearwater Blvd', 'Woburn', 'MA', '01801')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '333-33-3333', 'I', '18 Jessup Rd', 'Quincy', 'MA', '02169')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '444-44-4444', 'I', '12 Buchanan Ln', 'Waltham', 'MA', '02451')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '555-55-5555', 'I', '2341 Main St', 'Salem', 'NH', '03079')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '666-66-6666', 'I', '12 Blaylock Ln', 'Waltham', 'MA', '02451')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '777-77-7777', 'I', '29 Admiral Ln', 'Wilmington', 'MA', '01887')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '888-88-8888', 'I', '472 Freedom Rd', 'Salem', 'NH', '03079')
+insert into customer (cust_id, fed_id, cust_type_cd, address, city, state, postal_code) values (null, '999-99-9999', 'I', '29 Maple St', 'Newton', 'MA', '02458')
+insert into department (dept_id, name) values (null, 'Administration')
+insert into department (dept_id, name) values (null, 'Loans')
+insert into department (dept_id, name) values (null, 'Operations')
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Beth', 'Fowler', '2002-06-29', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'So. NH Branch'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Chris', 'Tucker', '2004-09-15', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Cindy', 'Mason', '2002-08-09', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'Quincy Branch'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Frank', 'Portman', '2003-04-01', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'Quincy Branch'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Helen', 'Fleming', '2004-03-17', (select dept_id from department where name = 'Operations'), 'Head Teller', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Jane', 'Grossman', '2002-05-03', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'John', 'Blake', '2000-05-11', (select dept_id from department where name = 'Operations'), 'Head Teller', (select branch_id from branch where name = 'Quincy Branch'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'John', 'Gooding', '2003-11-14', (select dept_id from department where name = 'Loans'), 'Loan Manager', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Michael', 'Smith', '2001-06-22', (select dept_id from department where name = 'Administration'), 'President', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Paula', 'Roberts', '2002-07-27', (select dept_id from department where name = 'Operations'), 'Head Teller', (select branch_id from branch where name = 'Woburn Branch'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Rick', 'Tulman', '2002-12-12', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'So. NH Branch'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Robert', 'Tyler', '2000-02-09', (select dept_id from department where name = 'Administration'), 'Treasurer', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Samantha', 'Jameson', '2003-01-08', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'Woburn Branch'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Sarah', 'Parker', '2002-12-02', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Susan', 'Barker', '2002-09-12', (select dept_id from department where name = 'Administration'), 'Vice President', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Susan', 'Hawthorne', '2002-04-24', (select dept_id from department where name = 'Operations'), 'Operations Manager', (select branch_id from branch where name = 'Headquarters'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Theresa', 'Markham', '2001-03-15', (select dept_id from department where name = 'Operations'), 'Head Teller', (select branch_id from branch where name = 'So. NH Branch'))
+insert into employee (emp_id, fname, lname, start_date, dept_id, title, assigned_branch_id) values (null, 'Thomas', 'Ziegler', '2000-10-23', (select dept_id from department where name = 'Operations'), 'Teller', (select branch_id from branch where name = 'Woburn Branch'))
+insert into faculty values (6, 'Tom', 30)
+insert into faculty values (7, 'Jack', 30)
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'Charles', 'Frasier', '1971-08-25' from customer where fed_id = '555-55-5555'
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'Frank', 'Tucker', '1958-02-06' from customer where fed_id = '333-33-3333'
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'James', 'Hadley', '1972-04-22' from customer where fed_id = '111-11-1111'
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'John', 'Hayward', '1966-12-22' from customer where fed_id = '444-44-4444'
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'John', 'Spencer', '1962-09-14' from customer where fed_id = '666-66-6666'
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'Louis', 'Blake', '1977-07-01' from customer where fed_id = '888-88-8888'
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'Margaret', 'Young', '1947-03-19' from customer where fed_id = '777-77-7777'
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'Richard', 'Farley', '1968-06-16' from customer where fed_id = '999-99-9999'
+insert into individual (cust_id, fname, lname, birth_date) select cust_id, 'Susan', 'Tingley', '1968-08-15' from customer where fed_id = '222-22-2222'
+insert into officer (officer_id, cust_id, fname, lname, title, start_date) select null, cust_id, 'Carl', 'Lutz', 'President', '2002-06-30' from customer where fed_id = '04-3333333'
+insert into officer (officer_id, cust_id, fname, lname, title, start_date) select null, cust_id, 'John', 'Chilton', 'President', '1995-05-01' from customer where fed_id = '04-1111111'
+insert into officer (officer_id, cust_id, fname, lname, title, start_date) select null, cust_id, 'Paul', 'Hardy', 'President', '2001-01-01' from customer where fed_id = '04-2222222'
+insert into officer (officer_id, cust_id, fname, lname, title, start_date) select null, cust_id, 'Stanley', 'Cheswick', 'President', '1999-05-01' from customer where fed_id = '04-4444444'
+insert into product (product_cd, name, product_type_cd, date_offered) values ('AUT','auto loan','LOAN','2000-01-01')
+insert into product (product_cd, name, product_type_cd, date_offered) values ('BUS','business line of credit','LOAN','2000-01-01')
+insert into product (product_cd, name, product_type_cd, date_offered) values ('CD','certificate of deposit','ACCOUNT','2000-01-01')
+insert into product (product_cd, name, product_type_cd, date_offered) values ('CHK','checking account','ACCOUNT','2000-01-01')
+insert into product (product_cd, name, product_type_cd, date_offered) values ('MM','money market account','ACCOUNT','2000-01-01')
+insert into product (product_cd, name, product_type_cd, date_offered) values ('MRT','home mortgage','LOAN','2000-01-01')
+insert into product (product_cd, name, product_type_cd, date_offered) values ('SAV','savings account','ACCOUNT','2000-01-01')
+insert into product (product_cd, name, product_type_cd, date_offered) values ('SBL','small business loan','LOAN','2000-01-01')
+insert into product values ('Gizmo', '$19.99', 'Gadgets', 'GizmoWorks');
+insert into product values ('MultiTouch', '$203.99', 'Household', 'Hitachi');
+insert into product values ('Powergizmo', '$29.99', 'Gadgets', 'GizmoWorks');
+insert into product values ('SingleTouch', '$149.99', 'Photography', 'Canon');
+insert into product values(1, 'bagel', 'Sunshine Co.');
+insert into product values(2, 'banana', 'BusyHands');
+insert into product values(3, 'gizmo', 'GizmoWorks');
+insert into product values(4, 'gadget', 'BusyHands');
+insert into product values(5, 'powerGizmo', 'PowerWorks');
+insert into product_type (product_type_cd, name) values ('ACCOUNT','Customer Accounts')
+insert into product_type (product_type_cd, name) values ('INSURANCE','Insurance Offerings')
+insert into product_type (product_type_cd, name) values ('LOAN','Individual and Business Loans')
+insert into transaction (txn_id, txn_date, account_id, txn_type_cd, amount, funds_avail_date) select null, a.open_date, a.account_id, 'CDT', 100, a.open_date from account a where a.product_cd IN ('CHK','SAV','CD','MM')
+leads := select E.eID from employee E where exists (select * from technologyArea A where A.aLeadID=E.eID)
+leadsA(eID) := select aLeadID from technologyArea
+moreThanOneTechArea := select T.eID, count(distinct areaID) as numAreas from takes T, trainingCourse C where T.cID = C.cID group by T.eID having numAreas > 1
+numEmpsTakenArea := select * from g2
+o1 := select E.eLast, E.eTitle, E.eSalary from employee E order by E.eLast
+refid NUMBER
+rollback
+select (round(avg(total/bocche), 2)), trade from catasto where series = 1 and total <> 0 and sex = 1 group by trade
+select (select * from cl_sched union select * from cl_sched) from department
+select * from catasto where family_name = “MACHIAVELL”
+select * from employee E where E.eSalary > 100000
+select * from employee E, technologyArea A where E.eID=A.aLeadID
+select * from employee where dno=5 and (salary between 30000 and 40000);
+select * from purchase;
+select * from students where extract( month from graduation_date ) = 6
+select * from students where graduation_date < current_date and graduation_date > current_date - interval '6 months'
+select * from students where graduation_date = (select min(graduation_date) from students)
+select C.cID, C.cTitle, C.cHours from (trainingCourse C join technologyArea A on areaID = aID) where A.aTitle = 'Database'
+select C.cID, C.cTitle, C.cHours from trainingCourse C where C.areaID = (select A.aID from technologyArea A where A.aTitle = 'Database')
+select C.cID, C.cTitle, C.cHours from trainingCourse C, technologyArea A where C.areaID = A.aID and A.aTitle = 'Database'
+select E.eID from employee E where E.eTitle='Manager' and exists (select * from takes T where T.eID=E.eID)
+select E.eID from employee E where E.eTitle='Manager' and not exists (select * from takes T where T.eID=E.eID)
+select E.eID from employee E where E.eTitle='Manager' except select T.eID from takes T
+select E.eID from employee E where E.eTitle='Manager' intersect select T.eID from takes T
+select E.eID from employee E where E.eTitle='Manager' or E.eTitle='Coach'
+select E.eID from employee E where E.eTitle='Manager' union select E.eID from employee E where E.eTitle='Coach'
+select E.eID from employee E where not exists (select * from leads L where L.eID=E.eID)
+select E.eID, C.cID from employee E, trainingCourse C
+select E.eID, E.eLast, E.eFirst, E.eTitle from employee E where E.eID in (select T.eID from takes T, dbCourse D where T.cID=D.cID)
+select E.eID, E.eLast, E.eFirst, E.eTitle from employee E where E.eID not in (select T.eID from takes T)
+select E.eID, E.eLast, E.eFirst, E.eTitle from employee E where exists (select * from dbEmployee B where B.eID=E.eID) and not exists (select * from dbCourse D where not exists (select * from takes T where T.eID=E.eID and T.cID=D.cID))
+select E.eID, E.eLast, E.eFirst, E.eTitle from employee E where exists (select * from moreThanOneTechArea M where M.eID = E.eID)
+select E.eID, E.eLast, E.eFirst, E.eTitle from employee E where exists (select * from takes T1, takes T2, trainingCourse C1, trainingCourse C2 where T1.eID=E.eID and T2.eID=E.eID and T1.cID=C1.cID and T2.cID=C2.cID and C1.areaID <> C2.areaID)
+select E.eID, E.eLast, E.eFirst, E.eTitle from employee E where not exists (select * from employee S where S.eSalary < E.eSalary)
+select E.eID, E.eLast, E.eFirst, E.eTitle from employee E where not exists (select * from takes T where T.eID=E.eID)
+select E.eID, E.eLast, E.eFirst, E.eTitle, E.eSalary from employee E, q5Ai Q where E.eSalary = Q.minSalary
+select IDS.NAME, PROJECTS.NAME from IDS INNER JOIN IDPROJ ON IDS.EID = IDPROJ.EID INNER JOIN PROJECTS ON IDPROJ.PID = PROJECTS.PID ORDER BY IDS.NAME;
+select all salary from employee;
+select avg(price) from purchase;
+select avg(total), sex from catasto where series = 1 and sex <> 0 and total <> 0 group by sex
+select bdate,address from employee where fname='John' and minit='B' and lname='Smith';
+select c.* from courses c left join sections s on c.id = s.course_id where s.id is null
+select c.city from geod_interstates i, geod_cities c where highway = 'I10/I5' and mdsys.sdo_within_distance (c.location, i.geom, 'distance=100 unit=mile') = 'TRUE'
+select c.city, c.pop90 from geod_cities c where mdsys.sdo_relate( c.location, mdsys.sdo_geometry (2003, 8307, null, mdsys.sdo_elem_info_array (1,1003,3), mdsys.sdo_ordinate_array (-109, 37, -102, 40)), 'mask=INSIDE’) = 'TRUE'
+select c.county, mdsys.sdo_geom.relate (s.geom,'DETERMINE', c.geom, 0.5) "relation" from geod_states s, geod_counties c where s.state = 'New Hampshire' and s.state = c.state
+select c.totpop, c.county from geod_counties c where mdsys.sdo_relate ( c.geom, mdsys.sdo_geometry (2003, 8307, null, mdsys.sdo_elem_info_array (1,1003,3), mdsys.sdo_ordinate_array (-109, 37, -102, 40)), 'mask=ANYINTERACT’) = 'TRUE'
+select count(*) from catasto where series = 1
+select count(*) from departments d, courses c where d.name = 'Computer Science' and d.id = c.department_id
+select count(*) from employee; select count(*) from employee,department where dno=dnumber and dname='Research';
+select count(*) from purchase;
+select count(*), sex from catasto where series = 1 group by sex
+select count(*), trade, sex from catasto where series = 1 and sex <> 0 group by trade, sex
+select count(distinct product) from purchase;
+select count(distinct salary) from employee;
+select count(product) from purchase;
+select count(quantity) from purchase;
+select county, c.state_abrv from geod_states s, geod_counties c where s.state = 'New York' and mdsys.sdo_filter (c.geom, s.geom) = 'TRUE'
+select d.name as "Department Name", count(*) as "# of Courses Offered" from departments d, courses c where d.id = c.department_id group by d.name
+select d.name from departments d inner join courses c on d.id = c.department_id where c.title = 'Databases'
+select d.name from departments d, courses c where c.title = 'Databases' and c.department_id = d.id
+select distinct C.cTitle, T.tYear, T.tMonth, T.tDay from trainingCourse C, takes T where C.cID=T.cID
+select distinct E.eID, E.eLast, E.eFirst, E.eTitle from (employee E natural join (takes T natural join dbCourse D))
+select distinct E.eID, E.eLast, E.eFirst, E.eTitle from employee E, takes T, dbCourse D where E.eID = T.eID and T.cID=D.cID
+select distinct E.eLast, E.eFirst, E.eTitle from employee E
+select distinct category from product;
+select distinct course_id from sections where year < 2009
+select distinct essn from works_on where pno in (1,2,3);
+select distinct f.name from faculty f inner join sections s on s.instructor_id = f.id inner join courses c on s.course_id = c.id where c.title = 'Databases'
+select distinct f.name from faculty f where exists (select * from sections where year = 2007 and instructor_id = f.id)
+select distinct f.name from faculty f, courses c, sections s where c.title = 'Databases' and c.id = s.course_id and s.instructor_id = f.id
+select distinct month from purchase;
+select distinct name from departments where id in (select department_id from courses where id in (select course_id from sections where year = 2007))
+select distinct salary from employee;
+select distinct x.month, (select count(*) from purchase y where x.month=y.month and price > 10.0) from purchase x where price > 10.0;
+select distinct x.month, (select count(*) from purchase y where x.month=y.month and price > 10.0) from purchase x;
+select distinct x.month, (select count(*) from purchase y where x.month=y.month) from purchase x where price > 10.0;
+select distinct x.month, (select count(*) from purchase y where x.month=y.month) from purchase x;
+select distinct z.manufacturer, (select count(*) from Product x, Purchase y where z.manufacturer = x.manufacturer and x.pname = y.product) from Product z;
+select dname,lname,fname,pname from department,employee,works_on,project where dnumber=dno and ssn=essn and pno=pnumber order by dname,lname,fname;
+select dno,count(*),avg(salary) from employee group by dno;
+select e.fname, e.lname from employee e where exists (select * from dependent where e.ssn = essn and e.fname = dependent_name and e.sex = sex);
+select e.fname,e.lname from employee as e where e.ssn in (select essn from dependent where e.fname=dependent_name and e.sex=sex);
+select e.fname,e.lname,s.fname,s.lname from employee as e, employee as s where e.superssn = s.ssn;
+select extract(year from graduation_date) as "Year", count(*) from students group by "Year"
+select extract(year from graduation_date) as "Year", count(*) from students group by "Year" having count(*) > 2
+select extract(year from graduation_date), count(*) from students group by extract(year from graduation_date)
+select f.name, count(s.id) from faculty f, sections s where f.id = s.instructor_id group by f.name having count(s.id) >= (select count(s.id) from faculty f, sections s where f.id = s.instructor_id group by f.name limit 1 offset 2)
+select fname, lname from employee where not exists ( (select pnumber from project where dnum = 5) MINUS (select pno from works_on where essn = ssn));
+select fname, lname from employee where ssn not in (select essn from dependent);
+select fname,lname from employee where address like '%Houston, TX%'; select fname,lname,1.1*salary as increased_sal from employee,works_on,project where ssn=essn and pno=pnumber and pname='ProductX';
+select fname,lname from employee where exists (select * from department where ssn=mgrssn) and exists (select * from dependent where ssn=essn);
+select fname,lname from employee where not exists (select * from dependent where ssn=essn);
+select fname,lname from employee where superssn is null;
+select fname,lname,address from employee,department where dnumber=dno and dname='Research';
+select lname,fname from employee where (select count(*) from dependent where ssn=essn) >=2;
+select max(quantity) from purchase;
+select min(E.eSalary) from employee E
+select min(graduation_date) from students
+select min(quantity) from purchase;
+select month from purchase group by month;
+select month, count(*) from purchase group by month;
+select month, count(*) from purchase where price > 10.0 group by month;
+select month, count(*), sum(price*quantity)/count(*) from purchase group by month having sum(price*quantity)/count(*) < 100.0;
+select month, sum(price*quantity)/count(*) as avgrev from purchase group by month order by avgrev desc;
+select name from ids left join tokens on ids.eid = tokens.eid where ids.typedef = true
+select name from students except select name from faculty
+select name from students intersect select name from faculty
+select name from students union select name from faculty
+select name from students where name in (select name from faculty)
+select name from students where name like 'A%' order by name desc
+select name from students where name not in (select name from faculty)
+select name, count(*) as c from tokens inner join ids on ids.eid = tokens.eid group by eid order by c desc
+select name, count(*) as cf from ( select fid, tokens.eid, count(*) as c from tokens group by eid, fid) as cl inner join ids on cl.eid = ids.eid group by ids.eid, ids.name order by cf desc;
+select name, patronymic, family_name, sex, total, bocche from catasto where family_name = “MACHIAVELL” order by patronymic
+select pnumber,dnum,lname,address,bdate from project,department,employee where dnum=dnumber and mgrssn=ssn and plocation='Stafford';
+select pnumber,pname,count(*) from project,works_on where pnumber=pno group by pnumber,pname having count(*)>2;
+select pnumber,pname,count(*) from project,works_on where pnumber=pno group by pnumber,pname;
+select pnumber,pname,count(*) from project,works_on,employee where pnumber=pno and ssn=essn and dno=5 group by pnumber,pname; select dnumber,count(*) from department,employee where dnumber=dno and salary>40000 and dno in (select dno from employee group by dno having count(*)>5) group by dnumber;
+select product, count(*) from purchase group by product;
+select product, count(*) from purchase where price > 2.0 group by product;
+select product, max(month) from purchase group by product;
+select product, min(month), max(month) from purchase group by product;
+select product, month from purchase group by product;
+select product, sum(price*quantity) as rev from purchase group by product order by rev desc;
+select product, sum(price*quantity) from purchase group by product;
+select product, sum(price*quantity)/count(*) from purchase group by product;
+select projects.name as projname, cufiles.name as cuname, basefiles.name as basename, definefiles.name as defname from definers inner join projects on definers.pid = projects.pid inner join files as cufiles on definers.cuid=cufiles.fid inner join files as basefiles on definers.basefileid=basefiles.fid inner join files as definefiles on definers.definerid = definefiles.fid;
+select s from (select name as s, foffset from ids inner join tokens on ids.eid = tokens.eid where fid = 4 union select code as s, foffset from rest where fid = 4 union select comment as s, foffset from comments where fid = 4 union select string as s, foffset from strings where fid = 4) order by foffset
+select s.name from students s left join faculty f on s.name = f.name where f.id is null
+select s.name from students s, faculty f where s.name = f.name
+select section_id, count(student_id) from enrollment group by section_id
+select section_id, count(student_id) from enrollment group by section_id order by count(student_id) desc limit 2
+select ssn from employee;
+select ssn,dname from employee,department;
+select sum(quantity) from purchase;
+select sum(salary),max(salary),min(salary),avg(salary) from employee
+select sum(salary),max(salary),min(salary),avg(salary) from employee, department where dno=dnumber and dname='Research';
+select task_name,command,attr5 from user_advisor_actions
+select x.manufacturer, count(*) from Product x, Purchase y where x.pname = y.product group by x.manufacturer;
+select x.manufacturer, count(y.pid) from Product x left outer join Purchase y on x.pname = y.product group by x.manufacturer;
+select x.manufacturer, y.month, count(*) from Product x, Purchase y where x.pname = y.product group by x.manufacturer, y.month;
+sqlsetcur dbms_sqltune.sqlset_cursor
+truncate table user_workload
+update employee set superior_emp_id = (select emp_id from emp_tmp where lname = 'Blake' and fname = 'John') where ((lname = 'Mason' and fname = 'Cindy') or (lname = 'Portman' and fname = 'Frank'))
+update employee set superior_emp_id = (select emp_id from emp_tmp where lname = 'Fleming' and fname = 'Helen') where ((lname = 'Tucker' and fname = 'Chris') or (lname = 'Parker' and fname = 'Sarah') or (lname = 'Grossman' and fname = 'Jane'))
+update employee set superior_emp_id = (select emp_id from emp_tmp where lname = 'Hawthorne' and fname = 'Susan') where ((lname = 'Gooding' and fname = 'John') or (lname = 'Fleming' and fname = 'Helen') or (lname = 'Roberts' and fname = 'Paula') or (lname = 'Blake' and fname = 'John') or (lname = 'Markham' and fname = 'Theresa'))
+update employee set superior_emp_id = (select emp_id from emp_tmp where lname = 'Markham' and fname = 'Theresa') where ((lname = 'Fowler' and fname = 'Beth') or (lname = 'Tulman' and fname = 'Rick'))
+update employee set superior_emp_id = (select emp_id from emp_tmp where lname = 'Roberts' and fname = 'Paula') where ((lname = 'Ziegler' and fname = 'Thomas') or (lname = 'Jameson' and fname = 'Samantha'))
+update employee set superior_emp_id = (select emp_id from emp_tmp where lname = 'Smith' and fname = 'Michael') where ((lname = 'Barker' and fname = 'Susan') or (lname = 'Tyler' and fname = 'Robert'))
+update employee set superior_emp_id = (select emp_id from emp_tmp where lname = 'Tyler' and fname = 'Robert') where lname = 'Hawthorne' and fname = 'Susan'
+update enrollment set grade_id = (select id from grades where letter = 'A-') where grade_id = (select id from grades where letter = 'B+') and section_id = (select s.id from sections s, courses c where s.year = 2001 and s.course_id = c.id and c.title = 'Calculus')
+update faculty set name = 'John', department_id = 10 where id = 5
+update purchase set price = null where price = 'null';
+v_action number
+v_attr1 VARCHAR2(4000)
+v_attr2 VARCHAR2(4000)
+v_attr3 VARCHAR2(4000)
+v_attr4 VARCHAR2(4000)
+v_attr5 VARCHAR2(4000)
+v_command VARCHAR2(32)
+variable name varchar2(30)
+with agents(name, salary) as ((select name, salary from fedemp where manager = 'Hoover') union all (select f.name, f.salary from agents as a, fedemp as f where f.manager = a.name) ), innerjoin(name, rank, subject, enrollment) as (select t.name, t.rank, c.subject, c.enrollment from teachers as t, courses as c where t.name = c.teacher and c.quarter = 'Fall 96'), teacher_only(name, rank) as (select name, rank from teachers except all select name, rank from innerjoin), course_only(subject, enrollment) as (select subject, enrollment from courses where quarter = 'Fall 96' except all select subject, enrollment from innerjoin) select name, rank, subject, enrollment from innerjoin union all select name, rank, cast(null as varchar(20)) as subject, cast(null as integer) as enrollment from teacher_only union all select cast(null as varchar(20)) as name, cast(null as varchar(20)) as rank, subject, enrollment from course_only
