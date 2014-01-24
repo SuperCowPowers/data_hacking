@@ -108,8 +108,8 @@ class LSHSimilarities():
         # Output some stats
         n_pairs = len(candidates)
         total_pairs = len(self._records)*len(self._records)
-        print'%d (%.2f%% out of %d) pairs returned from MinHash' % \
-              (n_pairs, n_pairs*100.0/total_pairs, total_pairs)
+        self.vprint ('%d (%.2f%% out of %d) pairs returned from MinHash' % \
+              (n_pairs, n_pairs*100.0/total_pairs, total_pairs))
 
         # Now process all the candidates events pairs and explicity
         # compute similarities based on the specified distance metric
