@@ -11,17 +11,6 @@ import math
 import heapq
 import collections
 import math
-import operator
-import matplotlib.pyplot
-
-# This class is just for fun :)
-class Pony():
-    def __init__(self): self.l=[0];
-    def score(self,s): self.l.append(s)
-    def plot(self):
-        matplotlib.pyplot.figure()
-        pd.Series(self.l).cumsum().plot(label='Pony Futures')
-        matplotlib.pyplot.legend(loc='best')
 
 class FixedHeap(list):
     def __init__(self, N):
