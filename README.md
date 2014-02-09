@@ -49,6 +49,13 @@ The primary motivation for these exercises is to explore the nexus of iPython, P
      %> sudo pip uninstall data_hacking
   </pre>
   
+#### Install iPython:
+There's quite a bit of google results for this, we actually have mixed feelings about the iPython install instructions on the iPython page. The directions work but it directs you to download and install Anaconda or the free edition of Enthought Canopy. Both of these are prepackaged python distributions with a bunch of stuff like Numpy, Scipy, IPython, Matplotlib, Pandas, ... occasionally these will have a hitch and then you might be a bit SOL because StackOverflow is going to say 'FTF are those things? Just do '$pip install blah' or '$brew install blah'. 
+
+So we recommend you be brave and do it the normal way... in particular this guy seems to have a pretty good write up for Mac installs:
+  
+  - [michaelmartinez: installing iPython](http://michaelmartinez.in/installing-ipython-notebook-on-mountain-lion.html)
+
 #### Running the Notebooks:
 Most of the notebooks will have relative paths to some resources, data files or images. In general the easiest way we found to run ipython on the notebooks is to change into that project directory and run ipython with this alias (put in your .bashrc or whatever):
 <pre>alias ipython='ipython notebook --FileNotebookManager.notebook_dir=`pwd`'</pre>
