@@ -6,10 +6,10 @@ data_hacking
 
 So hacking here means we want to quickly deconstruct data, understand what we've got and how to best utilize it for the problem at hand. 
 
-The primary motivation for these exercises is to explore the nexus of iPython, Pandas and Scikit Learn on security data of various kinds. The exercises will often intentionally show common missteps, warts in the data, paths that didn't work out that well and results that could definitely be improved upon. In general we're trying to capture what worked and what didn't, not only is that more realistic but often much more informative to the reader. :)
+The primary motivation for these exercises is to explore the nexus of IPython, Pandas and Scikit Learn on security data of various kinds. The exercises will often intentionally show common missteps, warts in the data, paths that didn't work out that well and results that could definitely be improved upon. In general we're trying to capture what worked and what didn't, not only is that more realistic but often much more informative to the reader. :)
 
 #### Python Modules Used:
-- [iPython](http://ipython.org): Architecture for interactive computing and presentation
+- [IPython](http://ipython.org): Architecture for interactive computing and presentation
 - [Pandas](http://pandas.pydata.org): Python Data Analysis Library
 - [Scikit Learn](http://scikit-learn.org): Machine Learning in Python, Pedregosa et al., JMLR 12, pp. 2825-2830, 2011.
 - [Matplotlib](http://matplotlib.org): Python 2D plotting library 
@@ -49,12 +49,12 @@ The primary motivation for these exercises is to explore the nexus of iPython, P
      %> sudo pip uninstall data_hacking
   </pre>
   
-#### Install iPython:
-There's quite a bit of google results for this, we actually have mixed feelings about the iPython install instructions on the iPython page. The directions work but it directs you to download and install Anaconda or the free edition of Enthought Canopy. Both of these are prepackaged python distributions with a bunch of stuff like Numpy, Scipy, IPython, Matplotlib, Pandas, ... occasionally these will have a hitch and then you might be a bit SOL because StackOverflow is going to say 'WTF are those things? Just do '$pip install blah' or '$brew install blah'. 
+#### Install IPython:
+There's quite a bit of google results for this, we actually have mixed feelings about the IPython install instructions on the IPython page. The directions work but it directs you to download and install Anaconda or the free edition of Enthought Canopy. Both of these are prepackaged python distributions with a bunch of stuff like Numpy, Scipy, IPython, Matplotlib, Pandas, ... occasionally these will have a hitch and then you might be a bit SOL because StackOverflow is going to say 'WTF are those things? Just do '$pip install blah' or '$brew install blah'. 
 
 So we recommend you be brave and do it the normal way... in particular this guy seems to have a pretty good write up for Mac installs:
   
-  - [michaelmartinez: installing iPython](http://michaelmartinez.in/installing-ipython-notebook-on-mountain-lion.html)
+  - [michaelmartinez: installing IPython](http://michaelmartinez.in/installing-ipython-notebook-on-mountain-lion.html)
 
 #### Running the Notebooks:
 Most of the notebooks will have relative paths to some resources, data files or images. In general the easiest way we found to run ipython on the notebooks is to change into that project directory and run ipython with this alias (put in your .bashrc or whatever):
