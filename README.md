@@ -38,7 +38,7 @@ The primary motivation for these exercises is to explore the nexus of IPython, P
     * Brew
       * graphviz, freetype, zmq
     * Python
-      * ipython, pandas, matplotlib, pyzmq, jinja2
+      * ipython, pandas, matplotlib, networkx, pyzmq, jinja2
 
   * Some of the exercises use packages from the data_hacking repository, to install those packages into your python site packages: 
   <pre>
