@@ -31,6 +31,9 @@ The primary motivation for these exercises is to explore the nexus of IPython, P
 - Browser Agent Fingerprinting
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/browser_fingerprinting)
     - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/browser_fingerprinting/browser_fingerprinting.ipynb)
+- PE File Classification 
+    - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/pefile_classification)
+    - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/pefile_classification/pefile_classification.ipynb)
 
 #####Setup:
 
