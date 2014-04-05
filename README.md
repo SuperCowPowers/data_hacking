@@ -15,35 +15,38 @@ The primary motivation for these exercises is to explore the nexus of IPython, P
 - [Matplotlib](http://matplotlib.org): Python 2D plotting library 
 
 ### Exercises:
-- Detecting Algorithmically Generated Domains
+- Detecting Algorithmically Generated Domains (BSidesDFW 2013)
     - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/dga_detection/DGA_Domain_Detection.ipynb)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/dga_detection)
 
-- Hierarchical Clustering of Syslogs
+- Hierarchical Clustering of Syslogs (BSidesDFW 2013)
     - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/fun_with_syslog/Fun_Syslog.ipynb)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/fun_with_syslog)
     
-- Exploration of data from Malware Domain List
+- Exploration of data from Malware Domain List (BSidesDFW 2013)
     - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/mdl_exploration/MDL_Data_Exploration.ipynb)
     - [Malware Domain List](http://www.malwaredomainlist.com)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/mdl_exploration)
     
-- SQL Injection
+- SQL Injection (Shmoocon 2014)
     - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/sql_injection/sql_injection.ipynb)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/sql_injection)
     
-- Browser Agent Fingerprinting
+- Browser Agent Fingerprinting (Shmoocon 2014)
     - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/browser_fingerprinting/browser_fingerprinting.ipynb)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/browser_fingerprinting)
     
-- PE File Classification 
+- PE File Classification (BSides 2014)
     - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/pefile_classification/pefile_classification.ipynb)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/pefile_classification)
 
-- PCAP Exploration
+- PCAP Exploration (BSidesATX 2014)
     - [Notebook Viewer](http://nbviewer.ipython.org/url/raw.github.com/ClickSecurity/data_hacking/master/contagio_traffic_analysis/contagio_traffic_analysis.ipynb)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/contagio_traffic_analysis)
 
+- Drive-By PCAP Analysis (ISSW 2014)
+    - [Notebook Viewer](http://nbviewer.ipython.org/github/ClickSecurity/data_hacking/blob/master/driveby_pcap_analysis/driveby_pcap_analysis.ipynb)
+    - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/driveby_pcap_analysis)
 
 #####Setup:
 
