@@ -9,7 +9,6 @@ import numpy as np
 import collections
 import math
 import heapq
-import collections
 import math
 
 class FixedHeap(list):
@@ -54,6 +53,12 @@ class GTest():
                     - contingency table (raw counts)
                     - conditional distribution (row proportions)
                     - g_scores + everything in the first two outputs
+
+            Note:
+                    N culling happens before min_volume, so there might be a case where N is further restricted by a min_volume setting.
+                    Matches will cause at most N * matches cols in the dataframe. The matches are calculated as the top/most frequent
+                    matches for each value in series_a, so there can be some overlap. This seemed better than shotgunning a choice
+                    or taking the first 'matches' out of the whole dataframe.
         '''
 
         # Might Need Improvement:
@@ -63,7 +68,22 @@ class GTest():
         #
         #     Note: I might need some 'private' lessons from Alison Gibbs on exactly how
         #           this should be done, she is SO cute! (and also super smart of course :)
-        #           http://www.youtube.com/watch?v=0nmxFpNBFIY
+        #           http://www.youtube.com/watch?v=0nmxFpNBFIYA
+
+        if N > 0:
+            topN = series_a.value_counts().head(N).index.tolist()
+            drop = []
+            for i, row in series_a.iteritems():
+                if row not in topN:
+                    drop.append(i)
+
+            # get rid of all rows in each Series that don't line up with a value in the top N, this keeps them
+            # both in sync for building the contingency table below.
+            series_a = series_a.drop(drop)
+            series_b = series_b.drop(drop)
+            series_a.index = range(len(series_a))
+            series_b.index = range(len(series_b))
+
         mar_dist_a = series_a.value_counts().astype(float)  # Marginal distibution of A
         mar_dist_b = series_b.value_counts().astype(float)  # Marginal distibution of B
         total_count = float(sum(mar_dist_a))  # Both mar_dist_a/b will sum up to the same thing
@@ -85,24 +105,30 @@ class GTest():
         dataframe = pd.DataFrame(cont_table.values(), index=cont_table.keys())
         dataframe.fillna(0, inplace=True)
 
-        # Add a column for the marginal distribution of A
-        dataframe['total'] = mar_dist_a
+        # Added support for matches back in. With this the dataframe will have at most matches * N cols
+        if matches > 0:
+            (rows, cols) = dataframe.shape
+            cols_to_keep = []
+            for r in range(rows):
+                cols_to_keep += dataframe.iloc[r].order(ascending=False).head(matches).index.tolist()[1:]
+            drop_cols = set(dataframe.columns.tolist()).difference(set(cols_to_keep))
+            dataframe = dataframe.drop(drop_cols, 1)
 
         # For each column (except total) compute conditional distribution (row proportions)
         columns = dataframe.columns.tolist()
-        columns.remove('total')
         dataframe_cd = pd.DataFrame.copy(dataframe)
+        dataframe_cd['total'] = mar_dist_a
         for column in columns:
             dataframe_cd[column] = dataframe_cd[column] / dataframe_cd['total']
 
+        dataframe_g = pd.DataFrame.copy(dataframe)
+        dataframe_g = dataframe_g.merge(dataframe_cd.rename(columns=lambda x: x + '_cd'), left_index=True, right_index=True)
         # Now build the g-scores dataframe
         # Fixme: Probably a better/faster way to do this (sleepy right now)
-        dataframe_g = pd.DataFrame.copy(dataframe)
+        # one part fixed...
         for column in columns:
-            dataframe_g[column+'_cd'] = dataframe_cd[column]
             dataframe_g[column+'_exp'] = mar_dist_a * mar_dist_b[column] / total_count
             dataframe_g[column+'_g'] = [self.g_test_score(count, exp) for count, exp in zip(dataframe_g[column], dataframe_g[column+'_exp'])]
-
 
         # Return the 3 dataframes
         return dataframe, dataframe_cd, dataframe_g
