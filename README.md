@@ -58,10 +58,10 @@ The primary motivation for these exercises is to explore the nexus of IPython, P
 #####Setup:
 
   * Required packages:
-    * Brew
+    * Brew/apt-get
       * graphviz, freetype, zmq
     * Python
-      * ipython, pygraphviz, pandas, matplotlib, networkx, pyzmq, jinja2
+      * ipython, pygraphviz, pandas, matplotlib, networkx, pyzmq, jinja2, scipy, patsy, statsmodels
 
   * Some of the exercises use packages from the data_hacking repository, to install those packages into your python site packages: 
   <pre>
