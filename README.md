@@ -48,6 +48,10 @@ The primary motivation for these exercises is to explore the nexus of IPython, P
     - [Notebook Viewer](http://nbviewer.ipython.org/github/ClickSecurity/data_hacking/blob/master/driveby_pcap_analysis/driveby_pcap_analysis.ipynb)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/driveby_pcap_analysis)
 
+- Mach-O Classification (SANS DFIR 2014)
+    - [Notebook Viewer](http://nbviewer.ipython.org/github/ClickSecurity/data_hacking/blob/master/macho_classification/macho_classification.ipynb)
+    - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/macho_classification)
+
 #### Friendly Notebooks
 - Windows Executable Clustering by Image Similarity
     - [Notebook Viewer](http://nbviewer.ipython.org/urls/raw.githubusercontent.com/sooshie/data_exploration/master/zeus_cluster/Image%20Based%20Clustering.ipynb)
