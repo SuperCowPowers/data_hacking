@@ -52,6 +52,11 @@ The primary motivation for these exercises is to explore the nexus of IPython, P
     - [Notebook Viewer](http://nbviewer.ipython.org/github/ClickSecurity/data_hacking/blob/master/macho_classification/macho_classification.ipynb)
     - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/macho_classification)
 
+- Yara Clustering (BSides Las Vegas 2014)
+    - [Notebook Viewer (Mach-O)](http://nbviewer.ipython.org/github/ClickSecurity/data_hacking/blob/master/yara_clustering/Mach-O%20Clustering.ipynb)
+    - [Notebook Viewer (PE)](http://nbviewer.ipython.org/github/ClickSecurity/data_hacking/blob/master/yara_clustering/PEFile%20Clustering.ipynb)
+    - [GitHub Project](https://github.com/ClickSecurity/data_hacking/tree/master/yara_clustering)
+
 #### Friendly Notebooks
 - Windows Executable Clustering by Image Similarity
     - [Notebook Viewer](http://nbviewer.ipython.org/urls/raw.githubusercontent.com/sooshie/data_exploration/master/zeus_cluster/Image%20Based%20Clustering.ipynb)
@@ -65,7 +70,7 @@ The primary motivation for these exercises is to explore the nexus of IPython, P
     * Brew/apt-get
       * graphviz, freetype, zmq
     * Python
-      * ipython, pygraphviz, pandas, matplotlib, networkx, pyzmq, jinja2, scipy, patsy, statsmodels
+      * ipython, pygraphviz, pandas, matplotlib, networkx, pyzmq, jinja2, scipy, patsy, statsmodels, pefile, macholib
 
   * Some of the exercises use packages from the data_hacking repository, to install those packages into your python site packages: 
   <pre>
