@@ -22,7 +22,7 @@ class MinHash():
         returned by getCandidatePairs().
     '''
 
-    def __init__(self, num_hashes=40, lsh_bands=10, lsh_rows=4, load_models=None, drop_duplicates=False, verbose=False):
+    def __init__(self, num_hashes=40, lsh_bands=10, lsh_rows=4, bin_limit=1000, load_models=None, drop_duplicates=False, verbose=False):
         ''' Init for MinHash '''
 
         # Minhash signatures, hashing and banding parameters
@@ -31,6 +31,7 @@ class MinHash():
         self._lsh_bands = lsh_bands
         self._lsh_rows = lsh_rows
         self._hash_salt = []
+        self._bin_limit = bin_limit
         for i in xrange(num_hashes):
             self._hash_salt.append(str(int(random.random()*100)))
 
@@ -203,10 +204,9 @@ class MinHash():
             for __key, candidate_list in subdict.iteritems():
 
                 # Sanity check
-                if (len(candidate_list) > 1000):
-                    print 'Hashing function issue, key: (%s,%s) has %d items in it' % (_key, __key, len(candidate_list))
-                    print 'LIMITED IT to 1000'
-                    candidate_list = candidate_list[:1000]
+                if (len(candidate_list) > self._bin_limit):
+                    print 'Hashing function issue, key: (%s,%s) has %d items in it out of %s slots' % (_key, __key, len(candidate_list), self._bin_limit)
+                    candidate_list = candidate_list[:self._bin_limit]
 
                 for source in candidate_list:
                     for target in candidate_list:
