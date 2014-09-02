@@ -7,7 +7,7 @@ from data_hacking import __version__
 setup(name='data_hacking',
       version=__version__,
       author='Click',
-      author_email='labs@clicksecurity.com',
+      author_email='clicklabs@clicksecurity.com',
       description='Modules for Data Hacking project',
       long_description=open('README.md').read(),
       install_requires=[ 'networkx','pygraphviz','pandas','matplotlib','numpy','tldextract','sqlparse','macholib','pefile','patsy','statsmodels','sklearn' ],
