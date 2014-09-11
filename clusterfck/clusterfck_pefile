@@ -1,0 +1,431 @@
+#!/usr/bin/python
+"""
+This script will parse a group of PE files, retreive a subset of features/attributes from each file,
+perform various clustering algorithms on the features, and then given the files in each cluster will
+generate Yara signatures that can help identify similar files.
+"""
+
+import os
+import sys
+import math
+import glob
+import struct
+import pefile
+import numpy as np
+import pandas as pd
+from argparse import ArgumentParser
+import data_hacking
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.preprocessing import scale
+from sklearn.decomposition import PCA
+
+def save_graphic(df, cols, signature_directory, cluster_type):
+    """
+    Print a simple 3D graph of the cluster layout after using PCA to reduce the clusters to 
+    three dimensions.
+    """
+    print "Generating graphic of cluster representation"
+    X = df.as_matrix(cols)
+    X = scale(X)
+    X = PCA(n_components=3).fit_transform(X)
+    fig = plt.figure(figsize=plt.figaspect(1))
+    ax = fig.add_subplot(1, 1, 1, projection='3d')
+    ax.scatter(X[:,0], X[:,1], X[:,2], c=df['cluster'], s=50)
+    ax.set_title(cluster_type + " Clusters")
+    fig.set_size_inches(24,18)
+    fig.set_dpi(400)
+    fig.savefig(cluster_type + '.png', bbox_inches='tight')
+
+def e_features(filename):
+    """
+    Extract the features from the given filename.
+
+    Uses pefile to do the file parsing, only a subset of features are chosen from the parsed file
+    """
+    features = {}
+    try:
+        pe = pefile.PE(filename, fast_load=False)
+
+        # File Header
+        features['filename'] = os.path.basename(filename)
+        features['machine'] = pe.FILE_HEADER.Machine
+        features['number of sections'] = pe.FILE_HEADER.NumberOfSections
+        features['compile date'] = pe.FILE_HEADER.TimeDateStamp
+        features['pointer to symbol table'] = pe.FILE_HEADER.PointerToSymbolTable
+        features['number of symbols'] = pe.FILE_HEADER.NumberOfSymbols
+        features['size of optional header'] = pe.FILE_HEADER.SizeOfOptionalHeader
+        features['characteristics'] = pe.FILE_HEADER.Characteristics
+
+        # Optional Header
+        features['magic'] = pe.OPTIONAL_HEADER.Magic
+        features['major linker version'] = pe.OPTIONAL_HEADER.MajorLinkerVersion
+        features['minor linker version'] = pe.OPTIONAL_HEADER.MinorLinkerVersion
+        features['size of code'] = pe.OPTIONAL_HEADER.SizeOfCode
+        features['size init data'] = pe.OPTIONAL_HEADER.SizeOfInitializedData
+        features['size uninit data'] = pe.OPTIONAL_HEADER.SizeOfUninitializedData
+        features['entry point address'] = pe.OPTIONAL_HEADER.AddressOfEntryPoint
+        features['base of code'] = pe.OPTIONAL_HEADER.BaseOfCode
+        if hasattr(pe.OPTIONAL_HEADER, 'BaseOfData'):
+            features['base of data'] = pe.OPTIONAL_HEADER.BaseOfData
+        features['image base'] = float(pe.OPTIONAL_HEADER.ImageBase)
+        features['section alignment'] = pe.OPTIONAL_HEADER.SectionAlignment
+        features['file alignment'] = pe.OPTIONAL_HEADER.FileAlignment
+        features['major operating system version'] = pe.OPTIONAL_HEADER.MajorOperatingSystemVersion
+        features['minor operating system version'] = pe.OPTIONAL_HEADER.MinorOperatingSystemVersion
+        features['major image version'] = pe.OPTIONAL_HEADER.MajorImageVersion
+        features['minor image version'] = pe.OPTIONAL_HEADER.MinorImageVersion
+        features['major subsystem version'] = pe.OPTIONAL_HEADER.MajorSubsystemVersion
+        features['minor subsystem version'] = pe.OPTIONAL_HEADER.MinorSubsystemVersion
+        features['size of image'] = pe.OPTIONAL_HEADER.SizeOfImage
+        features['size of headers'] = pe.OPTIONAL_HEADER.SizeOfHeaders
+        features['checksum'] = pe.OPTIONAL_HEADER.CheckSum
+        features['subsystem'] = pe.OPTIONAL_HEADER.Subsystem
+        features['dll charactersitics'] = pe.OPTIONAL_HEADER.DllCharacteristics
+        features['size of stack reserve'] = float(pe.OPTIONAL_HEADER.SizeOfStackReserve)
+        features['size of stack commit'] = float(pe.OPTIONAL_HEADER.SizeOfStackCommit)
+        features['size of heap reserve'] = float(pe.OPTIONAL_HEADER.SizeOfHeapReserve)
+        features['size of heap commit'] = float(pe.OPTIONAL_HEADER.SizeOfHeapCommit)
+        features['loader flags'] = pe.OPTIONAL_HEADER.LoaderFlags
+        features['number of rva and sizes'] = pe.OPTIONAL_HEADER.NumberOfRvaAndSizes
+
+        # Data directory
+        datadirs = {0: 'export table', 1: 'import table',
+            2: 'resource table', 3: 'exception table',
+            5: 'base relocation', 6: 'debug',
+            9: 'tls table', 12: 'import address table'}
+
+        data_directories = {}
+        for idx, datadir_name in datadirs.items():
+            if len(pe.OPTIONAL_HEADER.DATA_DIRECTORY) <= idx:
+                continue
+
+            directory = pe.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
+            features['data dir ' + datadir_name + ' size'] = directory.Size
+            features['data dir ' + datadir_name + ' rva'] = directory.VirtualAddress
+
+
+        # Resource Entry (grab first two)
+        if hasattr(pe, 'DIRECTORY_ENTRY_RESOURCE'):
+            resources = []
+            index = 0
+            for resource_type in pe.DIRECTORY_ENTRY_RESOURCE.entries:
+                if resource_type.name is not None:
+                    name = "%s" % resource_type.name
+                else:
+                    name = "%s" % pefile.RESOURCE_TYPE.get(resource_type.struct.Id)
+                if name == None:
+                    name = "%d" % resource_type.struct.Id
+                if hasattr(resource_type, 'directory'):
+                    for resource_id in resource_type.directory.entries:
+                        if hasattr(resource_id, 'directory'):
+                            for resource_lang in resource_id.directory.entries:
+                                resource = {}
+                                if hasattr(resource_lang, 'data'):
+                                    try:
+                                        features['resource ' + str(index) + ' rva'] = resource_lang.data.struct.OffsetToData
+                                        features['resource ' + str(index) + ' size'] = resource_lang.data.struct.Size
+                                        features['resource ' + str(index) + ' lang'] = resource_lang.data.lang
+                                        index += 1
+                                        if index == 2:
+                                            break
+                                    except pefile.PEFormatError as pfe:
+                                        pass
+                        if index == 2:
+                            break
+                if index == 2:
+                    break
+
+    except Exception as e:
+        print "Error processing %s - %s" % (filename, str(e))
+        #print traceback.format_exc()
+
+    return features
+
+
+def gen_sigs(cluster_type, sigmeta, cluster, file_directory, signature_directory, fdf):
+    """
+    Generate the signatures for the samples in a cluster. 
+    Takes:
+    cluster_type (name) - for signature name
+    sigmeta - meta to include in all signatures
+    cluster - cluster label (number)
+    file_directory - where the sample files live
+    signature_directory - where the output Yara files go
+    fdf - temp dataframe to calculate attributes from
+    """
+    print "Creating signature for cluster: %s from %s samples" % (cluster, len(fdf.filename.unique()))
+    meta = sigmeta.copy()
+    filename = fdf.filename.value_counts().index.tolist()[0]
+    print filename
+    count = 0
+    yara_rule_name = cluster_type + "_cluster_" + str(cluster)
+    for sample in fdf.filename.unique().tolist():
+        meta['sample_'+str(count)] = sample
+        count += 1
+
+
+    file_header_columns = ["pointer to symbol table", "characteristics", "number of symbols", "size of optional header",
+                            "machine", "compile date", "number of sections"]
+
+    optional_header_columns = ["subsystem", "major image version", 
+                               "major operating system version", "section alignment", "loader flags",
+                               "minor subsystem version", "major linker version",
+                               "size of code", "size of image", "number of rva and sizes", "dll charactersitics",
+                               "file alignment", "minor linker version", "base of code",
+                               "size uninit data", "entry point address", "size init data", "major subsystem version",
+                               "magic", "checksum", "minor image version",
+                               "minor operating system version", "size of headers", "base of data",
+                               "data dir base relocation rva", "data dir base relocation size", "data dir debug rva",
+                               "data dir debug size", "data dir exception table rva", "data dir exception table size",
+                               "data dir export table rva", "data dir export table size", "data dir import address table rva",
+                               "data dir import address table rva", "data dir import address table size",
+                               "data dir import table rva", "data dir import table size", "data dir import table size",
+                               "data dir resource table rva", "data dir resource table size", "data dir tls table rva",
+                               "data dir tls table size"]
+
+    qword_columns = ['image base', 'size of stack reserve', 'size of stack commit', 'size of heap reserve', 'size of heap commit']
+
+    sig = data_hacking.YaraPEGenerator(file_directory + "/" + filename, samplename=yara_rule_name, meta=meta)
+
+    file_header = []
+    optional_header = {}
+
+    for col in fdf.columns:
+        if len(fdf[col].unique()) == 1:
+            if fdf[col].unique()[0] != -1:
+                lower = [s for s in col if s.islower()]
+                if fdf[col].unique()[0] != -1 or (len(lower) == len(col)):
+                    if col in file_header_columns:
+                        file_header.append(col)
+                    if col in optional_header_columns:
+                        optional_header[col] = struct.pack("<I", int(fdf[col].unique()[0])).encode('hex')
+                    if col in qword_columns:
+                        if fdf['magic'][0] == 0x20b:
+                            optional_header[col] = struct.pack("<Q", int(fdf[col].unique()[0])).encode('hex')
+                        else:
+                            optional_header[col] = struct.pack("<I", int(fdf[col].unique()[0])).encode('hex')
+
+
+        if len(fdf[col].unique()) > 1:
+            if col not in optional_header_columns:
+                continue
+
+            if type(fdf[col].unique()[0]) == str or len(fdf[col].unique()) > 9:
+                continue
+
+            u = []
+            z = []
+            for value in fdf[col].unique():
+                u.append(struct.pack("<I", value).encode("hex"))
+
+            for d in zip(*u):
+                match = True
+                for idx in range(1,len(d)):
+                    if d[0] != d[idx]:
+                        match = False
+                        break
+                if match:
+                    z.append(d[0])
+                else:
+                    z.append('?')
+            string = ''.join(z)
+            if string != '????????':
+                optional_header[col] = string
+
+    if len(file_header) > 0:
+        sig.add_file_header(file_header)
+
+    if len(optional_header) > 0:
+        sig.add_optional_header_with_values(optional_header)
+        sig.get_signature(filename=signature_directory + '/' + yara_rule_name + '.yara', writesig=True)
+
+
+def main():
+    """
+    Main function, responsible for setting the features/dataframe, performing the clustering and generating the sigs
+    """
+    global include_cmd_size
+    file_directory = "./"
+    signature_directory = "./"
+    eoptions = ['Add cmdsize and type as a feature']
+    cluster_types = ['DBSCAN', 'MeanShift', 'KMeans']
+    features_list = []
+
+    parser = ArgumentParser(description="Process Mach-O files, perform clustering on them, and spit out Yara signatures.")
+    parser.add_argument('cluster types', nargs='+',
+                        help='Use the following algorithm to cluster. Options are: [' + ','.join(cluster_types) + ']')
+    parser.add_argument('-d', '--directory',
+                        help='directory that contains the PE files to analyze')
+    parser.add_argument('-Y', '--yara_sig_directory',
+                        help='where to put the Yara signatures')
+    parser.add_argument('-E', '--experimental',
+                        help='sets various(?) experimental options that affect signature generation: [' + ','.join(eoptions) + ']')
+    parser.add_argument('-e', '--email',
+                        help='email address to include in the rule files')
+    parser.add_argument('-a', '--author',
+                        help='author name to include in the rule files')
+    parser.add_argument('-k', '--k_clusters',
+                        help='number of clusters for KMeans clustering instead of estimating one')
+    parser.add_argument('-b', '--bandwidth',
+                        help='specify a bandwidth for MeanShift clustering instead of estimating one')
+    parser.add_argument('-m', '--min_samples',
+                        help='specify the minimum number of samples per cluster via DBSCAN instead of the default (3)')
+    parser.add_argument('-P', '--pca',
+                        help='Perform PCA to the specified number of components on the features (can help create more generic signatures via larger clusters), a value of 0 will cause this script to estimate a reasonable "n"')
+    parser.add_argument('-S', '--scale', action='store_true',
+                        help='Scale the feature values')
+
+    #                    help='')
+    args = parser.parse_args()
+
+    if args.directory:
+        file_directory = args.directory
+
+    if args.experimental:
+        include_cmd_size = True
+
+    for ctype in vars(args)['cluster types']:
+        if not ctype in cluster_types:
+            parser.print_help()
+            sys.exit(1)
+
+    meta = {}
+    if args.author:
+        meta['author'] = args.author
+    if args.email:
+        meta['email'] = args.email
+
+    file_list = glob.glob(file_directory + '/*')
+    for filename in file_list:
+        if os.path.isfile(filename):
+            features_list.append(e_features(filename))
+    print "Ingest Information"
+    print "------------------"
+    print "Files:", len(file_list)
+
+    if len(file_list) == 0:
+        print "There was a problem reading in files and gathering features to cluster on."
+        sys.exit(2)
+
+    dataframe = pd.DataFrame.from_records(features_list)
+    for col in dataframe.columns:
+        if 'resource' in col[0:7]:
+            dataframe[col].fillna(-1, inplace=True)
+
+    dataframe.fillna(-1, inplace=True)
+
+    cols = [x for x in dataframe.columns.tolist() if x != 'filename']
+    print "Features per feature vector:", len(cols)
+
+    X = dataframe.as_matrix(cols)
+
+    if args.scale:
+        print "Scaling features"
+        X = scale(X)
+
+    if args.pca:
+        print "Performing PCA"
+        if int(args.pca) == 0:
+            pca = PCA().fit(X)
+            n_comp = len([x for x in pca.explained_variance_ if x > 1e0])
+            print "Estimating number of components w/explained variance > 1: %s" % n_comp
+            X = PCA(n_components=n_comp).fit_transform(X)
+        else:
+            X = PCA(n_components=int(args.pca)).fit_transform(X)
+
+    if 'DBSCAN' in vars(args)['cluster types']:
+        cluster_df = pd.DataFrame()
+        from sklearn.cluster import DBSCAN
+
+        min_samples = 3
+        if args.min_samples:
+            min_samples = int(args.min_samples)
+        dbscan = DBSCAN(min_samples=min_samples)
+        dbscan.fit(X)
+        labels1 = dbscan.labels_
+        dataframe['cluster'] = labels1
+        labels1_u = np.unique(labels1)
+        nclusters = len(labels1_u)
+        cluster_df = dataframe[['filename', 'cluster']]
+
+        print
+        print "DBSCAN Cluster Information"
+        print "--------------------------"
+        print "Number of clusters: %d" % nclusters
+        print "Labeled samples: %s" % cluster_df[cluster_df['cluster'] != -1].filename.value_counts().sum()
+        print "Unlabeled samples: %s" % cluster_df[cluster_df['cluster'] == -1].filename.value_counts().sum()
+        print
+        # Remove the unclustered samples
+        cluster_df = cluster_df[cluster_df['cluster'] != -1]
+        for cluster in cluster_df.cluster.unique().tolist():
+            fdf = pd.DataFrame()
+            cluster = int(cluster)
+            for fname in cluster_df[cluster_df['cluster'] == cluster].filename.tolist():
+                fdf = fdf.append(dataframe[dataframe['filename'] == fname], ignore_index=True)
+            gen_sigs('DBSCAN', meta, cluster, file_directory, signature_directory, fdf)
+
+    if 'MeanShift' in vars(args)['cluster types']:
+        cluster_df = pd.DataFrame()
+        from sklearn.cluster import MeanShift, estimate_bandwidth
+
+        ebw = 0
+        if args.bandwidth:
+            ebw = int(args.bandwidth)
+        else:
+            ebw = estimate_bandwidth(X)
+        ms1 = MeanShift(bandwidth=ebw)
+        ms1.fit(X)
+
+        labels1 = ms1.labels_
+        dataframe['cluster'] = labels1
+        labels1_u = np.unique(labels1)
+        nclusters = len(labels1_u)
+        cluster_df = dataframe[['filename', 'cluster']]
+
+        print
+        print "MeanShift Cluster Information"
+        print "--------------------------"
+        print "Estimated Bandwidth: %s" % ebw
+        print "Number of clusters: %d" % nclusters
+        print
+
+        for cluster in cluster_df.cluster.unique().tolist():
+            fdf = pd.DataFrame()
+            cluster = int(cluster)
+            for fname in cluster_df[cluster_df['cluster'] == cluster].filename.tolist():
+                fdf = fdf.append(dataframe[dataframe['filename'] == fname], ignore_index=True)
+            gen_sigs('MeanShift', meta, cluster, file_directory, signature_directory, fdf)
+
+    if 'KMeans' in vars(args)['cluster types']:
+        cluster_df = pd.DataFrame()
+        from sklearn.cluster import KMeans
+
+        #rule of thumb of k = sqrt(#samples/2)
+        k_clusters = int(math.sqrt(int(len(features_list)/2)))
+        if args.k_clusters:
+            k_clusters = int(args.k_clusters)
+
+        kmeans = KMeans(n_clusters=k_clusters)
+        kmeans.fit(X)
+        labels1 = kmeans.labels_
+        dataframe['cluster'] = labels1
+        labels1_u = np.unique(labels1)
+        nclusters = len(labels1_u)
+        cluster_df = dataframe[['filename', 'cluster']]
+
+        print
+        print "KMeans Cluster Information"
+        print "--------------------------"
+        print "Number of clusters: %d" % nclusters
+        print
+
+        for cluster in cluster_df.cluster.unique().tolist():
+            fdf = pd.DataFrame()
+            cluster = int(cluster)
+            for fname in cluster_df[cluster_df['cluster'] == cluster].filename.tolist():
+                fdf = fdf.append(dataframe[dataframe['filename'] == fname], ignore_index=True)
+            gen_sigs('KMeans', meta, cluster, file_directory, signature_directory, fdf)
+
+if __name__ == "__main__":
+    main()

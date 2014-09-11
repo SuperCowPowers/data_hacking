@@ -1,0 +1,487 @@
+#!/usr/bin/python
+"""
+This script will parse a group of Mach-O files, retreive a subset of features/attributes from each file,
+perform various clustering algorithms on the features, and then given the files in each cluster will
+generate Yara signatures that can help identify similar files.
+"""
+
+import os
+import sys
+import math
+import glob
+import macholib.MachO
+import collections
+import numpy as np
+import pandas as pd
+from argparse import ArgumentParser
+import data_hacking
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.preprocessing import scale
+from sklearn.decomposition import PCA
+
+include_cmd_size = False
+
+def save_graphic(df, cols, signature_directory, cluster_type):
+    """
+    Print a simple 3D graph of the cluster layout after using PCA to reduce the clusters to 
+    three dimensions.
+    """
+    print "Generating graphic of cluster representation"
+    X = df.as_matrix(cols)
+    X = scale(X)
+    X = PCA(n_components=3).fit_transform(X)
+    fig = plt.figure(figsize=plt.figaspect(1))
+    ax = fig.add_subplot(1, 1, 1, projection='3d')
+    ax.scatter(X[:,0], X[:,1], X[:,2], c=df['cluster'], s=50)
+    ax.set_title(cluster_type + " Clusters")
+    fig.set_size_inches(24,18)
+    fig.set_dpi(400)
+    fig.savefig(cluster_type + '.png', bbox_inches='tight')
+
+def e_features(filename):
+    """
+    Extract the features from the given filename.
+
+    Uses macholib to do the file parsing, only a subset of features are chosen from the parsed file
+    """
+    results = []
+    try:
+        features = {}
+        mfile = macholib.MachO.MachO(filename)
+        if mfile.fat:
+            features['number of architectures'] = mfile.fat.nfat_arch
+        else:
+            features['number of architectures'] = 1
+
+        for header in mfile.headers:
+            cmd_count_size = collections.Counter()
+            cmd_count = collections.Counter()
+            #features['magic'] = int(header.MH_MAGIC)
+            #features['h_size'] = int(header.size)
+            #features['h_offset'] = int(header.offset)
+            for cmd in header.commands:
+                load_cmd = cmd[0]
+                cmd_info = cmd[1]
+                cmd_data = cmd[2]
+                cmd_name = load_cmd.get_cmd_name()
+                try:
+                    cmd_count[cmd_name] += 1
+                    cmd_count_size[cmd_name + ":" + str(load_cmd.cmdsize)] += 1
+                    if cmd_name in ('LC_SEGMENT', 'LC_SEGMENT_64'):
+                        bits = ''
+                        if cmd_name == 'LC_SEGMENT_64':
+                            bits = "64"
+                        for section_data in cmd_data:
+                            sec_info = section_data.describe()
+                            if sec_info['segname'] == '__PAGEZERO':
+                                features['lc_segment_' + bits + '_vmaddr'] = sec_info['vmaddr']
+                                features['lc_segment_' + bits + '_vmsize'] = sec_info['vmsize']
+                                features['lc_segment_' + bits + '_filesize'] = sec_info['filesize']
+                                features['lc_segment_' + bits + '_fileoff'] = sec_info['fileoff']
+                    if cmd_name == 'LC_VERSION_MIN_MACOSX':
+                        features['lc_version_min_macosx_min_version'] = float('.'.join(cmd_info.describe()['version'].split('.')[:2]))
+                    if cmd_name == 'LC_SYMTAB':
+                        info = cmd_info.describe()
+                        features['lc_symtab_strsize'] = info['strsize']
+                        features['lc_symtab_stroff'] = info['stroff']
+                        features['lc_symtab_symoff'] = info['symoff']
+                        features['lc_symtab_nsyms'] = info['nsyms']
+                    if cmd_name in ('LC_DYLD_INFO_ONLY', 'LC_DYLD_INFO'):
+                        info = cmd_info.describe()
+                        features['lc_dyld_info_lazy_bind_size'] = info['lazy_bind_size']
+                        features['lc_dyld_info_rebase_size'] = info['rebase_size']
+                        features['lc_dyld_info_lazy_bind_off'] = info['lazy_bind_off']
+                        features['lc_dyld_info_export_off'] = info['export_off']
+                        features['lc_dyld_info_export_size'] = info['export_size']
+                        features['lc_dyld_info_bind_off'] = info['bind_off']
+                        features['lc_dyld_info_rebase_off'] = info['rebase_off']
+                        features['lc_dyld_info_bind_size'] = info['bind_size']
+                        features['lc_dyld_info_weak_bind_size'] = info['weak_bind_size']
+                        features['lc_dyld_info_weak_bind_off'] = info['weak_bind_off']
+                    if cmd_name == 'LC_DYSYMTAB':
+                        info = cmd_info.describe()
+                        features['lc_dysymtab_nextdefsym'] = info['nextdefsym']
+                        features['lc_dysymtab_extreloff'] = info['extreloff']
+                        features['lc_dysymtab_nlocrel'] = info['nlocrel']
+                        features['lc_dysymtab_modtaboff'] = info['modtaboff']
+                        features['lc_dysymtab_iundefsym'] = info['iundefsym']
+                        features['lc_dysymtab_ntoc'] = info['ntoc']
+                        features['lc_dysymtab_ilocalsym'] = info['ilocalsym']
+                        features['lc_dysymtab_nundefsym'] = info['nundefsym']
+                        features['lc_dysymtab_nextrefsyms'] = info['nextrefsyms']
+                        features['lc_dysymtab_locreloff'] = info['locreloff']
+                        features['lc_dysymtab_nmodtab'] = info['nmodtab']
+                        features['lc_dysymtab_nlocalsym'] = info['nlocalsym']
+                        features['lc_dysymtab_tocoff'] = info['tocoff']
+                        features['lc_dysymtab_extrefsymoff'] = info['extrefsymoff']
+                        features['lc_dysymtab_nindirectsyms'] = info['nindirectsyms']
+                        features['lc_dysymtab_iextdefsym'] = info['iextdefsym']
+                        features['lc_dysymtab_nextrel'] = info['nextrel']
+                        features['lc_dysymtab_indirectsymoff'] = info['indirectsymoff']
+
+                except Exception as e:
+                    print 'Error getting command information: ' + str(e)
+            features['filename'] = os.path.split(filename)[1]
+
+            # Remove these 2 load command types
+            for lc in ['LC_MAIN', 'LC_UNIXTHREAD']:
+                if lc in features:
+                    features.pop(lc, None)
+
+            if include_cmd_size:
+                features.update(cmd_count_size)
+            else:
+                features.update(cmd_count)
+            results.append(features)
+    except Exception as e:
+        print "Error processing %s - %s" % (filename, str(e))
+        #print traceback.format_exc()
+
+    return results
+
+
+def gen_sigs(cluster_type, sigmeta, cluster, file_directory, signature_directory, fdf):
+    """
+    Generate the signatures for the samples in a cluster.
+    Takes:
+    cluster_type (name) - for signature name
+    sigmeta - meta to include in all signatures
+    cluster - cluster label (number)
+    file_directory - where the sample files live
+    signature_directory - where the output Yara files go
+    fdf - temp dataframe to calculate attributes from
+    """
+    # You can have duplicate filenames for FAT style binaries (so unique filenames is generally < # of 'samples' printed
+    print "Creating signature for cluster: %s from %s samples" % (cluster, len(fdf.filename.unique()))
+    meta = sigmeta.copy()
+    filename = fdf.filename.value_counts().index.tolist()[0]
+    count = 0
+    yara_rule_name = cluster_type + "_cluster_" + str(cluster)
+    for sample in fdf.filename.unique().tolist():
+        meta['sample_'+str(count)] = sample
+        count += 1
+
+    sig = data_hacking.YaraMachoGenerator(file_directory + "/" + filename, samplename=yara_rule_name, meta=meta)
+
+    lc_cmds = []
+    lc_symtab = []
+    lc_dysymtab = []
+    lc_dyld_info = []
+    lc_segment = []
+    lc_segment_64 = []
+
+    for col in fdf.columns:
+        if len(fdf[col].unique()) == 1:
+            if fdf[col].unique()[0] != 0:
+                lower = [s for s in col if s.islower()]
+                if fdf[col].unique()[0] > 0 or (len(lower) == len(col)):
+                    if col.startswith('LC_'):
+                        lc_cmds.append(col)
+                    if col.startswith('lc_segment_'):
+                        lc_segment.append(col)
+                    if col.startswith('lc_segment_64_'):
+                        lc_segment_64.append(col)
+                    if col.startswith('lc_symtab_'):
+                        lc_symtab.append(col)
+                    if col.startswith('lc_dysymtab_'):
+                        lc_dysymtab.append(col)
+                    if col.startswith('lc_dyld_info_'):
+                        lc_dyld_info.append(col)
+                    #print "%s - %s" % (c, fdf[c].unique()[0])
+        else:
+            pass
+
+    if len(lc_symtab) > 0:
+        if include_cmd_size:
+            lc_cmds = [x for x in lc_cmds if not x in 'LC_SYMTAB:']
+        else:
+            lc_cmds = [x for x in lc_cmds if x != 'LC_SYMTAB']
+        lc_symtab = set([x[10:] for x in lc_symtab])
+        sig.add_symtab(lc_symtab)
+
+    if len(lc_dysymtab) > 0:
+        if include_cmd_size:
+            lc_cmds = [x for x in lc_cmds if not x in 'LC_DYSYMTAB:']
+        else:
+            lc_cmds = [x for x in lc_cmds if x != 'LC_DYSYMTAB']
+        lc_dysymtab = set([x[12:] for x in lc_dysymtab])
+        sig.add_dysymtab(lc_dysymtab)
+
+    if len(lc_dyld_info):
+        if include_cmd_size:
+            lc_cmds = [x for x in lc_cmds if not x in 'LC_DYLD_INFO:']
+            lc_cmds = [x for x in lc_cmds if not x in 'LC_DYLD_INFO_ONLY:']
+        else:
+            lc_cmds = [x for x in lc_cmds if x != 'LC_DYLD_INFO']
+            lc_cmds = [x for x in lc_cmds if x != 'LC_DYLD_INFO_ONLY']
+        lc_dyld_info = set([x[13:] for x in lc_dyld_info])
+        sig.add_dyld_info(lc_dyld_info)
+
+    if len(lc_segment) > 0:
+        if include_cmd_size:
+            lc_cmds = [x for x in lc_cmds if not x in 'LC_SEGMENT:']
+        else:
+            lc_cmds = [x for x in lc_cmds if x != 'LC_SEGMENT']
+        lc_segment = set([x[12:] for x in lc_segment])
+        sig.add_segment(lc_segment)
+
+    if len(lc_segment_64) > 0:
+        if include_cmd_size:
+            lc_cmds = [x for x in lc_cmds if not x in 'LC_SEGMENT_64:']
+        else:
+            lc_cmds = [x for x in lc_cmds if x != 'LC_SEGMENT_64']
+        lc_segment_64 = set([x[14:] for x in lc_segment_64])
+        sig.add_segment(lc_segment_64)
+
+    if 'LC_VERSION_MIN_IPHONEOS' in lc_cmds:
+        if include_cmd_size:
+            lc_cmds = [x for x in lc_cmds if not x in 'LC_VERSION_MIN_IPHONEOS:']
+        else:
+            lc_cmds = [x for x in lc_cmds if x != 'LC_VERSION_MIN_IPHONEOS']
+        sig.add_version_min_macosx()
+
+    if 'LC_VERSION_MIN_MACOSX' in lc_cmds:
+        if include_cmd_size:
+            lc_cmds = [x for x in lc_cmds if not x in 'LC_VERSION_MIN_MACOSX:']
+        else:
+            lc_cmds = [x for x in lc_cmds if x != 'LC_VERSION_MIN_MACOSX']
+        sig.add_version_min_macosx()
+
+    if include_cmd_size:
+        [sig.add_lc_count(x.split(':')[0], int(fdf[x].unique()[0]), size=int(x.split(':')[1])) for x in lc_cmds]
+    else:
+        [sig.add_lc(x) for x in lc_cmds]
+
+    sig.get_signature(filename=signature_directory + '/' + yara_rule_name + '.yara', writesig=True)
+
+
+def main():
+    """
+    Main function, responsible for setting the features/dataframe, performing the clustering and generating the sigs
+    """
+    global include_cmd_size
+    file_directory = "./"
+    signature_directory = "./"
+    eoptions = ['Add cmdsize and type as a feature']
+    cluster_types = ['DBSCAN', 'MeanShift', 'KMeans']
+    features_list = []
+
+    parser = ArgumentParser(description="Process Mach-O files, perform clustering on them, and spit out Yara signatures.")
+    parser.add_argument('cluster types', nargs='+',
+                        help='Use the following algorithm to cluster. Options are: [' + ', '.join(cluster_types) + ']')
+    parser.add_argument('-d', '--directory',
+                        help='The directory that contains the Mach-O files to analyze')
+    parser.add_argument('-Y', '--yara_sig_directory',
+                        help='Where to put the Yara signatures')
+    parser.add_argument('-e', '--email',
+                        help='Email address to include in the rule files')
+    parser.add_argument('-a', '--author',
+                        help='Author name to include in the rule files')
+    parser.add_argument('-k', '--k_clusters',
+                        help='Number of clusters for KMeans clustering instead of estimating one')
+    parser.add_argument('-b', '--bandwidth',
+                        help='Specify a bandwidth for MeanShift clustering instead of estimating one')
+    parser.add_argument('-m', '--min_samples',
+                        help='Specify the minimum number of samples per cluster via DBSCAN instead of the default (3)')
+    parser.add_argument('-P', '--pca',
+                        help='Perform PCA to the specified number of components on the features (can help create more generic signatures via larger clusters), a value of 0 will cause this script to estimate a reasonable "n"')
+    parser.add_argument('-S', '--scale', action='store_true',
+                        help='Scale the feature values')
+    parser.add_argument('-E', '--experimental', action='store_true',
+                        help='Sets various(?) experimental options that affect signature generation: [' + ','.join(eoptions) + ']')
+    #parser.add_argument('-', '--',
+    #                    help='')
+    args = parser.parse_args()
+
+    if args.directory:
+        file_directory = args.directory
+
+    if args.experimental:
+        include_cmd_size = True
+
+    for ctype in vars(args)['cluster types']:
+        if not ctype in cluster_types:
+            parser.print_help()
+            sys.exit(1)
+
+    meta = {}
+    if args.author:
+        meta['author'] = args.author
+    if args.email:
+        meta['email'] = args.email
+
+    if args.yara_sig_directory:
+        signature_directory = args.yara_sig_directory
+
+    file_list = glob.glob(file_directory + '/*')
+    for filename in file_list:
+        if os.path.isfile(filename):
+            features_list.extend(e_features(filename))
+    print "Ingest Information"
+    print "------------------"
+    print "Files:", len(file_list)
+    print "Number of feature vectors:", len(features_list)
+
+    if len(file_list) == 0 or len(features_list) == 0:
+        print "There was a problem reading in files and gathering features to cluster on."
+        sys.exit(2)
+
+    dataframe = pd.DataFrame.from_records(features_list)
+    for col in dataframe.columns:
+        if col[0:3] in ['LC_']:
+            dataframe[col].fillna(0, inplace=True)
+
+    dataframe.fillna(-1, inplace=True)
+
+    cols = [x for x in dataframe.columns.tolist() if x != 'filename']
+    print "Features per feature vector:", len(cols)
+
+    X = dataframe.as_matrix(cols)
+
+    if args.scale:
+        print "Scaling features"
+        X = scale(X)
+
+    if args.pca:
+        print "Performing PCA"
+        if int(args.pca) == 0:
+            pca = PCA().fit(X)
+            n_comp = len([x for x in pca.explained_variance_ if x > 1e0])
+            print "Estimating number of components w/explained variance > 1: %s" % n_comp
+            X = PCA(n_components=n_comp).fit_transform(X)
+        else:
+            X = PCA(n_components=int(args.pca)).fit_transform(X)
+
+    if 'DBSCAN' in vars(args)['cluster types']:
+        cluster_df = pd.DataFrame()
+        from sklearn.cluster import DBSCAN
+
+        min_samples = 3
+        if args.min_samples:
+            min_samples = int(args.min_samples)
+        dbscan = DBSCAN(min_samples=min_samples)
+        dbscan.fit(X)
+        labels1 = dbscan.labels_
+        dataframe['cluster'] = labels1
+        labels1_u = np.unique(labels1)
+        nclusters = len(labels1_u)
+        cluster_df = dataframe[['filename', 'cluster']]
+
+        print
+        print "DBSCAN Cluster Information"
+        print "--------------------------"
+        print "Number of clusters: %d" % nclusters
+        print "Labeled samples: %s" % cluster_df[cluster_df['cluster'] != -1].filename.value_counts().sum()
+        print "Unlabeled samples: %s" % cluster_df[cluster_df['cluster'] == -1].filename.value_counts().sum()
+        print
+        # Remove the unclustered samples
+        cluster_df = cluster_df[cluster_df['cluster'] != -1]
+        for cluster in cluster_df.cluster.unique().tolist():
+            fdf = pd.DataFrame()
+            cluster = int(cluster)
+            for fname in cluster_df[cluster_df['cluster'] == cluster].filename.tolist():
+                fdf = fdf.append(dataframe[dataframe['filename'] == fname], ignore_index=True)
+            gen_sigs('DBSCAN', meta, cluster, file_directory, signature_directory, fdf)
+
+    if 'MeanShift' in vars(args)['cluster types']:
+        cluster_df = pd.DataFrame()
+        from sklearn.cluster import MeanShift, estimate_bandwidth
+
+        ebw = 0
+        if args.bandwidth:
+            ebw = int(args.bandwidth)
+        else:
+            ebw = estimate_bandwidth(X)
+        ms1 = MeanShift(bandwidth=ebw)
+        ms1.fit(X)
+
+        labels1 = ms1.labels_
+        dataframe['cluster'] = labels1
+        labels1_u = np.unique(labels1)
+        nclusters = len(labels1_u)
+        cluster_df = dataframe[['filename', 'cluster']]
+
+        print
+        print "MeanShift Cluster Information"
+        print "--------------------------"
+        print "Estimated Bandwidth: %s" % ebw
+        print "Number of clusters: %d" % nclusters
+        print
+
+        for cluster in cluster_df.cluster.unique().tolist():
+            fdf = pd.DataFrame()
+            cluster = int(cluster)
+            for fname in cluster_df[cluster_df['cluster'] == cluster].filename.tolist():
+                fdf = fdf.append(dataframe[dataframe['filename'] == fname], ignore_index=True)
+            gen_sigs('MeanShift', meta, cluster, file_directory, signature_directory, fdf)
+
+    if 'KMeans' in vars(args)['cluster types']:
+        cluster_df = pd.DataFrame()
+        from sklearn.cluster import KMeans
+
+        #rule of thumb of k = sqrt(#samples/2)
+        k_clusters = int(math.sqrt(int(len(features_list)/2)))
+        if args.k_clusters:
+            k_clusters = int(args.k_clusters)
+
+
+        from scipy.cluster.vq import kmeans,vq
+        from scipy.spatial.distance import cdist
+        
+        ##### cluster data into K=1..10 clusters #####
+        #K, KM, centroids,D_k,cIdx,dist,avgWithinSS = kmeans.run_kmeans(X,10)
+        
+        K = range(2,len(X),5)
+        
+        # scipy.cluster.vq.kmeans
+        KM = [kmeans(X,k) for k in K] # apply kmeans 1 to 10
+        centroids = [cent for (cent,var) in KM]   # cluster centroids
+        
+        D_k = [cdist(X, cent, 'euclidean') for cent in centroids]
+        
+        cIdx = [np.argmin(D,axis=1) for D in D_k]
+        dist = [np.min(D,axis=1) for D in D_k]
+        avgWithinSS = [sum(d)/X.shape[0] for d in dist]  
+        kIdx = 2
+        # plot elbow curve
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.plot(K, avgWithinSS, 'b*-')
+        ax.plot(K[kIdx], avgWithinSS[kIdx], marker='o', markersize=12, 
+              markeredgewidth=2, markeredgecolor='r', markerfacecolor='None')
+        plt.grid(True)
+        plt.xlabel('Number of clusters')
+        plt.ylabel('Average within-cluster sum of squares')
+        tt = plt.title('Elbow for K-Means clustering')  
+        ax = fig.add_subplot(1, 1, 1, projection='3d')
+        ax.scatter(X[:,0], X[:,1], X[:,2], c=df['cluster'], s=50)
+        ax.set_title(cluster_type + " Clusters")
+        fig.set_size_inches(24,18)
+        fig.set_dpi(400)
+        fig.savefig(cluster_type + '.png', bbox_inches='tight')
+
+        kmeans = KMeans(n_clusters=k_clusters)
+        kmeans.fit(X)
+        labels1 = kmeans.labels_
+        dataframe['cluster'] = labels1
+        labels1_u = np.unique(labels1)
+        nclusters = len(labels1_u)
+        cluster_df = dataframe[['filename', 'cluster']]
+
+        print
+        print "KMeans Cluster Information"
+        print "--------------------------"
+        print "Number of clusters: %d" % nclusters
+        print
+
+        for cluster in cluster_df.cluster.unique().tolist():
+            fdf = pd.DataFrame()
+            cluster = int(cluster)
+            for fname in cluster_df[cluster_df['cluster'] == cluster].filename.tolist():
+                fdf = fdf.append(dataframe[dataframe['filename'] == fname], ignore_index=True)
+            gen_sigs('KMeans', meta, cluster, file_directory, signature_directory, fdf)
+        save_graphic(dataframe, cols, signature_directory, "KMeans")
+
+if __name__ == "__main__":
+    main()
