@@ -1,0 +1,155 @@
+{
+    "_id": "32b2ee22-8145-43c1-a461-6a2b56f4ed50",
+    "characteristics": {
+        "swf": {
+            "compression": "none",
+            "swf metadata": {
+                "framecount": 771,
+                "framerate": 3072,
+                "resolution": "1 x 1",
+                "version": 6,
+                "xmax": 1,
+                "xmin": 0,
+                "ymax": 1,
+                "ymin": 0
+            },
+            "tag types": [
+                {
+                    "count": 1,
+                    "tag name": "End"
+                },
+                {
+                    "count": 1,
+                    "tag name": "ShowFrame"
+                },
+                {
+                    "count": 1,
+                    "tag name": "DoABC"
+                },
+                {
+                    "count": 2,
+                    "tag name": "Unknown"
+                },
+                {
+                    "count": 1,
+                    "tag name": "SetBackgroundColor"
+                },
+                {
+                    "count": 1,
+                    "tag name": "SymbolClass"
+                },
+                {
+                    "count": 1,
+                    "tag name": "FileAttributes"
+                },
+                {
+                    "count": 2,
+                    "tag name": "DefineSceneAndFrameLabelData"
+                },
+                {
+                    "count": 1,
+                    "tag name": "DefineBits"
+                }
+            ],
+            "warnings": [
+                "Data exists beyond End tag",
+                "Unknown tag type detected: 255",
+                "Unknown tag type detected: 437"
+            ]
+        }
+    },
+    "metadata": {
+        "_id": "32b2ee22-8145-43c1-a461-6a2b56f4ed50",
+        "entropy": 0.025761953439624886,
+        "file_name": "0abac7b164ab8f4b7921ed0c03c9953267eba029d248630b2155cf78abd96b30",
+        "file_size": 1050120,
+        "libmagic": "Macromedia Flash data, version 6",
+        "md5": "4b5ff3807d65500af23254cb1cbf636a",
+        "mimetype": "application/x-shockwave-flash",
+        "parent_sha256": "0abac7b164ab8f4b7921ed0c03c9953267eba029d248630b2155cf78abd96b30",
+        "score": 0,
+        "sha1": "d7f40f19c3e6362c98c86c4b15fb1c96365d4842",
+        "sha256": "0abac7b164ab8f4b7921ed0c03c9953267eba029d248630b2155cf78abd96b30",
+        "ssdeep": "24:2DhupJfuGIyrQSnBqB395qd08Xw72mE05exoNYntwkKlCbT/7S+Cefefmfwfy9:2fSUopqeYYtwkkCq0Omf8"
+    },
+    "verbose": {
+        "swf": {
+            "SWF String Statistical Analysis": {
+                "ActionScript String Length Mean to Median Ratio": "0.96"
+            },
+            "tags": [
+                {
+                    "FileAttributes": {
+                        "actionscript3": 1,
+                        "hasmetadata": 0,
+                        "reserved1": 0,
+                        "reserved2": 0,
+                        "reserved3": 0,
+                        "usedirectblit": 0,
+                        "usegpu": 0,
+                        "usenetwork": 0
+                    }
+                },
+                {
+                    "SetBackgroundColor": {
+                        "blue": 255,
+                        "green": 255,
+                        "red": 255
+                    }
+                },
+                {
+                    "Unknown": {}
+                },
+                {
+                    "DefineBits": {}
+                },
+                {
+                    "DefineSceneAndFrameLabelData": {}
+                },
+                {
+                    "DefineSceneAndFrameLabelData": {}
+                },
+                {
+                    "DoABC": {
+                        "abc": {
+                            "strings": [
+                                "new_fla",
+                                "MainTimeline",
+                                "flash.display",
+                                "MovieClip",
+                                "new_fla:MainTimeline",
+                                "frame1",
+                                "",
+                                "addFrameScript",
+                                "Object",
+                                "flash.events",
+                                "EventDispatcher",
+                                "DisplayObject",
+                                "InteractiveObject",
+                                "DisplayObjectContainer",
+                                "Sprite"
+                            ]
+                        },
+                        "bytecodename": "",
+                        "flags": 1
+                    }
+                },
+                {
+                    "SymbolClass": {
+                        "id_0": "0x0",
+                        "label_0": "new_fla.MainTimeline"
+                    }
+                },
+                {
+                    "ShowFrame": {}
+                },
+                {
+                    "Unknown": {}
+                },
+                {
+                    "End": {}
+                }
+            ]
+        }
+    }
+}

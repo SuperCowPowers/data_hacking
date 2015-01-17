@@ -1,0 +1,155 @@
+{
+    "_id": "88b25b53-46aa-4eaa-b532-85053f8f67d0",
+    "characteristics": {
+        "swf": {
+            "compression": "none",
+            "swf metadata": {
+                "framecount": 1,
+                "framerate": 3584,
+                "resolution": "1 x 1",
+                "version": 9,
+                "xmax": 1,
+                "xmin": 0,
+                "ymax": 1,
+                "ymin": 0
+            },
+            "tag types": [
+                {
+                    "count": 1,
+                    "tag name": "ShowFrame"
+                },
+                {
+                    "count": 1,
+                    "tag name": "DoAction"
+                },
+                {
+                    "count": 1,
+                    "tag name": "SetBackgroundColor"
+                },
+                {
+                    "count": 1,
+                    "tag name": "End"
+                },
+                {
+                    "count": 1,
+                    "tag name": "FileAttributes"
+                }
+            ]
+        }
+    },
+    "metadata": {
+        "_id": "88b25b53-46aa-4eaa-b532-85053f8f67d0",
+        "entropy": 4.978771519326162,
+        "file_name": "5b64091092d3f17c5d8338bbab3661509c937b6630e2b0ef30db2591fdfe22ff",
+        "file_size": 122,
+        "libmagic": "Macromedia Flash data, version 9",
+        "md5": "6a560c1afaa543ea07db594572b0f039",
+        "mimetype": "application/x-shockwave-flash",
+        "parent_sha256": "5b64091092d3f17c5d8338bbab3661509c937b6630e2b0ef30db2591fdfe22ff",
+        "score": 0,
+        "sha1": "63b1538a60b80280c87ab0b5cb9e20bd0114e0ce",
+        "sha256": "5b64091092d3f17c5d8338bbab3661509c937b6630e2b0ef30db2591fdfe22ff",
+        "ssdeep": "3:E4GtmnaRt4vhAXWtEMwk/dVpJhlH6aKvl+zXXET4/ln:E4G+a307DwkXpJn6nIi4tn"
+    },
+    "verbose": {
+        "swf": {
+            "SWF Constant Pool Analysis": {
+                "constant pool 0": {
+                    "obfuscated_data": {
+                        "base64": {
+                            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/": "flashVersion"
+                        }
+                    }
+                }
+            },
+            "SWF String Statistical Analysis": {
+                "Constant Pool String Length Mean to Median Ratio": "1.05"
+            },
+            "tags": [
+                {
+                    "FileAttributes": {
+                        "actionscript3": 0,
+                        "hasmetadata": 0,
+                        "reserved1": 0,
+                        "reserved2": 0,
+                        "reserved3": 0,
+                        "usedirectblit": 0,
+                        "usegpu": 0,
+                        "usenetwork": 0
+                    }
+                },
+                {
+                    "SetBackgroundColor": {
+                        "blue": 255,
+                        "green": 255,
+                        "red": 255
+                    }
+                },
+                {
+                    "DoAction": {
+                        "actions": [
+                            {
+                                "ActionConstantPool": {
+                                    "constant pool": [
+                                        "flashVersion",
+                                        "/:$version",
+                                        "ly20080.asp?gameee=",
+                                        "_root"
+                                    ],
+                                    "pool count": 4
+                                }
+                            },
+                            {
+                                "ActionPush": [
+                                    {
+                                        "pushType": 8,
+                                        "pushTypeName": "constant8",
+                                        "pushValue": 0,
+                                        "value": "flashVersion"
+                                    }
+                                ]
+                            },
+                            "ActionGetVariable",
+                            "ActionDefineLocal",
+                            {
+                                "ActionPush": [
+                                    {
+                                        "pushType": 8,
+                                        "pushTypeName": "constant8",
+                                        "pushValue": 2,
+                                        "value": "ly20080.asp?gameee="
+                                    }
+                                ]
+                            },
+                            "ActionGetVariable",
+                            "ActionAdd2",
+                            {
+                                "ActionPush": [
+                                    {
+                                        "pushType": 8,
+                                        "pushTypeName": "constant8",
+                                        "pushValue": 3,
+                                        "value": "_root"
+                                    }
+                                ]
+                            },
+                            "ActionGetVariable",
+                            {
+                                "ActionGetURL2": {
+                                    "method": "GET"
+                                }
+                            },
+                            "ActionStop"
+                        ]
+                    }
+                },
+                {
+                    "ShowFrame": {}
+                },
+                {
+                    "End": {}
+                }
+            ]
+        }
+    }
+}

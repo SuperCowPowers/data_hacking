@@ -1,0 +1,75 @@
+{
+    "_id": "41d69b29-a644-4908-8107-eb29b3843767",
+    "characteristics": {
+        "swf": {
+            "compression": "none",
+            "swf metadata": {
+                "framecount": 1,
+                "framerate": 3072,
+                "resolution": "575 x 575",
+                "version": 6,
+                "xmax": 575,
+                "xmin": 0,
+                "ymax": 575,
+                "ymin": 0
+            },
+            "tag types": [
+                {
+                    "count": 1,
+                    "tag name": "DefineBitsJPEG3"
+                },
+                {
+                    "count": 1,
+                    "tag name": "DefineShape3"
+                },
+                {
+                    "count": 1,
+                    "tag name": "End"
+                },
+                {
+                    "count": 1,
+                    "tag name": "PlaceObject2"
+                },
+                {
+                    "count": 1,
+                    "tag name": "ShowFrame"
+                }
+            ]
+        }
+    },
+    "metadata": {
+        "_id": "41d69b29-a644-4908-8107-eb29b3843767",
+        "entropy": 5.20118373941692,
+        "file_name": "5316c902e5a9cdf4dde73e38d028e0f59d12d9f076146abc14a3851c06f528c3",
+        "file_size": 8927,
+        "libmagic": "Macromedia Flash data, version 6",
+        "md5": "c0b4e29135ac66c91d80bea4ce39d6cb",
+        "mimetype": "application/x-shockwave-flash",
+        "parent_sha256": "5316c902e5a9cdf4dde73e38d028e0f59d12d9f076146abc14a3851c06f528c3",
+        "score": 0,
+        "sha1": "710a2e7f8783cc44a85d7563d8183d7305d080d8",
+        "sha256": "5316c902e5a9cdf4dde73e38d028e0f59d12d9f076146abc14a3851c06f528c3",
+        "ssdeep": "96:lkeND51giKe95LI4KS7Rh6zpGezJ/csRqw4OzBXyGx:nDjnnRh6z8ezJ/c/bOdXT"
+    },
+    "verbose": {
+        "swf": {
+            "tags": [
+                {
+                    "DefineBitsJPEG3": {}
+                },
+                {
+                    "DefineShape3": {}
+                },
+                {
+                    "PlaceObject2": {}
+                },
+                {
+                    "ShowFrame": {}
+                },
+                {
+                    "End": {}
+                }
+            ]
+        }
+    }
+}
