@@ -1,7 +1,7 @@
 data_hacking
 ============
 
-### Welcome to the Click Security Data Hacking Project
+### Welcome to the Data Hacking Project
 "Hacking in the sense of deconstructing an idea, hardware, anything and getting it to do something it wasn’t intended or to better understand how something works." _(BSides CFP)_ 
 
 So hacking here means we want to quickly deconstruct data, understand what we've got and how to best utilize it for the problem at hand. 
@@ -103,6 +103,3 @@ Most of the notebooks will have relative paths to some resources, data files or 
 $ cd data_hacking/fun_with_syslog
 $ ipython (as aliased above)
 </pre>
-
-
-[ ![Click Logo](http://raw.github.com/ClickSecurity/data_hacking/gh-pages/images/clicklogo_sm.png)](http://www.clicksecurity.com "Click Security")
