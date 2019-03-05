@@ -65,14 +65,16 @@ The primary motivation for these exercises is to explore the nexus of IPython, P
     - [Notebook Viewer (Java)](http://nbviewer.ipython.org/github/SuperCowPowers/data_hacking/blob/master/java_classification/java_classification.ipynb)
     - [GitHub Project](https://github.com/SuperCowPowers/data_hacking/tree/master/java_classification)
 
-#### Friendly Notebooks
+#### Related Notebooks
+- PE File Similarity Graph using Workbench
+    - [Notebook Viewer](https://nbviewer.jupyter.org/github/SuperCowPowers/workbench/blob/master/workbench/notebooks/PCAP_DriveBy.ipynb)
+
 - Windows Executable Clustering by Image Similarity
     - [Notebook Viewer](http://nbviewer.ipython.org/urls/raw.githubusercontent.com/sooshie/data_exploration/master/zeus_cluster/Image%20Based%20Clustering.ipynb)
 
-- PE File Similarity Graph using Workbench
-    - [Notebook Viewer](http://nbviewer.ipython.org/github/SuperCowPowers/workbench/blob/master/notebooks/PE_SimGraph.ipynb)
 
-#####Setup:
+
+#### Setup:
 
   * Required packages:
     * Brew/apt-get
